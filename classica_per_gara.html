@@ -1,0 +1,1714 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Classifiche Nuoto</title>
+<style>
+  body {
+    margin: 0;
+    padding: 20px;
+    font-family: Georgia, 'Times New Roman', Times, serif, sans-serif;
+    background-image: url("https://wallpapers.com/images/featured/sfondo-di-acqua-di-piscina-am94qlj0a89gmo8j.jpg");
+    background-size: cover;        
+    background-position: center;   
+    background-repeat: repeat;  
+    color: #070674;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+table { 
+    border-collapse: collapse; 
+    width: 100%; 
+    margin-top: 10px;
+    background-color: #ffffff7e; 
+}
+th, td { 
+    border: 1px solid #c4c4c4; 
+    padding: 6px; 
+    text-align: left; 
+}
+th { 
+    background-color: #f0f0f0; 
+}
+input, select, button { 
+    padding: 5px; 
+    margin-right: 10px; 
+}
+h1 { 
+    margin-top: 40px; 
+    text-align: center;     /* Centra il titolo */
+    font-size: 3rem;        /* Rende il titolo più grande */
+}
+a.homepage-link {
+    display: block;
+    text-align: center;     /* Centra il link */
+    margin-top: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #0e289c;
+}
+a.homepage-link:hover {
+    color: #081146;
+    text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<h1>Classifiche per gara</h1>
+<a href="homepage.html">Torna alla Homepage</a><br>
+<label for="provaSelect">Seleziona la prova:</label>
+<select id="provaSelect">
+  <option value="">-- Seleziona una prova --</option>
+</select>
+
+<div id="classifiche"></div>
+
+<script id="dati" type="text/plain">
+nome gara,nome atleta,gara,tempo,punti,medaglia
+Apertura,Bartalesi Beatrice,50 Stile Libero,30.28,434,no
+Apertura,Bartalesi Beatrice,100 Stile Libero,65.84,444,no
+Apertura,Catalano Giovanni,50 Stile Libero,28.02,372,no
+Apertura,Catalano Giovanni,100 Stile Libero,63.97,346,no
+Apertura,Damasio Gaia Ada,50 Stile Libero,32.09,364,no
+Apertura,Damasio Gaia Ada,100 Stile Libero,72.32,335,no
+Apertura,De Giorgi Alessandro,50 Stile Libero,29.30,325,no
+Apertura,De Giorgi Alessandro,100 Rana,84.02,285,no
+Apertura,Lambertoni Giulia,50 Stile Libero,36.94,239,no
+Apertura,Lambertoni Giulia,100 Rana,99.32,247,no
+Apertura,Manfrino Elisa,100 Dorso,79.79,325,no
+Apertura,Manfrino Elisa,100 Stile Libero,73.26,322,no
+Apertura,Oliaro Giulio,50 Stile Libero,30.31,294,no
+Apertura,Oliaro Giulio,100 Stile Libero,70.22,262,no
+Apertura,Pedi Mattia,100 Stile Libero,59.72,426,no
+Apertura,Pedi Mattia,100 Rana,83.47,291,no
+Apertura,Perosino Edoardo,100 Stile Libero,60.21,415,no
+Apertura,Perosino Edoardo,50 Stile Libero,27.10,411,no
+Apertura,Ruscelli Siria,50 Stile Libero,31.07,401,no
+Apertura,Ruscelli Siria,100 Stile Libero,70.46,362,no
+Apertura,Speranza Lucrezia,100 Dorso,82.46,294,no
+Apertura,Speranza Lucrezia,50 Stile Libero,34.48,294,no
+Apertura,Toniazzo Francesca,50 Stile Libero,33.13,331,no
+Apertura,Toniazzo Francesca,100 Stile Libero,72.76,329,no
+Apertura,Manfrino Elisa,Staffetta 4x50 Misti Femmine,145.36,349,no
+Apertura,Bartalesi Beatrice,Staffetta 4x50 Misti Femmine,145.36,349,no
+Apertura,Speranza Lucrezia,Staffetta 4x50 Misti Femmine,145.36,349,no
+Apertura,Ruscelli Siria,Staffetta 4x50 Misti Femmine,145.36,349,no
+Apertura,Catalano Giovanni,Staffetta 4x50 Misti Maschi,127.93,345,no
+Apertura,De Giorgi Alessandro,Staffetta 4x50 Misti Maschi,127.93,345,no
+Apertura,Pedi Mattia,Staffetta 4x50 Misti Maschi,127.93,345,no
+Apertura,Perosino Edoardo,Staffetta 4x50 Misti Maschi,127.93,345,no
+Apertura,De Giorgi Alessandro,50 Rana lanciato,36.80,311,no
+17° Memorial Davide Cagnotto,Bibbona Lucia,100 Stile Libero,81.15,237,no
+17° Memorial Davide Cagnotto,Bibbona Lucia,50 Rana,44.51,264,no
+17° Memorial Davide Cagnotto,Catalano Giovanni,400 Stile Libero,350.95,221,no
+17° Memorial Davide Cagnotto,Catalano Giovanni,50 Dorso,35.08,254,argento
+17° Memorial Davide Cagnotto,Damasio Gaia Ada,100 Stile Libero,74.32,309,no
+17° Memorial Davide Cagnotto,Damasio Gaia Ada,50 Dorso,41.65,223,no
+17° Memorial Davide Cagnotto,De Giorgi Alessandro,100 Stile Libero,86.10,141,no
+17° Memorial Davide Cagnotto,De Giorgi Alessandro,50 Rana,37.17,302,no
+17° Memorial Davide Cagnotto,Farruggia Vittoria,100 Stile Libero,77.43,273,no
+17° Memorial Davide Cagnotto,Farruggia Vittoria,50 Dorso,44.52,182,no
+17° Memorial Davide Cagnotto,Ichim Alexandra,50 Dorso,42.39,211,no
+17° Memorial Davide Cagnotto,Ichim Alexandra,100 Stile Libero,77.03,277,no
+17° Memorial Davide Cagnotto,Lambertoni Giulia,50 Dorso,49.59,132,no
+17° Memorial Davide Cagnotto,Lambertoni Giulia,50 Rana,47.26,220,no
+17° Memorial Davide Cagnotto,Manfrino Elisa,50 Dorso,37.97,294,no
+17° Memorial Davide Cagnotto,Manfrino Elisa,100 Stile Libero,74.99,300,no
+17° Memorial Davide Cagnotto,Oliaro Giulio,100 Stile Libero,67.38,294,no
+17° Memorial Davide Cagnotto,Oliaro Giulio,50 Rana,41.37,219,no
+17° Memorial Davide Cagnotto,Oliaro Pietro,100 Stile Libero,72.18,239,no
+17° Memorial Davide Cagnotto,Oliaro Pietro,50 Rana,39.6,250,no
+17° Memorial Davide Cagnotto,Pedi Mattia,100 Stile Libero,59.24,433,no
+17° Memorial Davide Cagnotto,Pedi Mattia,50 Rana,34.70,371,bronzo
+17° Memorial Davide Cagnotto,Perosino Edoardo,100 Stile Libero,60.18,413,no
+17° Memorial Davide Cagnotto,Perosino Edoardo,100 Farfalla,66.99,362,argento
+17° Memorial Davide Cagnotto,Ruscelli Siria,100 Stile Libero,70.70,359,no
+17° Memorial Davide Cagnotto,Ruscelli Siria,50 Rana,42.14,311,no
+17° Memorial Davide Cagnotto,Speranza Lucrezia,50 Dorso,38.24,288,no
+17° Memorial Davide Cagnotto,Speranza Lucrezia,100 Stile Libero,76.74,280,no
+17° Memorial Davide Cagnotto,Toniazzo Francesca,100 Stile Libero,74.24,310,no
+17° Memorial Davide Cagnotto,Toniazzo Francesca,50 Rana,46.82,226,no
+17° Memorial Davide Cagnotto,Ruscelli Siria,Mistaffetta 4x50 Stile Libero,120.04,392,no
+17° Memorial Davide Cagnotto,Perosino Edoardo,Mistaffetta 4x50 Stile Libero,120.04,392,no
+17° Memorial Davide Cagnotto,Toniazzo Francesca,Mistaffetta 4x50 Stile Libero,120.04,392,no
+17° Memorial Davide Cagnotto,Pedi Mattia,Mistaffetta 4x50 Stile Libero,120.04,392,no
+17° Memorial Davide Cagnotto,Manfrino Elisa,Mistaffetta 4x50 Stile Libero,127.94,324,no
+17° Memorial Davide Cagnotto,Catalano Giovanni,Mistaffetta 4x50 Stile Libero,127.94,324,no
+17° Memorial Davide Cagnotto,Damasio Gaia Ada,Mistaffetta 4x50 Stile Libero,127.94,324,no
+17° Memorial Davide Cagnotto,Oliaro Pietro,Mistaffetta 4x50 Stile Libero,127.94,324,no
+17° Memorial Davide Cagnotto,Speranza Lucrezia,Mistaffetta 4x50 Stile Libero,128.81,317,no
+17° Memorial Davide Cagnotto,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,128.81,317,no
+17° Memorial Davide Cagnotto,Ichim Alexandra,Mistaffetta 4x50 Stile Libero,128.81,317,no
+17° Memorial Davide Cagnotto,De Giorgi Alessandro,Mistaffetta 4x50 Stile Libero,128.81,317,no
+1ª Giornata Pentathlon 2023,Bibbona Lucia,100 Dorso,96.33,185,no
+1ª Giornata Pentathlon 2023,Catalano Giovanni,100 Dorso,80.07,219,no
+1ª Giornata Pentathlon 2023,Catalano Giovanni,200 Misti,183.42,213,no
+1ª Giornata Pentathlon 2023,Damasio Gaia Ada,100 Dorso,87.77,244,no
+1ª Giornata Pentathlon 2023,Damasio Gaia Ada,200 Misti,199.49,227,no
+1ª Giornata Pentathlon 2023,Manfrino Elisa,100 Dorso,79.87,324,no
+1ª Giornata Pentathlon 2023,Manfrino Elisa,200 Misti,186.26,280,no
+1ª Giornata Pentathlon 2023,Oliaro Giulio,100 Dorso,81.62,207,no
+1ª Giornata Pentathlon 2023,Oliaro Giulio,200 Misti,182.01,218,no
+1ª Giornata Pentathlon 2023,Pedi Mattia,100 Dorso,74.88,268,no
+1ª Giornata Pentathlon 2023,Pedi Mattia,200 Misti,152.24,373,no
+1ª Giornata Pentathlon 2023,Perosino Edoardo,100 Dorso,75.21,265,no
+1ª Giornata Pentathlon 2023,Perosino Edoardo,200 Misti,154.53,357,no
+Trofeo Mimosa,Bartalesi Beatrice,50 Stile Libero,30.50,424,no
+Trofeo Mimosa,Bartalesi Beatrice,100 Stile Libero,65.99,441,bronzo
+Trofeo Mimosa,Bibbona Lucia,50 Rana,43.65,274,argento
+Trofeo Mimosa,Bibbona Lucia,100 Rana,98.18,256,no
+Trofeo Mimosa,Damasio Gaia Ada,50 Stile Libero,33.01,335,no
+Trofeo Mimosa,Damasio Gaia Ada,100 Stile Libero,74.74,303,no
+Trofeo Mimosa,Farruggia Vittoria,50 Stile Libero,33.61,317,no
+Trofeo Mimosa,Farruggia Vittoria,100 Stile Libero,76.07,288,no
+Trofeo Mimosa,Ferrero Miriam,50 Stile Libero,38.37,213,no
+Trofeo Mimosa,Ferrero Miriam,100 Stile Libero,86.86,193,no
+Trofeo Mimosa,Fiora Virginia,50 Dorso,35.96,346,oro
+Trofeo Mimosa,Fiora Virginia,100 Dorso,78.76,338,no
+Trofeo Mimosa,Ichim Alexandra,50 Stile Libero,33.52,320,no
+Trofeo Mimosa,Ichim Alexandra,100 Stile Libero,81.49,234,no
+Trofeo Mimosa,Manfrino Elisa,50 Dorso,37.80,298,no
+Trofeo Mimosa,Manfrino Elisa,100 Dorso,81.05,310,bronzo
+Trofeo Mimosa,Ruscelli Siria,50 Stile Libero,31.93,370,bronzo
+Trofeo Mimosa,Ruscelli Siria,100 Stile Libero,70.16,367,no
+Trofeo Mimosa,Speranza Lucrezia,50 Dorso,39.11,269,no
+Trofeo Mimosa,Speranza Lucrezia,100 Dorso,85.80,261,no
+2ª Giornata Pentathlon 2023,Bartalesi Beatrice,100 Rana,90.82,323,no
+2ª Giornata Pentathlon 2023,Bartalesi Beatrice,100 Stile Libero,65.47,452,no
+2ª Giornata Pentathlon 2023,Bibbona Lucia,100 Rana,96.27,271,no
+2ª Giornata Pentathlon 2023,De Giorgi Alessandro,100 Rana,81.57,311,no
+2ª Giornata Pentathlon 2023,De Giorgi Alessandro,100 Stile Libero,65.20,325,no
+2ª Giornata Pentathlon 2023,Farruggia Vittoria,100 Rana,107.47,195,no
+2ª Giornata Pentathlon 2023,Farruggia Vittoria,100 Stile Libero,74.32,309,no
+2ª Giornata Pentathlon 2023,Ferrero Miriam,100 Rana,103.16,220,no
+2ª Giornata Pentathlon 2023,Ferrero Miriam,100 Stile Libero,80.28,245,no
+2ª Giornata Pentathlon 2023,Lambertoni Giulia,100 Rana,99.33,247,no
+2ª Giornata Pentathlon 2023,Lambertoni Giulia,100 Stile Libero,85.16,205,no
+2ª Giornata Pentathlon 2023,Manfrino Elisa,100 Rana,101.88,229,no
+2ª Giornata Pentathlon 2023,Manfrino Elisa,100 Stile Libero,72.61,331,no
+2ª Giornata Pentathlon 2023,Manfrino Elisa,100 Farfalla,89.61,226,no
+2ª Giornata Pentathlon 2023,Oliaro Giulio,100 Rana,90.87,225,no
+2ª Giornata Pentathlon 2023,Oliaro Giulio,100 Stile Libero,66.02,313,no
+2ª Giornata Pentathlon 2023,Oliaro Giulio,100 Farfalla,85.81,172,no
+2ª Giornata Pentathlon 2023,Perosino Edoardo,100 Rana,79.89,331,no
+2ª Giornata Pentathlon 2023,Perosino Edoardo,100 Stile Libero,58.49,450,bronzo
+2ª Giornata Pentathlon 2023,Perosino Edoardo,100 Farfalla,65.55,387,no
+2ª Giornata Pentathlon 2023,Ruscelli Siria,100 Rana,90.46,327,no
+2ª Giornata Pentathlon 2023,Ruscelli Siria,100 Stile Libero,68.75,390,no
+2ª Giornata Pentathlon 2023,Ruscelli Siria,100 Farfalla,89.91,223,no
+2ª Giornata Pentathlon 2023,Speranza Lucrezia,100 Rana,98.41,254,no
+2ª Giornata Pentathlon 2023,Speranza Lucrezia,100 Stile Libero,74.99,300,no
+2ª Giornata Pentathlon 2023,Speranza Lucrezia,100 Farfalla,90.81,217,no
+2ª Giornata Pentathlon 2023,Tessitore Andrea,100 Rana,87.27,254,no
+2ª Giornata Pentathlon 2023,Tessitore Andrea,100 Stile Libero,63.18,357,no
+2ª Giornata Pentathlon 2023,Toniazzo Francesca,100 Rana,101.38,232,no
+2ª Giornata Pentathlon 2023,Toniazzo Francesca,100 Stile Libero,74.90,301,no
+Trofeo Raspini,Bartalesi Beatrice,50 Stile Libero,30.10,442,no
+Trofeo Raspini,Bartalesi Beatrice,50 Farfalla,33.28,393,no
+Trofeo Raspini,Bibbona Lucia,50 Rana,42.72,298,no
+Trofeo Raspini,Bibbona Lucia,100 Misti,88.29,262,no
+Trofeo Raspini,Catalano Giovanni,50 Dorso,34.00,279,no
+Trofeo Raspini,Catalano Giovanni,50 Stile Libero,28.03,372,no
+Trofeo Raspini,De Giorgi Alessandro,50 Rana,37.68,290,no
+Trofeo Raspini,De Giorgi Alessandro,50 Stile Libero,29.36,323,no
+Trofeo Raspini,Farruggia Vittoria,50 Dorso,43.86,191,no
+Trofeo Raspini,Farruggia Vittoria,50 Stile Libero,33.38,324,no
+Trofeo Raspini,Fiora Virginia,50 Dorso,36.55,330,no
+Trofeo Raspini,Fiora Virginia,50 Stile Libero,31.62,381,no
+Trofeo Raspini,Ichim Alexandra,50 Dorso,39.63,259,no
+Trofeo Raspini,Ichim Alexandra,50 Stile Libero,33.57,318,no
+Trofeo Raspini,Oliaro Giulio,50 Stile Libero,29.07,333,no
+Trofeo Raspini,Oliaro Giulio,50 Farfalla,34.94,241,no
+Trofeo Raspini,Pedi Mattia,50 Rana,35.07,360,no
+Trofeo Raspini,Pedi Mattia,100 Misti,69.73,352,no
+Trofeo Raspini,Perosino Edoardo,50 Farfalla,28.81,430,no
+Trofeo Raspini,Perosino Edoardo,100 Misti,68.60,370,no
+Trofeo Raspini,Ruscelli Siria,50 Stile Libero,31.26,394,no
+Trofeo Raspini,Ruscelli Siria,100 Misti,82.56,320,no
+Trofeo Raspini,Speranza Lucrezia,50 Dorso,38.52,282,no
+Trofeo Raspini,Speranza Lucrezia,100 Misti,86.05,283,no
+Trofeo Raspini,Toniazzo Francesca,50 Stile Libero,33.99,307,no
+Trofeo Raspini,Toniazzo Francesca,50 Farfalla,42.31,191,no
+Trofeo Raspini,Bartalesi Beatrice,Mistaffetta 4x50 Stile Libero,116.15,433,no
+Trofeo Raspini,Toniazzo Francesca,Mistaffetta 4x50 Stile Libero,116.15,433,no
+Trofeo Raspini,Perosino Edoardo,Mistaffetta 4x50 Stile Libero,116.15,433,no
+Trofeo Raspini,Pedi Mattia,Mistaffetta 4x50 Stile Libero,116.15,433,no
+Trofeo Raspini,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,121.45,378,no
+Trofeo Raspini,Fiora Virginia,Mistaffetta 4x50 Stile Libero,121.45,378,no
+Trofeo Raspini,Farruggia Vittoria,Mistaffetta 4x50 Stile Libero,121.45,378,no
+Trofeo Raspini,Catalano Giovanni,Mistaffetta 4x50 Stile Libero,121.45,378,no
+Trofeo Raspini,Bartalesi Beatrice,50 Stile Libero,29.98,447,no
+Trofeo Raspini,Toniazzo Francesca,50 Stile Libero lanciato,33.55,319,no
+Trofeo Raspini,Perosino Edoardo,50 Stile Libero lanciato,25.73,481,no
+Trofeo Raspini,Pedi Mattia,50 Stile Libero lanciato,26.51,439,no
+Trofeo Raspini,Oliaro Giulio,50 Stile Libero,28.80,342,no
+Trofeo Raspini,Fiora Virginia,50 Stile Libero lanciato,31.91,371,no
+Trofeo Raspini,Farruggia Vittoria,50 Stile Libero lanciato,33.28,327,no
+Trofeo Raspini,Catalano Giovanni,50 Stile Libero lanciato,27.32,401,no
+44° Trofeo Della Resistenza,Bartalesi Beatrice,50 Stile Libero,30.41,471,no
+44° Trofeo Della Resistenza,Bartalesi Beatrice,100 Stile Libero,66.44,471,no
+44° Trofeo Della Resistenza,Bibbona Lucia,50 Stile Libero,34.61,319,no
+44° Trofeo Della Resistenza,Bibbona Lucia,100 Rana,98.54,275,no
+44° Trofeo Della Resistenza,Catalano Giovanni,50 Stile Libero,28.03,415,bronzo
+44° Trofeo Della Resistenza,Catalano Giovanni,100 Stile Libero,63.72,398,no
+44° Trofeo Della Resistenza,Damasio Gaia Ada,50 Stile Libero,33.09,366,no
+44° Trofeo Della Resistenza,Damasio Gaia Ada,100 Stile Libero,74.25,337,no
+44° Trofeo Della Resistenza,De Giorgi Alessandro,50 Stile Libero,29.94,340,no
+44° Trofeo Della Resistenza,De Giorgi Alessandro,100 Rana,86.32,286,argento
+44° Trofeo Della Resistenza,Farruggia Vittoria,50 Stile Libero,34.10,334,no
+44° Trofeo Della Resistenza,Farruggia Vittoria,100 Stile Libero,77.06,302,no
+44° Trofeo Della Resistenza,Ferrero Miriam,50 Stile Libero,36.96,262,no
+44° Trofeo Della Resistenza,Ferrero Miriam,100 Stile Libero,82.55,245,no
+44° Trofeo Della Resistenza,Fiora Virginia,50 Stile Libero,32.06,402,no
+44° Trofeo Della Resistenza,Fiora Virginia,100 Dorso,80.75,360,no
+44° Trofeo Della Resistenza,Ichim Alexandra,50 Stile Libero,33.37,356,no
+44° Trofeo Della Resistenza,Ichim Alexandra,100 Stile Libero,74.26,337,no
+44° Trofeo Della Resistenza,Manfrino Elisa,200 Stile Libero,171.69,284,no
+44° Trofeo Della Resistenza,Manfrino Elisa,100 Dorso,80.47,363,bronzo
+44° Trofeo Della Resistenza,Oliaro Giulio,50 Stile Libero,28.79,383,no
+44° Trofeo Della Resistenza,Oliaro Giulio,100 Stile Libero,64.72,380,no
+44° Trofeo Della Resistenza,Pedi Mattia,200 Stile Libero,136.68,415,argento
+44° Trofeo Della Resistenza,Pedi Mattia,100 Rana,82.17,331,oro
+44° Trofeo Della Resistenza,Perosino Edoardo,100 Farfalla,70.25,348,bronzo
+44° Trofeo Della Resistenza,Perosino Edoardo,100 Stile Libero,60.45,467,no
+44° Trofeo Della Resistenza,Ruscelli Siria,50 Stile Libero,31.15,438,argento
+44° Trofeo Della Resistenza,Ruscelli Siria,100 Stile Libero,68.33,433,bronzo
+44° Trofeo Della Resistenza,Tessitore Andrea,50 Stile Libero,29.73,347,no
+44° Trofeo Della Resistenza,Tessitore Andrea,100 Stile Libero,65.31,370,no
+44° Trofeo Della Resistenza,Toniazzo Francesca,50 Stile Libero,34.46,324,no
+44° Trofeo Della Resistenza,Toniazzo Francesca,100 Stile Libero,75.22,324,no
+44° Trofeo Della Resistenza,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,127.45,406,no
+44° Trofeo Della Resistenza,Manfrino Elisa,Staffetta 4x50 Stile Libero Femmine,127.45,406,no
+44° Trofeo Della Resistenza,Damasio Gaia Ada,Staffetta 4x50 Stile Libero Femmine,127.45,406,no
+44° Trofeo Della Resistenza,Bartalesi Beatrice,Staffetta 4x50 Stile Libero Femmine,127.45,406,no
+44° Trofeo Della Resistenza,Ruscelli Siria,50 Stile Libero,30.96,443,no
+44° Trofeo Della Resistenza,Manfrino Elisa,50 Stile Libero lanciato,33.69,344,no
+44° Trofeo Della Resistenza,Damasio Gaia Ada,50 Stile Libero lanciato,32.76,374,no
+44° Trofeo Della Resistenza,Bartalesi Beatrice,50 Stile Libero lanciato,29.62,506,no
+44° Trofeo Della Resistenza,Catalano Giovanni,Staffetta 4x50 Stile Libero Maschi,109.56,444,argento
+44° Trofeo Della Resistenza,Perosino Edoardo,Staffetta 4x50 Stile Libero Maschi,109.56,444,argento
+44° Trofeo Della Resistenza,Oliaro Giulio,Staffetta 4x50 Stile Libero Maschi,109.56,444,argento
+44° Trofeo Della Resistenza,Pedi Mattia,Staffetta 4x50 Stile Libero Maschi,109.56,444,argento
+44° Trofeo Della Resistenza,Catalano Giovanni,50 Stile Libero,27.44,442,no
+44° Trofeo Della Resistenza,Perosino Edoardo,50 Stile Libero lanciato,26.39,497,no
+44° Trofeo Della Resistenza,Oliaro Giulio,50 Stile Libero lanciato,28.49,395,no
+44° Trofeo Della Resistenza,Pedi Mattia,50 Stile Libero lanciato,26.89,470,no
+44° Trofeo Della Resistenza,Fiora Virginia,Mistaffetta 4x50 Misti,132.23,430,bronzo
+44° Trofeo Della Resistenza,De Giorgi Alessandro,Mistaffetta 4x50 Misti,132.23,430,bronzo
+44° Trofeo Della Resistenza,Perosino Edoardo,Mistaffetta 4x50 Misti,132.23,430,bronzo
+44° Trofeo Della Resistenza,Bartalesi Beatrice,Mistaffetta 4x50 Misti,132.23,430,bronzo
+44° Trofeo Della Resistenza,Fiora Virginia,50 Dorso,36.59,395,no
+44° Trofeo Della Resistenza,De Giorgi Alessandro,50 Rana lanciato,37.27,337,no
+44° Trofeo Della Resistenza,Perosino Edoardo,50 Farfalla lanciato,29.00,452,no
+44° Trofeo Della Resistenza,Bartalesi Beatrice,50 Stile Libero lanciato,29.07,535,no
+Campionati Regionali Open 2023,Bartalesi Beatrice,50 Stile Libero,31.30,432,no
+Campionati Regionali Open 2023,Bartalesi Beatrice,100 Stile Libero,67.15,456,no
+Campionati Regionali Open 2023,Bibbona Lucia,50 Rana,43.98,295,no
+Campionati Regionali Open 2023,Bibbona Lucia,100 Stile Libero,77.47,297,no
+Campionati Regionali Open 2023,Catalano Giovanni,50 Stile Libero,28.21,407,no
+Campionati Regionali Open 2023,Catalano Giovanni,100 Stile Libero,66.21,355,no
+Campionati Regionali Open 2023,De Giorgi Alessandro,50 Rana,37.92,320,no
+Campionati Regionali Open 2023,De Giorgi Alessandro,200 Rana,195.97,266,oro
+Campionati Regionali Open 2023,Farruggia Vittoria,50 Stile Libero,34.36,326,no
+Campionati Regionali Open 2023,Farruggia Vittoria,100 Stile Libero,75.75,318,no
+Campionati Regionali Open 2023,Ferrero Miriam,50 Stile Libero,35.81,288,no
+Campionati Regionali Open 2023,Ferrero Miriam,100 Stile Libero,79.28,277,no
+Campionati Regionali Open 2023,Fiora Virginia,50 Dorso,37.22,380,bronzo
+Campionati Regionali Open 2023,Fiora Virginia,100 Dorso,81.50,350,no
+Campionati Regionali Open 2023,Ichim Alexandra,50 Stile Libero,33.56,350,no
+Campionati Regionali Open 2023,Ichim Alexandra,100 Stile Libero,75.32,323,no
+Campionati Regionali Open 2023,Lambertoni Giulia,50 Stile Libero,37.94,242,no
+Campionati Regionali Open 2023,Lambertoni Giulia,50 Rana,46.01,258,no
+Campionati Regionali Open 2023,Manfrino Elisa,200 Dorso,175.29,348,argento
+Campionati Regionali Open 2023,Manfrino Elisa,100 Dorso,81.78,346,no
+Campionati Regionali Open 2023,Oliaro Giulio,50 Stile Libero,29.43,358,no
+Campionati Regionali Open 2023,Oliaro Giulio,100 Stile Libero,66.06,358,no
+Campionati Regionali Open 2023,Pedi Mattia,50 Rana,36.27,366,bronzo
+Campionati Regionali Open 2023,Pedi Mattia,200 Stile Libero,136.62,416,no
+Campionati Regionali Open 2023,Perosino Edoardo,50 Farfalla,29.21,443,oro
+Campionati Regionali Open 2023,Perosino Edoardo,100 Stile Libero,61.27,448,bronzo
+Campionati Regionali Open 2023,Ruscelli Siria,50 Stile Libero,31.59,420,no
+Campionati Regionali Open 2023,Ruscelli Siria,100 Stile Libero,69.62,409,no
+Campionati Regionali Open 2023,Speranza Lucrezia,50 Stile Libero,34.73,316,no
+Campionati Regionali Open 2023,Speranza Lucrezia,50 Dorso,39.92,308,no
+Campionati Regionali Open 2023,Toniazzo Francesca,50 Stile Libero,35.32,300,no
+Campionati Regionali Open 2023,Toniazzo Francesca,100 Stile Libero,76.20,312,no
+Campionati Regionali Open 2023,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,126.01,421,no
+Campionati Regionali Open 2023,Fiora Virginia,Staffetta 4x50 Stile Libero Femmine,126.01,421,no
+Campionati Regionali Open 2023,Ichim Alexandra,Staffetta 4x50 Stile Libero Femmine,126.01,421,no
+Campionati Regionali Open 2023,Bartalesi Beatrice,Staffetta 4x50 Stile Libero Femmine,126.01,421,no
+Campionati Regionali Open 2023,Perosino Edoardo,Staffetta 4x50 Stile Libero Maschi,109.98,439,bronzo
+Campionati Regionali Open 2023,Catalano Giovanni,Staffetta 4x50 Stile Libero Maschi,109.98,439,bronzo
+Campionati Regionali Open 2023,Oliaro Giulio,Staffetta 4x50 Stile Libero Maschi,109.98,439,bronzo
+Campionati Regionali Open 2023,Pedi Mattia,Staffetta 4x50 Stile Libero Maschi,109.98,439,bronzo
+Campionati Regionali Open 2023,Perosino Edoardo,50 Stile Libero,27.49,440,no
+Campionati Regionali Open 2023,Catalano Giovanni,50 Stile Libero lanciato,27.50,439,no
+Campionati Regionali Open 2023,Oliaro Giulio,50 Stile Libero lanciato,28.54,393,no
+Campionati Regionali Open 2023,Pedi Mattia,50 Stile Libero lanciato,26.45,494,no
+Campionati Regionali Open 2023,Manfrino Elisa,Staffetta 4x50 Misti Femmine,150.55,337,no
+Campionati Regionali Open 2023,Bibbona Lucia,Staffetta 4x50 Misti Femmine,150.55,337,no
+Campionati Regionali Open 2023,Speranza Lucrezia,Staffetta 4x50 Misti Femmine,150.55,337,no
+Campionati Regionali Open 2023,Bartalesi Beatrice,Staffetta 4x50 Misti Femmine,150.55,337,no
+Campionati Regionali Open 2023,Manfrino Elisa,50 Dorso,38.36,343,no
+Campionati Regionali Open 2023,Catalano Giovanni,Staffetta 4x50 Misti Maschi,127.91,396,no
+Campionati Regionali Open 2023,De Giorgi Alessandro,Staffetta 4x50 Misti Maschi,127.91,396,no
+Campionati Regionali Open 2023,Perosino Edoardo,Staffetta 4x50 Misti Maschi,127.91,396,no
+Campionati Regionali Open 2023,Pedi Mattia,Staffetta 4x50 Misti Maschi,127.91,396,no
+Campionati Regionali Open 2023,Catalano Giovanni,50 Dorso,34.61,315,no
+Campionati Regionali Open 2023,De Giorgi Alessandro,50 Rana lanciato,37.44,332,no
+Campionati Regionali Open 2023,Perosino Edoardo,50 Farfalla lanciato,29.04,450,no
+Campionati Regionali Open 2023,Pedi Mattia,50 Stile Libero lanciato,26.56,487,no
+Campionati Nazionali Estivi 2023 Giorno 1,Bibbona Lucia,50 Rana,42.98,316,no
+Campionati Nazionali Estivi 2023 Giorno 2,Bibbona Lucia,100 Rana,96.99,289,no
+Campionati Nazionali Estivi 2023 Giorno 2,Bibbona Lucia,200 Rana,214.16,273,no
+Campionati Nazionali Estivi 2023 Giorno 2,Catalano Giovanni,50 Dorso,35.27,307,no
+Campionati Nazionali Estivi 2023 Giorno 2,Catalano Giovanni,100 Stile Libero,63.80,397,no
+Campionati Nazionali Estivi 2023 Giorno 3,Catalano Giovanni,50 Stile Libero,28.20,407,no
+Campionati Nazionali Estivi 2023 Giorno 1,Damasio Gaia Ada,50 Rana,49.55,206,no
+Campionati Nazionali Estivi 2023 Giorno 2,Damasio Gaia Ada,100 Stile Libero,74.96,328,no
+Campionati Nazionali Estivi 2023 Giorno 3,Damasio Gaia Ada,50 Stile Libero,32.90,372,no
+Campionati Nazionali Estivi 2023 Giorno 1,De Giorgi Alessandro,50 Rana,38.35,309,no
+Campionati Nazionali Estivi 2023 Giorno 2,De Giorgi Alessandro,100 Rana,87.05,278,no
+Campionati Nazionali Estivi 2023 Giorno 2,De Giorgi Alessandro,200 Rana,197.89,258,no
+Campionati Nazionali Estivi 2023 Giorno 1,Ferrero Miriam,50 Rana,47.18,239,no
+Campionati Nazionali Estivi 2023 Giorno 2,Ferrero Miriam,100 Stile Libero,81.83,252,no
+Campionati Nazionali Estivi 2023 Giorno 3,Ferrero Miriam,50 Stile Libero,37.90,243,no
+Campionati Nazionali Estivi 2023 Giorno 1,Fiora Virginia,100 Dorso,80.67,361,no
+Campionati Nazionali Estivi 2023 Giorno 2,Fiora Virginia,50 Dorso,37.99,358,no
+Campionati Nazionali Estivi 2023 Giorno 3,Fiora Virginia,50 Stile Libero,32.34,392,no
+Campionati Nazionali Estivi 2023 Giorno 2,Ichim Alexandra,50 Dorso,40.96,285,no
+Campionati Nazionali Estivi 2023 Giorno 2,Ichim Alexandra,100 Stile Libero,74.97,328,no
+Campionati Nazionali Estivi 2023 Giorno 3,Ichim Alexandra,50 Stile Libero,33.38,356,no
+Campionati Nazionali Estivi 2023 Giorno 2,Oliaro Giulio,100 Stile Libero,65.75,363,no
+Campionati Nazionali Estivi 2023 Giorno 2,Oliaro Giulio,50 Farfalla,35.71,242,no
+Campionati Nazionali Estivi 2023 Giorno 3,Oliaro Giulio,50 Stile Libero,29.32,362,no
+Campionati Nazionali Estivi 2023 Giorno 2,Pedi Mattia,200 Stile Libero,134.95,431,argento
+Campionati Nazionali Estivi 2023 Giorno 2,Pedi Mattia,100 Stile Libero,59.41,492,no
+Campionati Nazionali Estivi 2023 Giorno 3,Pedi Mattia,50 Stile Libero,27.48,440,no
+Campionati Nazionali Estivi 2023 Giorno 2,Perosino Edoardo,100 Stile Libero,60.82,458,no
+Campionati Nazionali Estivi 2023 Giorno 2,Perosino Edoardo,50 Farfalla,28.70,467,no
+Campionati Nazionali Estivi 2023 Giorno 3,Perosino Edoardo,50 Stile Libero,27.14,457,no
+Campionati Nazionali Estivi 2023 Giorno 2,Ruscelli Siria,100 Stile Libero,70.16,400,no
+Campionati Nazionali Estivi 2023 Giorno 2,Ruscelli Siria,200 Stile Libero,158.92,359,no
+Campionati Nazionali Estivi 2023 Giorno 3,Ruscelli Siria,50 Stile Libero,31.48,425,no
+Campionati Nazionali Estivi 2023 Giorno 2,Toniazzo Francesca,100 Stile Libero,75.87,316,no
+Campionati Nazionali Estivi 2023 Giorno 2,Toniazzo Francesca,200 Stile Libero,172.45,281,no
+Campionati Nazionali Estivi 2023 Giorno 3,Toniazzo Francesca,50 Stile Libero,34.82,314,no
+Campionati Nazionali Estivi 2023 Giorno 1,Fiora Virginia,Mistaffetta 4x50 Misti,134.94,401,no
+Campionati Nazionali Estivi 2023 Giorno 1,De Giorgi Alessandro,Mistaffetta 4x50 Misti,134.94,401,no
+Campionati Nazionali Estivi 2023 Giorno 1,Perosino Edoardo,Mistaffetta 4x50 Misti,134.94,401,no
+Campionati Nazionali Estivi 2023 Giorno 1,Ruscelli Siria,Mistaffetta 4x50 Misti,134.94,401,no
+Campionati Nazionali Estivi 2023 Giorno 1,Fiora Virginia,50 Dorso,38.02,352,no
+Campionati Nazionali Estivi 2023 Giorno 1,De Giorgi Alessandro,50 Rana lanciato,37.04,343,no
+Campionati Nazionali Estivi 2023 Giorno 1,Perosino Edoardo,50 Farfalla lanciato,29.56,427,no
+Campionati Nazionali Estivi 2023 Giorno 1,Ruscelli Siria,50 Stile Libero lanciato,30.12,481,no
+Campionati Nazionali Estivi 2023 Giorno 2,Fiora Virginia,Staffetta 4x50 Misti Femmine,154.59,311,no
+Campionati Nazionali Estivi 2023 Giorno 2,Bibbona Lucia,Staffetta 4x50 Misti Femmine,154.59,311,no
+Campionati Nazionali Estivi 2023 Giorno 2,Ferrero Miriam,Staffetta 4x50 Misti Femmine,154.59,311,no
+Campionati Nazionali Estivi 2023 Giorno 2,Damasio Gaia Ada,Staffetta 4x50 Misti Femmine,154.59,311,no
+Campionati Nazionali Estivi 2023 Giorno 2,Catalano Giovanni,Staffetta 4x50 Misti Maschi,127.73,396,no
+Campionati Nazionali Estivi 2023 Giorno 2,De Giorgi Alessandro,Staffetta 4x50 Misti Maschi,127.73,396,no
+Campionati Nazionali Estivi 2023 Giorno 2,Perosino Edoardo,Staffetta 4x50 Misti Maschi,127.73,396,no
+Campionati Nazionali Estivi 2023 Giorno 2,Pedi Mattia,Staffetta 4x50 Misti Maschi,127.73,396,no
+Campionati Nazionali Estivi 2023 Giorno 2,Catalano Giovanni,50 Dorso,34.20,326,no
+Campionati Nazionali Estivi 2023 Giorno 2,De Giorgi Alessandro,50 Rana lanciato,37.97,319,no
+Campionati Nazionali Estivi 2023 Giorno 2,Perosino Edoardo,50 Farfalla lanciato,28.72,466,no
+Campionati Nazionali Estivi 2023 Giorno 2,Pedi Mattia,50 Stile Libero lanciato,26.84,472,no
+Campionati Nazionali Estivi 2023 Giorno 2,Ruscelli Siria,Mistaffetta 4x50 Stile Libero,117.57,439,no
+Campionati Nazionali Estivi 2023 Giorno 2,Toniazzo Francesca,Mistaffetta 4x50 Stile Libero,117.57,439,no
+Campionati Nazionali Estivi 2023 Giorno 2,Pedi Mattia,Mistaffetta 4x50 Stile Libero,117.57,439,no
+Campionati Nazionali Estivi 2023 Giorno 2,Perosino Edoardo,Mistaffetta 4x50 Stile Libero,117.57,439,no
+Campionati Nazionali Estivi 2023 Giorno 2,Ruscelli Siria,50 Stile Libero,30.90,446,no
+Campionati Nazionali Estivi 2023 Giorno 2,Toniazzo Francesca,50 Stile Libero lanciato,33.94,351,no
+Campionati Nazionali Estivi 2023 Giorno 2,Perosino Edoardo,50 Stile Libero lanciato,26.40,496,no
+Campionati Nazionali Estivi 2023 Giorno 2,Pedi Mattia,50 Stile Libero lanciato,27.03,462,no
+Campionati Nazionali Estivi 2023 Giorno 3,Ichim Alexandra,Staffetta 4x50 Stile Libero Femmine,130.03,383,no
+Campionati Nazionali Estivi 2023 Giorno 3,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,130.03,383,no
+Campionati Nazionali Estivi 2023 Giorno 3,Fiora Virginia,Staffetta 4x50 Stile Libero Femmine,130.03,383,no
+Campionati Nazionali Estivi 2023 Giorno 3,Toniazzo Francesca,Staffetta 4x50 Stile Libero Femmine,130.03,383,no
+Campionati Nazionali Estivi 2023 Giorno 3,Ichim Alexandra,50 Stile Libero,33.13,361,no
+Campionati Nazionali Estivi 2023 Giorno 3,Fiora Virginia,50 Stile Libero lanciato,32.21,393,no
+Campionati Nazionali Estivi 2023 Giorno 3,Ruscelli Siria,50 Stile Libero lanciato,30.65,457,no
+Campionati Nazionali Estivi 2023 Giorno 3,Toniazzo Francesca,50 Stile Libero lanciato,34.04,333,no
+Campionati Nazionali Estivi 2023 Giorno 3,Perosino Edoardo,Staffetta 4x50 Stile Libero Maschi,110.37,435,no
+Campionati Nazionali Estivi 2023 Giorno 3,Catalano Giovanni,Staffetta 4x50 Stile Libero Maschi,110.37,435,no
+Campionati Nazionali Estivi 2023 Giorno 3,Oliaro Giulio,Staffetta 4x50 Stile Libero Maschi,110.37,435,no
+Campionati Nazionali Estivi 2023 Giorno 3,Pedi Mattia,Staffetta 4x50 Stile Libero Maschi,110.37,435,no
+Campionati Nazionali Estivi 2023 Giorno 3,Perosino Edoardo,50 Stile Libero,27.09,459,no
+Campionati Nazionali Estivi 2023 Giorno 3,Catalano Giovanni,50 Stile Libero lanciato,27.88,421,no
+Campionati Nazionali Estivi 2023 Giorno 3,Oliaro Giulio,50 Stile Libero lanciato,29.03,373,no
+Campionati Nazionali Estivi 2023 Giorno 3,Pedi Mattia,50 Stile Libero lanciato,26.37,498,no
+Coppa Autunno,Bagnasco Giulia,50 Stile Libero,36.53,247,no
+Coppa Autunno,Bagnasco Giulia,100 Rana,104.42,212,no
+Coppa Autunno,Bartalesi Beatrice,100 Stile Libero,66.07,439,no
+Coppa Autunno,Bartalesi Beatrice,200 Stile Libero,146.21,429,no
+Coppa Autunno,Belmare Diego,50 Stile Libero,29.49,319,no
+Coppa Autunno,Belmare Diego,100 Stile Libero,67.90,287,no
+Coppa Autunno,Bibbona Lucia,50 Stile Libero,33.85,310,no
+Coppa Autunno,Bibbona Lucia,100 Rana,93.67,295,no
+Coppa Autunno,Catalano Giovanni,50 Stile Libero,27.47,395,bronzo
+Coppa Autunno,Catalano Giovanni,100 Stile Libero,63.50,352,no
+Coppa Autunno,Cecire Vittoria,50 Stile Libero,31.18,397,oro
+Coppa Autunno,Cecire Vittoria,100 Stile Libero,73.71,316,no
+Coppa Autunno,De Giorgi Alessandro,50 Stile Libero,28.40,357,no
+Coppa Autunno,De Giorgi Alessandro,100 Rana,82.66,299,bronzo
+Coppa Autunno,Farruggia Vittoria,50 Stile Libero,32.94,337,no
+Coppa Autunno,Farruggia Vittoria,100 Stile Libero,74.39,308,no
+Coppa Autunno,Fiora Virginia,50 Stile Libero,31.22,396,no
+Coppa Autunno,Fiora Virginia,100 Dorso,78.96,335,no
+Coppa Autunno,Ichim Alexandra,50 Stile Libero,31.10,400,no
+Coppa Autunno,Ichim Alexandra,100 Stile Libero,70.34,364,no
+Coppa Autunno,Ingrosso Emma,50 Stile Libero,34.27,299,no
+Coppa Autunno,Ingrosso Emma,100 Stile Libero,78.21,265,no
+Coppa Autunno,Lambertoni Giulia,50 Stile Libero,37.17,234,no
+Coppa Autunno,Lambertoni Giulia,100 Rana,99.42,246,no
+Coppa Autunno,Lucchese Camilla,50 Stile Libero,35.50,269,no
+Coppa Autunno,Lucchese Camilla,100 Stile Libero,78.49,262,no
+Coppa Autunno,Manfrino Elisa,100 Dorso,80.97,311,no
+Coppa Autunno,Manfrino Elisa,200 Stile Libero,157.46,343,no
+Coppa Autunno,Martini Lorenzo,50 Stile Libero,33.89,210,no
+Coppa Autunno,Martini Lorenzo,100 Stile Libero,79.11,182,no
+Coppa Autunno,Oliaro Giulio,50 Stile Libero,27.92,376,argento
+Coppa Autunno,Oliaro Giulio,100 Stile Libero,64.46,336,no
+Coppa Autunno,Perosino Edoardo,100 Farfalla,65.70,384,argento
+Coppa Autunno,Perosino Edoardo,100 Stile Libero,57.69,469,no
+Coppa Autunno,Ruscelli Siria,50 Stile Libero,30.97,405,no
+Coppa Autunno,Ruscelli Siria,100 Stile Libero,67.91,405,bronzo
+Coppa Autunno,Savant Ros Sveva,50 Stile Libero,34.77,286,no
+Coppa Autunno,Savant Ros Sveva,100 Stile Libero,80.59,242,no
+Coppa Autunno,Toniazzo Francesca,50 Stile Libero,34.58,291,no
+Coppa Autunno,Toniazzo Francesca,100 Stile Libero,76.16,287,no
+Coppa Autunno,Ichim Alexandra,Staffetta 4x50 Stile Libero Femmine,133.44,333,no
+Coppa Autunno,Farruggia Vittoria,Staffetta 4x50 Stile Libero Femmine,133.44,333,no
+Coppa Autunno,Ingrosso Emma,Staffetta 4x50 Stile Libero Femmine,133.44,333,no
+Coppa Autunno,Fiora Virginia,Staffetta 4x50 Stile Libero Femmine,133.44,333,no
+Coppa Autunno,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,126.81,388,no
+Coppa Autunno,Toniazzo Francesca,Staffetta 4x50 Stile Libero Femmine,126.81,388,no
+Coppa Autunno,Cecire Vittoria,Staffetta 4x50 Stile Libero Femmine,126.81,388,no
+Coppa Autunno,Bartalesi Beatrice,Staffetta 4x50 Stile Libero Femmine,126.81,388,no
+Coppa Autunno,Oliaro Giulio,Staffetta 4x50 Stile Libero Maschi,111.83,391,argento
+Coppa Autunno,De Giorgi Alessandro,Staffetta 4x50 Stile Libero Maschi,111.83,391,argento
+Coppa Autunno,Catalano Giovanni,Staffetta 4x50 Stile Libero Maschi,111.83,391,argento
+Coppa Autunno,Perosino Edoardo,Staffetta 4x50 Stile Libero Maschi,111.83,391,argento
+Coppa Autunno,Oliaro Giulio,50 Stile Libero,28.79,343,no
+Coppa Autunno,De Giorgi Alessandro,50 Stile Libero lanciato,28.22,364,no
+Coppa Autunno,Catalano Giovanni,50 Stile Libero lanciato,27.46,395,no
+Coppa Autunno,Perosino Edoardo,50 Stile Libero lanciato,27.18,408,no
+Campionati Nazionali Invernali Master 2023,Manfrino Elisa,100 Dorso,80.68,314,no
+Campionati Nazionali Invernali Master 2023,Manfrino Elisa,100 Stile Libero,74.07,312,no
+18° Memorial Davide Cagnotto,Belmare Diego,50 Dorso,39.22,179,bronzo
+18° Memorial Davide Cagnotto,Belmare Diego,100 Stile Libero,69.73,265,no
+18° Memorial Davide Cagnotto,Cecire Vittoria,50 Farfalla,40.53,217,no
+18° Memorial Davide Cagnotto,Cecire Vittoria,100 Stile Libero,72.12,338,no
+18° Memorial Davide Cagnotto,De Giorgi Alessandro,50 Farfalla,34.07,257,no
+18° Memorial Davide Cagnotto,De Giorgi Alessandro,100 Rana,83.19,293,oro
+18° Memorial Davide Cagnotto,Farruggia Vittoria,50 Dorso,43.85,190,no
+18° Memorial Davide Cagnotto,Farruggia Vittoria,100 Stile Libero,73.21,323,no
+18° Memorial Davide Cagnotto,Ichim Alexandra,50 Dorso,39.64,258,no
+18° Memorial Davide Cagnotto,Ichim Alexandra,100 Stile Libero,72.03,339,no
+18° Memorial Davide Cagnotto,Ingrosso Emma,50 Farfalla,37.15,282,bronzo
+18° Memorial Davide Cagnotto,Ingrosso Emma,100 Stile Libero,75.89,290,no
+18° Memorial Davide Cagnotto,Lambertoni Giulia,100 Stile Libero,84.94,207,no
+18° Memorial Davide Cagnotto,Lambertoni Giulia,100 Rana,100.43,239,bronzo
+18° Memorial Davide Cagnotto,Lucchese Camilla,50 Farfalla,40.19,223,no
+18° Memorial Davide Cagnotto,Lucchese Camilla,100 Stile Libero,77.57,271,no
+18° Memorial Davide Cagnotto,Manfrino Elisa,50 Dorso,38.40,284,oro
+18° Memorial Davide Cagnotto,Manfrino Elisa,200 Stile Libero,163.24,308,no
+18° Memorial Davide Cagnotto,Martini Lorenzo,50 Dorso,44.10,126,bronzo
+18° Memorial Davide Cagnotto,Martini Lorenzo,100 Stile Libero,78.96,257,no
+18° Memorial Davide Cagnotto,Oliaro Giulio,50 Farfalla,31.52,328,argento
+18° Memorial Davide Cagnotto,Oliaro Giulio,100 Stile Libero,63.76,347,argento
+18° Memorial Davide Cagnotto,Perosino Edoardo,50 Farfalla,28.55,442,bronzo
+18° Memorial Davide Cagnotto,Perosino Edoardo,100 Stile Libero,58.71,445,no
+18° Memorial Davide Cagnotto,Savant Ros Sveva,50 Dorso,41.81,220,bronzo
+18° Memorial Davide Cagnotto,Savant Ros Sveva,100 Stile Libero,81.48,234,no
+18° Memorial Davide Cagnotto,Toniazzo Francesca,50 Farfalla,43.82,172,no
+18° Memorial Davide Cagnotto,Toniazzo Francesca,100 Stile Libero,76.90,279,no
+18° Memorial Davide Cagnotto,Farruggia Vittoria,Mistaffetta 4x50 Stile Libero,124.29,346,argento
+18° Memorial Davide Cagnotto,Belmare Diego,Mistaffetta 4x50 Stile Libero,124.29,346,argento
+18° Memorial Davide Cagnotto,Ichim Alexandra,Mistaffetta 4x50 Stile Libero,124.29,346,argento
+18° Memorial Davide Cagnotto,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,124.29,346,argento
+18° Memorial Davide Cagnotto,Farruggia Vittoria,50 Stile Libero,32.73,343,no
+18° Memorial Davide Cagnotto,Belmare Diego,50 Stile Libero lanciato,30.49,289,no
+18° Memorial Davide Cagnotto,Ichim Alexandra,50 Stile Libero lanciato,32.62,347,no
+18° Memorial Davide Cagnotto,Oliaro Giulio,50 Stile Libero lanciato,28.53,352,no
+18° Memorial Davide Cagnotto,Toniazzo Francesca,Mistaffetta 4x50 Stile Libero,120.29,382,bronzo
+18° Memorial Davide Cagnotto,De Giorgi Alessandro,Mistaffetta 4x50 Stile Libero,120.29,382,bronzo
+18° Memorial Davide Cagnotto,Cecire Vittoria,Mistaffetta 4x50 Stile Libero,120.29,382,bronzo
+18° Memorial Davide Cagnotto,Perosino Edoardo,Mistaffetta 4x50 Stile Libero,120.29,382,bronzo
+18° Memorial Davide Cagnotto,Toniazzo Francesca,50 Stile Libero,35.18,276,no
+18° Memorial Davide Cagnotto,De Giorgi Alessandro,50 Stile Libero lanciato,28.13,368,no
+18° Memorial Davide Cagnotto,Cecire Vittoria,50 Stile Libero lanciato,30.96,406,no
+18° Memorial Davide Cagnotto,Perosino Edoardo,50 Stile Libero lanciato,26.30,450,no
+18° Memorial Davide Cagnotto,Belmare Diego,Mistaffetta 4x50 Misti,144.38,286,bronzo
+18° Memorial Davide Cagnotto,Ichim Alexandra,Mistaffetta 4x50 Misti,144.38,286,bronzo
+18° Memorial Davide Cagnotto,Oliaro Giulio,Mistaffetta 4x50 Misti,144.38,286,bronzo
+18° Memorial Davide Cagnotto,Cecire Vittoria,Mistaffetta 4x50 Misti,144.38,286,bronzo
+18° Memorial Davide Cagnotto,Manfrino Elisa,Mistaffetta 4x50 Misti,140.39,311,no
+18° Memorial Davide Cagnotto,De Giorgi Alessandro,Mistaffetta 4x50 Misti,140.39,311,no
+18° Memorial Davide Cagnotto,Perosino Edoardo,Mistaffetta 4x50 Misti,140.39,311,no
+18° Memorial Davide Cagnotto,Toniazzo Francesca,Mistaffetta 4x50 Misti,140.39,311,no
+18° Memorial Davide Cagnotto,Belmare Diego,50 Dorso,38.73,186,no
+18° Memorial Davide Cagnotto,Ichim Alexandra,50 Rana lanciato,41.35,322,no
+18° Memorial Davide Cagnotto,Oliaro Giulio,50 Farfalla lanciato,31.85,318,no
+18° Memorial Davide Cagnotto,Cecire Vittoria,50 Stile Libero lanciato,32.49,351,no
+18° Memorial Davide Cagnotto,Manfrino Elisa,50 Dorso,38.78,276,no
+18° Memorial Davide Cagnotto,De Giorgi Alessandro,50 Rana lanciato,36.92,308,no
+18° Memorial Davide Cagnotto,Perosino Edoardo,50 Farfalla lanciato,29.40,404,no
+18° Memorial Davide Cagnotto,Toniazzo Francesca,50 Stile Libero lanciato,35.15,277,no
+1ª Giornata Pentathlon 2024,Bagnasco Giulia,200 Misti,214.15,184,no
+1ª Giornata Pentathlon 2024,Bartalesi Beatrice,200 Misti,171.17,360,no
+1ª Giornata Pentathlon 2024,Bartalesi Beatrice,100 Dorso,81.29,307,no
+1ª Giornata Pentathlon 2024,Belmare Diego,200 Misti,181.88,218,no
+1ª Giornata Pentathlon 2024,Belmare Diego,100 Dorso,85.69,179,no
+1ª Giornata Pentathlon 2024,Ichim Alexandra,100 Dorso,89.78,228,no
+1ª Giornata Pentathlon 2024,Ingrosso Emma,200 Misti,186.33,279,no
+1ª Giornata Pentathlon 2024,Ingrosso Emma,100 Dorso,93.42,202,no
+1ª Giornata Pentathlon 2024,Lucchese Camilla,200 Misti,202.21,218,no
+1ª Giornata Pentathlon 2024,Lucchese Camilla,100 Dorso,85.97,260,no
+1ª Giornata Pentathlon 2024,Oliaro Giulio,200 Misti,162.79,305,no
+1ª Giornata Pentathlon 2024,Oliaro Giulio,100 Dorso,76.27,254,no
+1ª Giornata Pentathlon 2024,Perosino Edoardo,200 Misti,148.87,399,no
+1ª Giornata Pentathlon 2024,Perosino Edoardo,100 Dorso,73.46,284,no
+2ª Giornata Pentathlon 2024,Bagnasco Giulia,100 Stile Libero,78.40,263,no
+2ª Giornata Pentathlon 2024,Bagnasco Giulia,100 Farfalla,102.20,147,no
+2ª Giornata Pentathlon 2024,Bagnasco Giulia,100 Rana,107.43,195,no
+2ª Giornata Pentathlon 2024,Bartalesi Beatrice,100 Stile Libero,65.16,458,no
+2ª Giornata Pentathlon 2024,Bartalesi Beatrice,100 Farfalla,81.49,291,no
+2ª Giornata Pentathlon 2024,Bartalesi Beatrice,100 Rana,85.02,394,no
+2ª Giornata Pentathlon 2024,Catalano Giovanni,100 Stile Libero,64.98,328,no
+2ª Giornata Pentathlon 2024,Cecire Vittoria,100 Stile Libero,69.10,384,no
+2ª Giornata Pentathlon 2024,Farruggia Vittoria,100 Stile Libero,72.84,328,no
+2ª Giornata Pentathlon 2024,Ichim Alexandra,100 Stile Libero,70.11,368,no
+2ª Giornata Pentathlon 2024,Ichim Alexandra,100 Farfalla,87.39,236,no
+2ª Giornata Pentathlon 2024,Ichim Alexandra,100 Rana,95.52,278,no
+2ª Giornata Pentathlon 2024,Ingrosso Emma,100 Stile Libero,73.23,323,no
+2ª Giornata Pentathlon 2024,Ingrosso Emma,100 Farfalla,83.62,270,no
+2ª Giornata Pentathlon 2024,Ingrosso Emma,100 Rana,98.51,253,no
+2ª Giornata Pentathlon 2024,Lambertoni Giulia,100 Stile Libero,81.54,234,no
+2ª Giornata Pentathlon 2024,Lambertoni Giulia,100 Rana,96.30,271,no
+2ª Giornata Pentathlon 2024,Lucchese Camilla,100 Stile Libero,73.90,314,no
+2ª Giornata Pentathlon 2024,Lucchese Camilla,100 Farfalla,97.96,167,no
+2ª Giornata Pentathlon 2024,Lucchese Camilla,100 Rana,103.13,221,no
+2ª Giornata Pentathlon 2024,Martini Lorenzo,100 Stile Libero,76.93,198,no
+2ª Giornata Pentathlon 2024,Oliaro Giulio,100 Stile Libero,60.23,412,no
+2ª Giornata Pentathlon 2024,Oliaro Giulio,100 Farfalla,71.56,297,no
+2ª Giornata Pentathlon 2024,Oliaro Giulio,100 Rana,88.83,241,no
+2ª Giornata Pentathlon 2024,Perosino Edoardo,100 Stile Libero,57.36,477,argento
+2ª Giornata Pentathlon 2024,Perosino Edoardo,100 Farfalla,61.71,464,no
+2ª Giornata Pentathlon 2024,Perosino Edoardo,100 Rana,75.64,390,no
+Coppa Piemonte,Bagnasco Giulia,100 Stile Libero,77.50,272,no
+Coppa Piemonte,Bagnasco Giulia,50 Rana,48.53,199,no
+Coppa Piemonte,Bartalesi Beatrice,100 Stile Libero,64.13,481,no
+Coppa Piemonte,Bartalesi Beatrice,50 Stile Libero,29.34,477,no
+Coppa Piemonte,Belmare Diego,100 Stile Libero,67.62,291,no
+Coppa Piemonte,Belmare Diego,50 Stile Libero,29.47,320,no
+Coppa Piemonte,Bibbona Lucia,100 Stile Libero,74.41,307,no
+Coppa Piemonte,Bibbona Lucia,50 Rana,41.50,319,no
+Coppa Piemonte,Catalano Giovanni,100 Stile Libero,62.92,361,no
+Coppa Piemonte,Catalano Giovanni,50 Stile Libero,27.14,409,no
+Coppa Piemonte,Cecire Vittoria,100 Stile Libero,70.89,356,no
+Coppa Piemonte,Cecire Vittoria,50 Rana,43.28,281,no
+Coppa Piemonte,De Giorgi Alessandro,50 Stile Libero,28.09,369,no
+Coppa Piemonte,De Giorgi Alessandro,50 Rana,36.12,329,no
+Coppa Piemonte,Farruggia Vittoria,50 Stile Libero,32.49,351,no
+Coppa Piemonte,Farruggia Vittoria,100 Stile Libero,72.58,331,no
+Coppa Piemonte,Ichim Alexandra,50 Stile Libero,31.48,386,no
+Coppa Piemonte,Ichim Alexandra,50 Rana,41.71,314,no
+Coppa Piemonte,Ingrosso Emma,50 Stile Libero,32.68,345,no
+Coppa Piemonte,Ingrosso Emma,100 Farfalla,83.81,268,no
+Coppa Piemonte,Lambertoni Giulia,100 Rana,96.03,273,no
+Coppa Piemonte,Lambertoni Giulia,50 Rana,42.47,298,no
+Coppa Piemonte,Lucchese Camilla,50 Stile Libero,33.95,308,no
+Coppa Piemonte,Lucchese Camilla,100 Dorso,84.56,273,no
+Coppa Piemonte,Manfrino Elisa,100 Stile Libero,73.75,316,no
+Coppa Piemonte,Manfrino Elisa,100 Dorso,82.15,298,no
+Coppa Piemonte,Oliaro Giulio,50 Stile Libero,28.33,360,bronzo
+Coppa Piemonte,Oliaro Giulio,100 Stile Libero,62.58,367,argento
+Coppa Piemonte,Perosino Edoardo,50 Rana,33.02,431,bronzo
+Coppa Piemonte,Perosino Edoardo,100 Stile Libero,57.21,481,no
+Coppa Piemonte,Ruscelli Siria,50 Stile Libero,30.34,431,argento
+Coppa Piemonte,Ruscelli Siria,50 Rana,38.26,407,no
+Coppa Piemonte,Savant Ros Sveva,50 Stile Libero,34.78,286,no
+Coppa Piemonte,Savant Ros Sveva,100 Stile Libero,76.38,284,no
+Coppa Piemonte,Bagnasco Giulia,Staffetta 4x100 Stile Libero Femmine,299.35,323,no
+Coppa Piemonte,Lucchese Camilla,Staffetta 4x100 Stile Libero Femmine,299.35,323,no
+Coppa Piemonte,Farruggia Vittoria,Staffetta 4x100 Stile Libero Femmine,299.35,323,no
+Coppa Piemonte,Ingrosso Emma,Staffetta 4x100 Stile Libero Femmine,299.35,323,no
+Coppa Piemonte,Ichim Alexandra,Staffetta 4x100 Stile Libero Femmine,272.15,430,no
+Coppa Piemonte,Cecire Vittoria,Staffetta 4x100 Stile Libero Femmine,272.15,430,no
+Coppa Piemonte,Ruscelli Siria,Staffetta 4x100 Stile Libero Femmine,272.15,430,no
+Coppa Piemonte,Bartalesi Beatrice,Staffetta 4x100 Stile Libero Femmine,272.15,430,no
+Coppa Piemonte,Oliaro Giulio,Staffetta 4x100 Stile Libero Maschi,246.20,408,no
+Coppa Piemonte,Catalano Giovanni,Staffetta 4x100 Stile Libero Maschi,246.20,408,no
+Coppa Piemonte,De Giorgi Alessandro,Staffetta 4x100 Stile Libero Maschi,246.20,408,no
+Coppa Piemonte,Perosino Edoardo,Staffetta 4x100 Stile Libero Maschi,246.20,408,no
+Coppa Piemonte,Oliaro Giulio,100 Stile Libero,61.51,387,no
+Coppa Piemonte,Catalano Giovanni,100 Stile Libero lanciato,62.76,364,no
+Coppa Piemonte,De Giorgi Alessandro,100 Stile Libero lanciato,63.78,347,no
+Coppa Piemonte,Perosino Edoardo,100 Stile Libero lanciato,58.25,456,no
+Coppa Piemonte,Catalano Giovanni,Mistaffetta 4x100 Misti,314.04,294,no
+Coppa Piemonte,Ruscelli Siria,Mistaffetta 4x100 Misti,314.04,294,no
+Coppa Piemonte,Oliaro Giulio,Mistaffetta 4x100 Misti,314.04,294,no
+Coppa Piemonte,Cecire Vittoria,Mistaffetta 4x100 Misti,314.04,294,no
+Coppa Piemonte,Manfrino Elisa,Mistaffetta 4x100 Misti,289.50,384,no
+Coppa Piemonte,De Giorgi Alessandro,Mistaffetta 4x100 Misti,289.50,384,no
+Coppa Piemonte,Perosino Edoardo,Mistaffetta 4x100 Misti,289.50,384,no
+Coppa Piemonte,Bartalesi Beatrice,Mistaffetta 4x100 Misti,289.50,384,no
+Coppa Piemonte,Ruscelli Siria,100 Rana lanciato,85.96,381,no
+Coppa Piemonte,Oliaro Giulio,100 Farfalla lanciato,77.00,238,no
+Coppa Piemonte,Manfrino Elisa,100 Dorso,81.28,307,no
+Coppa Piemonte,De Giorgi Alessandro,100 Rana lanciato,80.40,325,no
+Coppa Piemonte,Perosino Edoardo,100 Farfalla lanciato,63.83,419,no
+Coppa Piemonte,Bartalesi Beatrice,100 Stile Libero lanciato,63.99,484,no
+45° Trofeo Della Resistenza,Bagnasco Giulia,100 Stile Libero,81.77,252,no
+45° Trofeo Della Resistenza,Bagnasco Giulia,50 Stile Libero,37.19,257,no
+45° Trofeo Della Resistenza,Belmare Diego,100 Stile Libero,69.37,309,no
+45° Trofeo Della Resistenza,Belmare Diego,50 Stile Libero,30.41,325,no
+45° Trofeo Della Resistenza,Catalano Giovanni,100 Stile Libero,63.48,403,bronzo
+45° Trofeo Della Resistenza,Catalano Giovanni,50 Stile Libero,27.68,431,argento
+45° Trofeo Della Resistenza,De Giorgi Alessandro,100 Rana,84.73,302,no
+45° Trofeo Della Resistenza,De Giorgi Alessandro,50 Stile Libero,29.13,369,no
+45° Trofeo Della Resistenza,Farruggia Vittoria,100 Stile Libero,74.34,336,no
+45° Trofeo Della Resistenza,Farruggia Vittoria,50 Stile Libero,33.05,367,no
+45° Trofeo Della Resistenza,Ichim Alexandra,100 Stile Libero,70.86,388,no
+45° Trofeo Della Resistenza,Ichim Alexandra,50 Stile Libero,31.87,409,no
+45° Trofeo Della Resistenza,Ingrosso Emma,100 Farfalla,85.65,271,no
+45° Trofeo Della Resistenza,Ingrosso Emma,50 Stile Libero,33.87,341,no
+45° Trofeo Della Resistenza,Lambertoni Giulia,100 Rana,98.93,272,no
+45° Trofeo Della Resistenza,Lambertoni Giulia,50 Stile Libero,37.80,245,no
+45° Trofeo Della Resistenza,Lucchese Camilla,100 Dorso,86.17,296,no
+45° Trofeo Della Resistenza,Lucchese Camilla,50 Stile Libero,35.94,285,no
+45° Trofeo Della Resistenza,Perosino Edoardo,100 Farfalla,67.73,389,argento
+45° Trofeo Della Resistenza,Perosino Edoardo,50 Stile Libero,26.97,466,no
+45° Trofeo Della Resistenza,Ruscelli Siria,100 Stile Libero,69.56,410,no
+45° Trofeo Della Resistenza,Ruscelli Siria,50 Stile Libero,31.59,420,no
+45° Trofeo Della Resistenza,Savant Ros Sveva,100 Stile Libero,78.96,280,no
+45° Trofeo Della Resistenza,Savant Ros Sveva,50 Stile Libero,35.46,297,no
+45° Trofeo Della Resistenza,Toniazzo Francesca,100 Stile Libero,84.67,227,no
+45° Trofeo Della Resistenza,Toniazzo Francesca,50 Stile Libero,35.75,290,no
+45° Trofeo Della Resistenza,Farruggia Vittoria,Staffetta 4x50 Stile Libero Femmine,139.76,308,no
+45° Trofeo Della Resistenza,Bagnasco Giulia,Staffetta 4x50 Stile Libero Femmine,139.76,308,no
+45° Trofeo Della Resistenza,Lucchese Camilla,Staffetta 4x50 Stile Libero Femmine,139.76,308,no
+45° Trofeo Della Resistenza,Ingrosso Emma,Staffetta 4x50 Stile Libero Femmine,139.76,308,no
+45° Trofeo Della Resistenza,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,127.50,406,no
+45° Trofeo Della Resistenza,Toniazzo Francesca,Staffetta 4x50 Stile Libero Femmine,127.50,406,no
+45° Trofeo Della Resistenza,Ichim Alexandra,Staffetta 4x50 Stile Libero Femmine,127.50,406,no
+45° Trofeo Della Resistenza,Bartalesi Beatrice,Staffetta 4x50 Stile Libero Femmine,127.50,406,no
+45° Trofeo Della Resistenza,Belmare Diego,Staffetta 4x50 Stile Libero Maschi,111.18,425,no
+45° Trofeo Della Resistenza,De Giorgi Alessandro,Staffetta 4x50 Stile Libero Maschi,111.18,425,no
+45° Trofeo Della Resistenza,Catalano Giovanni,Staffetta 4x50 Stile Libero Maschi,111.18,425,no
+45° Trofeo Della Resistenza,Perosino Edoardo,Staffetta 4x50 Stile Libero Maschi,111.18,425,no
+45° Trofeo Della Resistenza,Ruscelli Siria,50 Stile Libero,31.66,414,no
+45° Trofeo Della Resistenza,Toniazzo Francesca,50 Stile Libero lanciato,34.65,316,no
+45° Trofeo Della Resistenza,Ichim Alexandra,50 Stile Libero lanciato,32.14,396,no
+45° Trofeo Della Resistenza,Bartalesi Beatrice,50 Stile Libero lanciato,28.77,552,no
+45° Trofeo Della Resistenza,Belmare Diego,50 Stile Libero,29.80,345,no
+45° Trofeo Della Resistenza,De Giorgi Alessandro,50 Stile Libero lanciato,28.18,408,no
+45° Trofeo Della Resistenza,Catalano Giovanni,50 Stile Libero lanciato,27.08,460,no
+45° Trofeo Della Resistenza,Perosino Edoardo,50 Stile Libero lanciato,26.11,513,no
+45° Trofeo Della Resistenza,Lucchese Camilla,Mistaffetta 4x50 Misti,149.85,288,no
+45° Trofeo Della Resistenza,Belmare Diego,Mistaffetta 4x50 Misti,149.85,288,no
+45° Trofeo Della Resistenza,Ingrosso Emma,Mistaffetta 4x50 Misti,149.85,288,no
+45° Trofeo Della Resistenza,Catalano Giovanni,Mistaffetta 4x50 Misti,149.85,288,no
+1° Trofeo Minitop,Bagnasco Giulia,50 Stile Libero,36.35,251,no
+1° Trofeo Minitop,Bagnasco Giulia,50 Rana,49.34,190,no
+1° Trofeo Minitop,Belmare Diego,50 Stile Libero,29.67,313,no
+1° Trofeo Minitop,Belmare Diego,50 Rana,42.63,200,no
+1° Trofeo Minitop,Bibbona Lucia,50 Stile Libero,33.77,313,no
+1° Trofeo Minitop,Bibbona Lucia,50 Rana,42.21,303,no
+1° Trofeo Minitop,Catalano Giovanni,50 Stile Libero,27.88,378,no
+1° Trofeo Minitop,Catalano Giovanni,50 Dorso,33.29,292,no
+1° Trofeo Minitop,Cecire Vittoria,50 Stile Libero,31.62,381,no
+1° Trofeo Minitop,De Giorgi Alessandro,50 Stile Libero,28.49,354,no
+1° Trofeo Minitop,De Giorgi Alessandro,50 Rana,36.28,325,no
+1° Trofeo Minitop,Farruggia Vittoria,50 Dorso,42.92,203,no
+1° Trofeo Minitop,Farruggia Vittoria,50 Stile Libero,32.12,363,no
+1° Trofeo Minitop,Ingrosso Emma,50 Farfalla,36.16,306,no
+1° Trofeo Minitop,Ingrosso Emma,50 Stile Libero,32.53,350,no
+1° Trofeo Minitop,Lambertoni Giulia,50 Stile Libero,36.64,245,no
+1° Trofeo Minitop,Lambertoni Giulia,50 Rana,43.13,284,no
+1° Trofeo Minitop,Lucchese Camilla,50 Dorso,38.65,278,no
+1° Trofeo Minitop,Lucchese Camilla,50 Stile Libero,34.21,301,no
+1° Trofeo Minitop,Martini Lorenzo,50 Dorso,44.13,125,no
+1° Trofeo Minitop,Martini Lorenzo,50 Stile Libero,33.78,212,no
+1° Trofeo Minitop,Oliaro Giulio,50 Farfalla,29.82,388,no
+1° Trofeo Minitop,Oliaro Giulio,50 Stile Libero,28.32,360,no
+1° Trofeo Minitop,Pedi Mattia,50 Farfalla,30.69,355,no
+1° Trofeo Minitop,Pedi Mattia,50 Stile Libero,28.39,358,no
+1° Trofeo Minitop,Perosino Edoardo,50 Farfalla,28.00,468,argento
+1° Trofeo Minitop,Perosino Edoardo,100 Misti,66.41,408,bronzo
+1° Trofeo Minitop,Ruscelli Siria,50 Stile Libero,31.21,396,no
+1° Trofeo Minitop,Ruscelli Siria,50 Rana,38.56,398,no
+1° Trofeo Minitop,Savant Ros Sveva,50 Dorso,39.04,270,no
+1° Trofeo Minitop,Savant Ros Sveva,50 Stile Libero,33.99,307,no
+1° Trofeo Minitop,Cecire Vittoria,Mistaffetta 4x50 Stile Libero,115.68,430,no
+1° Trofeo Minitop,Pedi Mattia,Mistaffetta 4x50 Stile Libero,115.68,430,no
+1° Trofeo Minitop,Ruscelli Siria,Mistaffetta 4x50 Stile Libero,115.68,430,no
+1° Trofeo Minitop,Perosino Edoardo,Mistaffetta 4x50 Stile Libero,115.68,430,no
+1° Trofeo Minitop,Belmare Diego,Mistaffetta 4x50 Stile Libero,121.95,367,no
+1° Trofeo Minitop,Ingrosso Emma,Mistaffetta 4x50 Stile Libero,121.95,367,no
+1° Trofeo Minitop,Farruggia Vittoria,Mistaffetta 4x50 Stile Libero,121.95,367,no
+1° Trofeo Minitop,De Giorgi Alessandro,Mistaffetta 4x50 Stile Libero,121.95,367,no
+1° Trofeo Minitop,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,121.96,367,no
+1° Trofeo Minitop,Bibbona Lucia,Mistaffetta 4x50 Stile Libero,121.96,367,no
+1° Trofeo Minitop,Lucchese Camilla,Mistaffetta 4x50 Stile Libero,121.96,367,no
+1° Trofeo Minitop,Catalano Giovanni,Mistaffetta 4x50 Stile Libero,121.96,367,no
+1° Trofeo Minitop,Cecire Vittoria,50 Stile Libero,31.35,391,no
+1° Trofeo Minitop,Pedi Mattia,50 Stile Libero lanciato,28.00,373,no
+1° Trofeo Minitop,Ruscelli Siria,50 Stile Libero lanciato,30.47,426,no
+1° Trofeo Minitop,Perosino Edoardo,50 Stile Libero lanciato,26.20,455,no
+1° Trofeo Minitop,Belmare Diego,50 Stile Libero,29.02,335,no
+1° Trofeo Minitop,Ingrosso Emma,50 Stile Libero lanciato,32.77,342,no
+1° Trofeo Minitop,Farruggia Vittoria,50 Stile Libero lanciato,32.63,347,no
+1° Trofeo Minitop,De Giorgi Alessandro,50 Stile Libero lanciato,27.59,390,no
+1° Trofeo Minitop,Oliaro Giulio,50 Stile Libero,27.57,390,no
+1° Trofeo Minitop,Bibbona Lucia,50 Stile Libero lanciato,32.98,336,no
+1° Trofeo Minitop,Lucchese Camilla,50 Stile Libero lanciato,33.61,317,no
+1° Trofeo Minitop,Catalano Giovanni,50 Stile Libero lanciato,27.65,387,no
+Campionati Regionali Open 2024,Bagnasco Giulia,50 Stile Libero,36.03,283,no
+Campionati Regionali Open 2024,Bagnasco Giulia,100 Stile Libero,78.67,283,no
+Campionati Regionali Open 2024,Bartalesi Beatrice,50 Stile Libero,30.06,488,oro
+Campionati Regionali Open 2024,Bartalesi Beatrice,200 Stile Libero,147.36,450,bronzo
+Campionati Regionali Open 2024,Belmare Diego,50 Stile Libero,30.21,331,no
+Campionati Regionali Open 2024,Belmare Diego,100 Stile Libero,70.55,293,no
+Campionati Regionali Open 2024,Bibbona Lucia,50 Stile Libero,34.68,317,no
+Campionati Regionali Open 2024,Bibbona Lucia,200 Rana,215.18,269,argento
+Campionati Regionali Open 2024,Catalano Giovanni,50 Stile Libero,28.58,391,no
+Campionati Regionali Open 2024,Catalano Giovanni,100 Stile Libero,64.05,392,no
+Campionati Regionali Open 2024,Cecire Vittoria,50 Stile Libero,31.61,419,no
+Campionati Regionali Open 2024,Cecire Vittoria,100 Stile Libero,71.61,376,no
+Campionati Regionali Open 2024,De Giorgi Alessandro,50 Rana,35.89,377,oro
+Campionati Regionali Open 2024,De Giorgi Alessandro,200 Rana,188.92,296,argento
+Campionati Regionali Open 2024,Farruggia Vittoria,50 Stile Libero,33.12,365,no
+Campionati Regionali Open 2024,Farruggia Vittoria,100 Stile Libero,74.95,328,no
+Campionati Regionali Open 2024,Ichim Alexandra,50 Rana,44.42,286,no
+Campionati Regionali Open 2024,Ichim Alexandra,100 Stile Libero,74.35,336,no
+Campionati Regionali Open 2024,Ingrosso Emma,50 Farfalla,35.88,315,no
+Campionati Regionali Open 2024,Ingrosso Emma,100 Stile Libero,74.08,340,no
+Campionati Regionali Open 2024,Lambertoni Giulia,50 Rana,45.39,268,no
+Campionati Regionali Open 2024,Lambertoni Giulia,100 Rana,101.24,254,no
+Campionati Regionali Open 2024,Lucchese Camilla,50 Dorso,40.11,304,bronzo
+Campionati Regionali Open 2024,Lucchese Camilla,100 Stile Libero,74.77,330,no
+Campionati Regionali Open 2024,Martini Lorenzo,50 Stile Libero,32.80,259,no
+Campionati Regionali Open 2024,Martini Lorenzo,100 Stile Libero,75.97,235,no
+Campionati Regionali Open 2024,Oliaro Giulio,50 Farfalla,38.91,187,no
+Campionati Regionali Open 2024,Oliaro Giulio,100 Stile Libero,62.73,418,no
+Campionati Regionali Open 2024,Pedi Mattia,200 Stile Libero,147.11,333,no
+Campionati Regionali Open 2024,Ruscelli Siria,50 Rana,39.97,393,oro
+Campionati Regionali Open 2024,Ruscelli Siria,100 Stile Libero,70.36,396,no
+Campionati Regionali Open 2024,Ichim Alexandra,Staffetta 4x50 Stile Libero Femmine,124.61,435,no
+Campionati Regionali Open 2024,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,124.61,435,no
+Campionati Regionali Open 2024,Cecire Vittoria,Staffetta 4x50 Stile Libero Femmine,124.61,435,no
+Campionati Regionali Open 2024,Bartalesi Beatrice,Staffetta 4x50 Stile Libero Femmine,124.61,435,no
+Campionati Regionali Open 2024,Bagnasco Giulia,Staffetta 4x50 Stile Libero Femmine,138.24,318,no
+Campionati Regionali Open 2024,Lucchese Camilla,Staffetta 4x50 Stile Libero Femmine,138.24,318,no
+Campionati Regionali Open 2024,Farruggia Vittoria,Staffetta 4x50 Stile Libero Femmine,138.24,318,no
+Campionati Regionali Open 2024,Ingrosso Emma,Staffetta 4x50 Stile Libero Femmine,138.24,318,no
+Campionati Regionali Open 2024,Belmare Diego,Staffetta 4x50 Stile Libero Maschi,113.35,401,argento
+Campionati Regionali Open 2024,Catalano Giovanni,Staffetta 4x50 Stile Libero Maschi,113.35,401,argento
+Campionati Regionali Open 2024,Oliaro Giulio,Staffetta 4x50 Stile Libero Maschi,113.35,401,argento
+Campionati Regionali Open 2024,Pedi Mattia,Staffetta 4x50 Stile Libero Maschi,113.35,401,argento
+Campionati Regionali Open 2024,Ichim Alexandra,50 Stile Libero,32.56,336,no
+Campionati Regionali Open 2024,Ruscelli Siria,50 Stile Libero lanciato,31.48,336,no
+Campionati Regionali Open 2024,Cecire Vittoria,50 Stile Libero lanciato,30.98,336,no
+Campionati Regionali Open 2024,Bartalesi Beatrice,50 Stile Libero lanciato,29.59,336,no
+Campionati Regionali Open 2024,Bagnasco Giulia,50 Stile Libero,37.60,336,no
+Campionati Regionali Open 2024,Lucchese Camilla,50 Stile Libero lanciato,34.38,336,no
+Campionati Regionali Open 2024,Farruggia Vittoria,50 Stile Libero lanciato,34.00,336,no
+Campionati Regionali Open 2024,Ingrosso Emma,50 Stile Libero lanciato,32.26,336,no
+Campionati Regionali Open 2024,Belmare Diego,50 Stile Libero,29.36,336,no
+Campionati Regionali Open 2024,Catalano Giovanni,50 Stile Libero lanciato,27.61,336,no
+Campionati Regionali Open 2024,Oliaro Giulio,50 Stile Libero lanciato,28.12,336,no
+Campionati Regionali Open 2024,Pedi Mattia,50 Stile Libero lanciato,28.26,336,no
+Campionati Regionali Open 2024,Lucchese Camilla,Staffetta 4x50 Misti Femmine,146.48,377,no
+Campionati Regionali Open 2024,Ruscelli Siria,Staffetta 4x50 Misti Femmine,146.48,377,no
+Campionati Regionali Open 2024,Cecire Vittoria,Staffetta 4x50 Misti Femmine,146.48,377,no
+Campionati Regionali Open 2024,Bartalesi Beatrice,Staffetta 4x50 Misti Femmine,146.48,377,no
+Campionati Regionali Open 2024,Catalano Giovanni,Staffetta 4x50 Misti Maschi,130.69,362,argento
+Campionati Regionali Open 2024,De Giorgi Alessandro,Staffetta 4x50 Misti Maschi,130.69,362,argento
+Campionati Regionali Open 2024,Oliaro Giulio,Staffetta 4x50 Misti Maschi,130.69,362,argento
+Campionati Regionali Open 2024,Belmare Diego,Staffetta 4x50 Misti Maschi,130.69,362,argento
+Campionati Regionali Open 2024,Lucchese Camilla,50 Dorso,39.73,309,no
+Campionati Regionali Open 2024,Ruscelli Siria,50 Rana lanciato,38.63,430,no
+Campionati Regionali Open 2024,Cecire Vittoria,50 Farfalla lanciato,38.60,253,no
+Campionati Regionali Open 2024,Bartalesi Beatrice,50 Stile Libero lanciato,29.43,516,no
+Campionati Regionali Open 2024,Catalano Giovanni,50 Dorso,35.47,292,no
+Campionati Regionali Open 2024,De Giorgi Alessandro,50 Rana lanciato,35.85,379,no
+Campionati Regionali Open 2024,Oliaro Giulio,50 Farfalla lanciato,30.16,402,no
+Campionati Regionali Open 2024,Belmare Diego,50 Stile Libero lanciato,28.96,376,no
+2° Trofeo Torino Nuoto,Bagnasco Giulia,50 Stile Libero,36.81,241,no
+2° Trofeo Torino Nuoto,Belmare Diego,50 Stile Libero,28.53,352,no
+2° Trofeo Torino Nuoto,Cecire Vittoria,50 Stile Libero,31.27,394,no
+2° Trofeo Torino Nuoto,Farruggia Vittoria,50 Stile Libero,32.35,356,no
+2° Trofeo Torino Nuoto,Ingrosso Emma,50 Stile Libero,32.66,346,no
+2° Trofeo Torino Nuoto,Toniazzo Francesca,50 Stile Libero,34.10,304,no
+2° Trofeo Torino Nuoto,Catalano Giovanni,50 Stile Libero,27.14,409,no
+2° Trofeo Torino Nuoto,Lucchese Camilla,50 Dorso,38.13,290,no
+2° Trofeo Torino Nuoto,Savant Ros Sveva,50 Dorso,38.42,283,no
+2° Trofeo Torino Nuoto,Ichim Alexandra,50 Rana,41.82,312,no
+2° Trofeo Torino Nuoto,Lambertoni Giulia,50 Rana,42.90,289,no
+2° Trofeo Torino Nuoto,De Giorgi Alessandro,50 Rana,35.91,335,no
+2° Trofeo Torino Nuoto,Belmare Diego,50 Rana,43.47,189,no
+2° Trofeo Torino Nuoto,Ruscelli Siria,50 Rana,39.19,379,no
+2° Trofeo Torino Nuoto,Oliaro Giulio,100 Misti,70.79,337,no
+2° Trofeo Torino Nuoto,Bartalesi Beatrice,100 Misti,76.02,410,no
+Campionati Nazionali Estivi 2024 Giorno 1,Bibbona Lucia,100 Rana,95.26,305,no
+Campionati Nazionali Estivi 2024 Giorno 1,De Giorgi Alessandro,100 Rana,78.74,376,no
+Campionati Nazionali Estivi 2024 Giorno 1,Lambertoni Giulia,100 Rana,99.24,269,no
+Campionati Nazionali Estivi 2024 Giorno 1,Lucchese Camilla,50 Dorso,39.19,326,no
+Campionati Nazionali Estivi 2024 Giorno 1,Ruscelli Siria,100 Rana,89.35,369,no
+Campionati Nazionali Estivi 2024 Giorno 1,Catalano Giovanni,Mistaffetta 4x50 Misti,135.55,384,no
+Campionati Nazionali Estivi 2024 Giorno 1,Ruscelli Siria,Mistaffetta 4x50 Misti,135.55,384,no
+Campionati Nazionali Estivi 2024 Giorno 1,Ingrosso Emma,Mistaffetta 4x50 Misti,135.55,384,no
+Campionati Nazionali Estivi 2024 Giorno 1,Oliaro Giulio,Mistaffetta 4x50 Misti,135.55,384,no
+Campionati Nazionali Estivi 2024 Giorno 1,Lucchese Camilla,Mistaffetta 4x50 Misti,132.87,421,no
+Campionati Nazionali Estivi 2024 Giorno 1,De Giorgi Alessandro,Mistaffetta 4x50 Misti,132.87,421,no
+Campionati Nazionali Estivi 2024 Giorno 1,Perosino Edoardo,Mistaffetta 4x50 Misti,132.87,421,no
+Campionati Nazionali Estivi 2024 Giorno 1,Cecire Vittoria,Mistaffetta 4x50 Misti,132.87,421,no
+Campionati Nazionali Estivi 2024 Giorno 1,Savant Ros Sveva,Mistaffetta 4x50 Misti,149.53,292,no
+Campionati Nazionali Estivi 2024 Giorno 1,Lambertoni Giulia,Mistaffetta 4x50 Misti,149.53,292,no
+Campionati Nazionali Estivi 2024 Giorno 1,Belmare Diego,Mistaffetta 4x50 Misti,149.53,292,no
+Campionati Nazionali Estivi 2024 Giorno 1,Martini Lorenzo,Mistaffetta 4x50 Misti,149.53,292,no
+Campionati Nazionali Estivi 2024 Giorno 1,Catalano Giovanni,50 Dorso,33.02,362,no
+Campionati Nazionali Estivi 2024 Giorno 1,Ruscelli Siria,50 Rana lanciato,39.86,391,no
+Campionati Nazionali Estivi 2024 Giorno 1,Ingrosso Emma,50 Farfalla lanciato,35.54,324,no
+Campionati Nazionali Estivi 2024 Giorno 1,Oliaro Giulio,50 Stile Libero lanciato,27.13,457,no
+Campionati Nazionali Estivi 2024 Giorno 1,Lucchese Camilla,50 Dorso,39.07,324,no
+Campionati Nazionali Estivi 2024 Giorno 1,De Giorgi Alessandro,50 Rana lanciato,34.69,418,no
+Campionati Nazionali Estivi 2024 Giorno 1,Perosino Edoardo,50 Farfalla lanciato,28.00,503,no
+Campionati Nazionali Estivi 2024 Giorno 1,Cecire Vittoria,50 Stile Libero lanciato,31.11,437,no
+Campionati Nazionali Estivi 2024 Giorno 1,Savant Ros Sveva,50 Dorso,40.61,289,no
+Campionati Nazionali Estivi 2024 Giorno 1,Lambertoni Giulia,50 Rana lanciato,43.95,292,no
+Campionati Nazionali Estivi 2024 Giorno 1,Belmare Diego,50 Farfalla lanciato,32.46,322,no
+Campionati Nazionali Estivi 2024 Giorno 1,Martini Lorenzo,50 Stile Libero lanciato,32.51,266,no
+Campionati Nazionali Estivi 2024 Giorno 1,Lucchese Camilla,Mistaffetta 4x50 Stile Libero,119.68,419,no
+Campionati Nazionali Estivi 2024 Giorno 1,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,119.68,419,no
+Campionati Nazionali Estivi 2024 Giorno 1,Ichim Alexandra,Mistaffetta 4x50 Stile Libero,119.68,419,no
+Campionati Nazionali Estivi 2024 Giorno 1,Catalano Giovanni,Mistaffetta 4x50 Stile Libero,119.68,419,no
+Campionati Nazionali Estivi 2024 Giorno 1,Ruscelli Siria,Mistaffetta 4x50 Stile Libero,116.69,447,no
+Campionati Nazionali Estivi 2024 Giorno 1,Cecire Vittoria,Mistaffetta 4x50 Stile Libero,116.69,447,no
+Campionati Nazionali Estivi 2024 Giorno 1,Pedi Mattia,Mistaffetta 4x50 Stile Libero,116.69,447,no
+Campionati Nazionali Estivi 2024 Giorno 1,Perosino Edoardo,Mistaffetta 4x50 Stile Libero,116.69,447,no
+Campionati Nazionali Estivi 2024 Giorno 1,Ingrosso Emma,Mistaffetta 4x50 Stile Libero,122.89,383,no
+Campionati Nazionali Estivi 2024 Giorno 1,Farruggia Vittoria,Mistaffetta 4x50 Stile Libero,122.89,383,no
+Campionati Nazionali Estivi 2024 Giorno 1,Belmare Diego,Mistaffetta 4x50 Stile Libero,122.89,383,no
+Campionati Nazionali Estivi 2024 Giorno 1,De Giorgi Alessandro,Mistaffetta 4x50 Stile Libero,122.89,383,no
+Campionati Nazionali Estivi 2024 Giorno 1,Lucchese Camilla,50 Stile Libero,33.61,346,no
+Campionati Nazionali Estivi 2024 Giorno 1,Oliaro Giulio,50 Stile Libero lanciato,27.16,456,no
+Campionati Nazionali Estivi 2024 Giorno 1,Ichim Alexandra,50 Stile Libero lanciato,32.14,396,no
+Campionati Nazionali Estivi 2024 Giorno 1,Catalano Giovanni,50 Stile Libero lanciato,26.77,476,no
+Campionati Nazionali Estivi 2024 Giorno 1,Ruscelli Siria,50 Stile Libero,31.65,415,no
+Campionati Nazionali Estivi 2024 Giorno 1,Cecire Vittoria,50 Stile Libero lanciato,30.79,450,no
+Campionati Nazionali Estivi 2024 Giorno 1,Pedi Mattia,50 Stile Libero lanciato,28.12,411,no
+Campionati Nazionali Estivi 2024 Giorno 1,Perosino Edoardo,50 Stile Libero lanciato,26.13,512,no
+Campionati Nazionali Estivi 2024 Giorno 1,Ingrosso Emma,50 Stile Libero,33.32,355,no
+Campionati Nazionali Estivi 2024 Giorno 1,Farruggia Vittoria,50 Stile Libero lanciato,32.33,389,no
+Campionati Nazionali Estivi 2024 Giorno 1,Belmare Diego,50 Stile Libero lanciato,29.67,350,no
+Campionati Nazionali Estivi 2024 Giorno 1,De Giorgi Alessandro,50 Stile Libero lanciato,27.57,436,no
+Campionati Nazionali Estivi 2024 Giorno 2,Bagnasco Giulia,100 Stile Libero,79.57,274,no
+Campionati Nazionali Estivi 2024 Giorno 2,Belmare Diego,100 Stile Libero,69.50,307,no
+Campionati Nazionali Estivi 2024 Giorno 2,Catalano Giovanni,100 Stile Libero,62.33,426,no
+Campionati Nazionali Estivi 2024 Giorno 2,De Giorgi Alessandro,50 Rana,35.78,381,no
+Campionati Nazionali Estivi 2024 Giorno 2,Cecire Vittoria,100 Stile Libero,70.28,398,no
+Campionati Nazionali Estivi 2024 Giorno 2,Farruggia Vittoria,100 Stile Libero,74.00,341,no
+Campionati Nazionali Estivi 2024 Giorno 2,Ichim Alexandra,100 Stile Libero,70.76,390,no
+Campionati Nazionali Estivi 2024 Giorno 2,Ingrosso Emma,100 Stile Libero,73.49,348,no
+Campionati Nazionali Estivi 2024 Giorno 2,Ingrosso Emma,50 Farfalla,35.83,316,no
+Campionati Nazionali Estivi 2024 Giorno 2,Lambertoni Giulia,50 Rana,43.09,314,no
+Campionati Nazionali Estivi 2024 Giorno 2,Lucchese Camilla,100 Stile Libero,71.96,371,no
+Campionati Nazionali Estivi 2024 Giorno 2,Martini Lorenzo,100 Stile Libero,77.41,222,no
+Campionati Nazionali Estivi 2024 Giorno 2,Oliaro Giulio,100 Stile Libero,61.58,442,no
+Campionati Nazionali Estivi 2024 Giorno 2,Pedi Mattia,100 Stile Libero,61.98,433,no
+Campionati Nazionali Estivi 2024 Giorno 2,Pedi Mattia,50 Farfalla,30.72,380,no
+Campionati Nazionali Estivi 2024 Giorno 2,Perosino Edoardo,100 Stile Libero,59.37,493,no
+Campionati Nazionali Estivi 2024 Giorno 2,Perosino Edoardo,50 Farfalla,28.19,493,no
+Campionati Nazionali Estivi 2024 Giorno 2,Ruscelli Siria,50 Rana,40.08,390,no
+Campionati Nazionali Estivi 2024 Giorno 2,Savant Ros Sveva,100 Stile Libero,76.42,309,no
+Campionati Nazionali Estivi 2024 Giorno 2,Toniazzo Francesca,100 Stile Libero,77.34,298,no
+Campionati Nazionali Estivi 2024 Giorno 2,Lucchese Camilla,Staffetta 4x50 Misti Femmine,146.21,361,no
+Campionati Nazionali Estivi 2024 Giorno 2,Ruscelli Siria,Staffetta 4x50 Misti Femmine,146.21,361,no
+Campionati Nazionali Estivi 2024 Giorno 2,Ichim Alexandra,Staffetta 4x50 Misti Femmine,146.21,361,no
+Campionati Nazionali Estivi 2024 Giorno 2,Cecire Vittoria,Staffetta 4x50 Misti Femmine,146.21,361,no
+Campionati Nazionali Estivi 2024 Giorno 2,Savant Ros Sveva,Staffetta 4x50 Misti Femmine,152.97,314,no
+Campionati Nazionali Estivi 2024 Giorno 2,Bibbona Lucia,Staffetta 4x50 Misti Femmine,152.97,314,no
+Campionati Nazionali Estivi 2024 Giorno 2,Ingrosso Emma,Staffetta 4x50 Misti Femmine,152.97,314,no
+Campionati Nazionali Estivi 2024 Giorno 2,Toniazzo Francesca,Staffetta 4x50 Misti Femmine,152.97,314,no
+Campionati Nazionali Estivi 2024 Giorno 2,Catalano Giovanni,Staffetta 4x50 Misti Maschi,124.39,419,no
+Campionati Nazionali Estivi 2024 Giorno 2,De Giorgi Alessandro,Staffetta 4x50 Misti Maschi,124.39,419,no
+Campionati Nazionali Estivi 2024 Giorno 2,Perosino Edoardo,Staffetta 4x50 Misti Maschi,124.39,419,no
+Campionati Nazionali Estivi 2024 Giorno 2,Oliaro Giulio,Staffetta 4x50 Misti Maschi,124.39,419,no
+Campionati Nazionali Estivi 2024 Giorno 2,Lucchese Camilla,50 Dorso,39.21,321,no
+Campionati Nazionali Estivi 2024 Giorno 2,Ruscelli Siria,50 Rana lanciato,40.05,385,no
+Campionati Nazionali Estivi 2024 Giorno 2,Savant Ros Sveva,50 Dorso,40.45,292,no
+Campionati Nazionali Estivi 2024 Giorno 2,Bibbona Lucia,50 Rana lanciato,41.85,338,no
+Campionati Nazionali Estivi 2024 Giorno 2,Ingrosso Emma,50 Farfalla lanciato,35.74,319,no
+Campionati Nazionali Estivi 2024 Giorno 2,Toniazzo Francesca,50 Stile Libero lanciato,34.93,308,no
+Campionati Nazionali Estivi 2024 Giorno 2,Catalano Giovanni,50 Dorso,33.32,353,no
+Campionati Nazionali Estivi 2024 Giorno 2,De Giorgi Alessandro,50 Rana lanciato,35.35,395,no
+Campionati Nazionali Estivi 2024 Giorno 2,Perosino Edoardo,50 Farfalla lanciato,28.37,483,no
+Campionati Nazionali Estivi 2024 Giorno 2,Oliaro Giulio,50 Stile Libero lanciato,27.35,446,no
+Campionati Nazionali Estivi 2024 Giorno 3,Bagnasco Giulia,50 Stile Libero,35.78,289,no
+Campionati Nazionali Estivi 2024 Giorno 3,Belmare Diego,50 Stile Libero,29.78,346,no
+Campionati Nazionali Estivi 2024 Giorno 3,Bibbona Lucia,50 Stile Libero,34.41,325,no
+Campionati Nazionali Estivi 2024 Giorno 3,Catalano Giovanni,50 Stile Libero,27.32,448,no
+Campionati Nazionali Estivi 2024 Giorno 3,Cecire Vittoria,50 Stile Libero,30.34,474,no
+Campionati Nazionali Estivi 2024 Giorno 3,Farruggia Vittoria,50 Stile Libero,33.53,351,no
+Campionati Nazionali Estivi 2024 Giorno 3,Ichim Alexandra,50 Stile Libero,32.12,400,no
+Campionati Nazionali Estivi 2024 Giorno 3,Martini Lorenzo,50 Stile Libero,33.56,241,no
+Campionati Nazionali Estivi 2024 Giorno 3,Savant Ros Sveva,50 Stile Libero,32.89,372,no
+Campionati Nazionali Estivi 2024 Giorno 3,Toniazzo Francesca,50 Stile Libero,35.04,308,no
+Campionati Nazionali Estivi 2024 Giorno 3,Bagnasco Giulia,Staffetta 4x50 Stile Libero Femmine,133.61,353,no
+Campionati Nazionali Estivi 2024 Giorno 3,Lucchese Camilla,Staffetta 4x50 Stile Libero Femmine,133.61,353,no
+Campionati Nazionali Estivi 2024 Giorno 3,Ingrosso Emma,Staffetta 4x50 Stile Libero Femmine,133.61,353,no
+Campionati Nazionali Estivi 2024 Giorno 3,Farruggia Vittoria,Staffetta 4x50 Stile Libero Femmine,133.61,353,no
+Campionati Nazionali Estivi 2024 Giorno 3,Ichim Alexandra,Staffetta 4x50 Stile Libero Femmine,128.63,395,no
+Campionati Nazionali Estivi 2024 Giorno 3,Toniazzo Francesca,Staffetta 4x50 Stile Libero Femmine,128.63,395,no
+Campionati Nazionali Estivi 2024 Giorno 3,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,128.63,395,no
+Campionati Nazionali Estivi 2024 Giorno 3,Cecire Vittoria,Staffetta 4x50 Stile Libero Femmine,128.63,395,no
+Campionati Nazionali Estivi 2024 Giorno 3,Catalano Giovanni,Staffetta 4x50 Stile Libero Maschi,107.51,470,no
+Campionati Nazionali Estivi 2024 Giorno 3,Oliaro Giulio,Staffetta 4x50 Stile Libero Maschi,107.51,470,no
+Campionati Nazionali Estivi 2024 Giorno 3,Pedi Mattia,Staffetta 4x50 Stile Libero Maschi,107.51,470,no
+Campionati Nazionali Estivi 2024 Giorno 3,Perosino Edoardo,Staffetta 4x50 Stile Libero Maschi,107.51,470,no
+Campionati Nazionali Estivi 2024 Giorno 3,Bagnasco Giulia,50 Stile Libero,35.17,302,no
+Campionati Nazionali Estivi 2024 Giorno 3,Lucchese Camilla,50 Stile Libero lanciato,33.33,355,no
+Campionati Nazionali Estivi 2024 Giorno 3,Ingrosso Emma,50 Stile Libero lanciato,32.47,384,no
+Campionati Nazionali Estivi 2024 Giorno 3,Farruggia Vittoria,50 Stile Libero lanciato,32.64,378,no
+Campionati Nazionali Estivi 2024 Giorno 3,Ichim Alexandra,50 Stile Libero,32.60,379,no
+Campionati Nazionali Estivi 2024 Giorno 3,Toniazzo Francesca,50 Stile Libero lanciato,34.88,310,no
+Campionati Nazionali Estivi 2024 Giorno 3,Ruscelli Siria,50 Stile Libero lanciato,30.92,445,no
+Campionati Nazionali Estivi 2024 Giorno 3,Cecire Vittoria,50 Stile Libero lanciato,30.16,479,no
+Campionati Nazionali Estivi 2024 Giorno 3,Oliaro Giulio,50 Stile Libero lanciato,27.12,458,no
+Memorial Giuseppina Ghibaudo,Belmare Diego,100 Stile Libero,68.44,281,bronzo
+Memorial Giuseppina Ghibaudo,Belmare Diego,50 Stile Libero,29.29,326,argento
+Memorial Giuseppina Ghibaudo,De Giorgi Alessandro,100 Rana,81.51,311,no
+Memorial Giuseppina Ghibaudo,De Giorgi Alessandro,200 Misti,168.16,277,bronzo
+Memorial Giuseppina Ghibaudo,Ingrosso Emma,100 Farfalla,87.20,238,no
+Memorial Giuseppina Ghibaudo,Ingrosso Emma,50 Stile Libero,32.66,346,no
+Memorial Giuseppina Ghibaudo,Lucchese Camilla,100 Dorso,82.67,292,no
+Memorial Giuseppina Ghibaudo,Lucchese Camilla,50 Stile Libero,34.35,297,no
+Memorial Giuseppina Ghibaudo,Midulla Arianna,100 Stile Libero,71.03,354,no
+Memorial Giuseppina Ghibaudo,Midulla Arianna,100 Rana,93.42,297,no
+Memorial Giuseppina Ghibaudo,Perosino Edoardo,100 Rana,80.06,329,no
+Memorial Giuseppina Ghibaudo,Perosino Edoardo,200 Stile Libero,142.87,336,no
+Memorial Giuseppina Ghibaudo,Prudenzano Sofia,50 Stile Libero,37.63,226,no
+Memorial Giuseppina Ghibaudo,Prudenzano Sofia,100 Stile Libero,83.60,217,no
+Memorial Giuseppina Ghibaudo,Ruscelli Siria,100 Stile Libero,70.39,363,oro
+Memorial Giuseppina Ghibaudo,Ruscelli Siria,100 Rana,86.43,375,argento
+Memorial Giuseppina Ghibaudo,Savant Ros Sveva,50 Stile Libero,33.35,325,no
+Memorial Giuseppina Ghibaudo,Savant Ros Sveva,100 Stile Libero,75.83,290,argento
+Memorial Giuseppina Ghibaudo,Midulla Arianna,Staffetta 4x50 Stile Libero Femmine,131.24,350,no
+Memorial Giuseppina Ghibaudo,Ingrosso Emma,Staffetta 4x50 Stile Libero Femmine,131.24,350,no
+Memorial Giuseppina Ghibaudo,Lucchese Camilla,Staffetta 4x50 Stile Libero Femmine,131.24,350,no
+Memorial Giuseppina Ghibaudo,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,131.24,350,no
+Memorial Giuseppina Ghibaudo,Midulla Arianna,50 Stile Libero,33.50,320,no
+Memorial Giuseppina Ghibaudo,Ingrosso Emma,50 Stile Libero lanciato,33.09,332,no
+Memorial Giuseppina Ghibaudo,Lucchese Camilla,50 Stile Libero lanciato,33.74,313,no
+Memorial Giuseppina Ghibaudo,Ruscelli Siria,50 Stile Libero lanciato,30.91,408,no
+15° Trofeo Master Città di Saronno,De Giorgi Alessandro,200 Rana,182.86,283,no
+15° Trofeo Master Città di Saronno,De Giorgi Alessandro,50 Farfalla,35.28,234,no
+15° Trofeo Master Città di Saronno,Perosino Edoardo,100 Misti,68.32,375,no
+15° Trofeo Master Città di Saronno,Perosino Edoardo,50 Farfalla,27.95,471,no
+19° Memorial Davide Cagnotto,Belmare Diego,50 Stile Libero,29.96,304,no
+19° Memorial Davide Cagnotto,Belmare Diego,50 Farfalla,31.84,318,bronzo
+19° Memorial Davide Cagnotto,Cecire Vittoria,50 Stile Libero,31.88,372,no
+19° Memorial Davide Cagnotto,Cecire Vittoria,50 Dorso,37.22,312,no
+19° Memorial Davide Cagnotto,De Giorgi Alessandro,50 Stile Libero,28.42,356,no
+19° Memorial Davide Cagnotto,De Giorgi Alessandro,50 Rana,35.75,339,argento
+19° Memorial Davide Cagnotto,Ingrosso Emma,50 Stile Libero,33.22,328,no
+19° Memorial Davide Cagnotto,Ingrosso Emma,50 Farfalla,36.20,305,no
+19° Memorial Davide Cagnotto,Lambertoni Giulia,100 Stile Libero,82.58,225,no
+19° Memorial Davide Cagnotto,Lambertoni Giulia,50 Rana,45.45,243,no
+19° Memorial Davide Cagnotto,Lucchese Camilla,100 Stile Libero,73.90,314,no
+19° Memorial Davide Cagnotto,Lucchese Camilla,50 Dorso,39.74,256,no
+19° Memorial Davide Cagnotto,Midulla Arianna,50 Farfalla,37.06,284,no
+19° Memorial Davide Cagnotto,Midulla Arianna,100 Stile Libero,69.63,375,no
+19° Memorial Davide Cagnotto,Oliaro Giulio,50 Farfalla,28.67,436,argento
+19° Memorial Davide Cagnotto,Oliaro Giulio,100 Stile Libero,59.84,420,no
+19° Memorial Davide Cagnotto,Perosino Edoardo,50 Farfalla,28.86,428,argento
+19° Memorial Davide Cagnotto,Perosino Edoardo,100 Stile Libero,56.93,488,bronzo
+19° Memorial Davide Cagnotto,Prudenzano Sofia,50 Stile Libero,37.78,223,no
+19° Memorial Davide Cagnotto,Prudenzano Sofia,100 Stile Libero,82.80,223,no
+19° Memorial Davide Cagnotto,Ruscelli Siria,50 Stile Libero,29.89,451,argento
+19° Memorial Davide Cagnotto,Ruscelli Siria,50 Rana,37.84,421,no
+19° Memorial Davide Cagnotto,Savant Ros Sveva,50 Stile Libero,32.43,353,no
+19° Memorial Davide Cagnotto,Savant Ros Sveva,100 Stile Libero,72.51,332,no
+19° Memorial Davide Cagnotto,Tissoni Giulia,100 Stile Libero,74.47,307,no
+19° Memorial Davide Cagnotto,Tissoni Giulia,50 Dorso,38.67,278,bronzo
+19° Memorial Davide Cagnotto,Toniazzo Francesca,50 Stile Libero,34.47,294,no
+19° Memorial Davide Cagnotto,Toniazzo Francesca,100 Stile Libero,78.15,265,no
+19° Memorial Davide Cagnotto,De Giorgi Alessandro,Mistaffetta 4x50 Stile Libero,118.65,406,no
+19° Memorial Davide Cagnotto,Ruscelli Siria,Mistaffetta 4x50 Stile Libero,118.65,406,no
+19° Memorial Davide Cagnotto,Savant Ros Sveva,Mistaffetta 4x50 Stile Libero,118.65,406,no
+19° Memorial Davide Cagnotto,Perosino Edoardo,Mistaffetta 4x50 Stile Libero,118.65,406,no
+19° Memorial Davide Cagnotto,Belmare Diego,Mistaffetta 4x50 Stile Libero,121.65,377,bronzo
+19° Memorial Davide Cagnotto,Midulla Arianna,Mistaffetta 4x50 Stile Libero,121.65,377,bronzo
+19° Memorial Davide Cagnotto,Ingrosso Emma,Mistaffetta 4x50 Stile Libero,121.65,377,bronzo
+19° Memorial Davide Cagnotto,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,121.65,377,bronzo
+19° Memorial Davide Cagnotto,De Giorgi Alessandro,50 Stile Libero,28.31,361,no
+19° Memorial Davide Cagnotto,Ruscelli Siria,50 Stile Libero lanciato,31.29,393,no
+19° Memorial Davide Cagnotto,Savant Ros Sveva,50 Stile Libero lanciato,31.84,373,no
+19° Memorial Davide Cagnotto,Perosino Edoardo,50 Stile Libero lanciato,27.10,411,no
+19° Memorial Davide Cagnotto,Belmare Diego,50 Stile Libero,29.82,308,no
+19° Memorial Davide Cagnotto,Midulla Arianna,50 Stile Libero lanciato,32.56,349,no
+19° Memorial Davide Cagnotto,Ingrosso Emma,50 Stile Libero lanciato,32.41,354,no
+19° Memorial Davide Cagnotto,Oliaro Giulio,50 Stile Libero lanciato,26.86,422,no
+19° Memorial Davide Cagnotto,Lucchese Camilla,Mistaffetta 4x50 Misti,134.15,368,no
+19° Memorial Davide Cagnotto,De Giorgi Alessandro,Mistaffetta 4x50 Misti,134.15,368,no
+19° Memorial Davide Cagnotto,Perosino Edoardo,Mistaffetta 4x50 Misti,134.15,368,no
+19° Memorial Davide Cagnotto,Ruscelli Siria,Mistaffetta 4x50 Misti,134.15,368,no
+19° Memorial Davide Cagnotto,Tissoni Giulia,Mistaffetta 4x50 Misti,141.63,313,bronzo
+19° Memorial Davide Cagnotto,Belmare Diego,Mistaffetta 4x50 Misti,141.63,313,bronzo
+19° Memorial Davide Cagnotto,Oliaro Giulio,Mistaffetta 4x50 Misti,141.63,313,bronzo
+19° Memorial Davide Cagnotto,Midulla Arianna,Mistaffetta 4x50 Misti,141.63,313,bronzo
+19° Memorial Davide Cagnotto,Lucchese Camilla,50 Dorso,38.94,272,no
+19° Memorial Davide Cagnotto,De Giorgi Alessandro,50 Rana lanciato,35.40,350,no
+19° Memorial Davide Cagnotto,Perosino Edoardo,50 Farfalla lanciato,28.58,440,no
+19° Memorial Davide Cagnotto,Ruscelli Siria,50 Stile Libero lanciato,31.04,403,no
+19° Memorial Davide Cagnotto,Tissoni Giulia,50 Dorso,38.29,286,no
+19° Memorial Davide Cagnotto,Belmare Diego,50 Rana lanciato,41.62,215,no
+19° Memorial Davide Cagnotto,Oliaro Giulio,50 Farfalla lanciato,29.13,416,no
+19° Memorial Davide Cagnotto,Midulla Arianna,50 Stile Libero lanciato,32.59,348,no
+Campionati Nazionali Invernali Master 2024 Giorno 2,De Giorgi Alessandro,50 Rana,35.50,347,no
+Campionati Nazionali Invernali Master 2024 Giorno 3,De Giorgi Alessandro,100 Rana,79.37,338,no
+Campionati Nazionali Invernali Master 2024 Giorno 2,Perosino Edoardo,100 Farfalla,61.90,460,no
+Campionati Nazionali Invernali Master 2024 Giorno 3,Perosino Edoardo,50 Farfalla,27.72,483,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Belmare Diego,50 Stile Libero,29.70,312,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Belmare Diego,50 Farfalla,31.99,314,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Cecire Vittoria,50 Stile Libero,30.77,413,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Ingrosso Emma,50 Stile Libero,31.84,373,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Ingrosso Emma,50 Farfalla,34.32,358,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Lucchese Camilla,100 Dorso,80.60,315,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Oliaro Giulio,50 Stile Libero,26.49,440,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Ruscelli Siria,200 Rana,188.58,363,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Ruscelli Siria,50 Stile Libero,30.73,415,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Tissoni Giulia,100 Dorso,83.07,288,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Tissoni Giulia,50 Stile Libero,33.88,310,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Belmare Diego,100 Stile Libero,67.42,294,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Cecire Vittoria,100 Stile Libero,69.19,383,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Cecire Vittoria,50 Dorso,36.92,319,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Ingrosso Emma,100 Stile Libero,70.82,357,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Lucchese Camilla,100 Stile Libero,71.83,342,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Lucchese Camilla,200 Stile Libero,155.11,359,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Oliaro Giulio,100 Stile Libero,60.30,411,no
+1ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Ruscelli Siria,100 Rana,84.67,399,no
+1ª Giornata Pentathlon 2025,Belmare Diego,200 Misti,172.69,255,no
+1ª Giornata Pentathlon 2025,Belmare Diego,100 Dorso,76.05,256,no
+1ª Giornata Pentathlon 2025,Ingrosso Emma,200 Misti,179.32,313,no
+1ª Giornata Pentathlon 2025,Ingrosso Emma,100 Dorso,85.86,261,no
+1ª Giornata Pentathlon 2025,Lucchese Camilla,200 Misti,180.55,307,no
+1ª Giornata Pentathlon 2025,Lucchese Camilla,100 Dorso,82.23,297,no
+1ª Giornata Pentathlon 2025,Midulla Arianna,200 Misti,171.51,358,no
+1ª Giornata Pentathlon 2025,Midulla Arianna,100 Dorso,85.60,263,no
+1ª Giornata Pentathlon 2025,Oliaro Giulio,200 Misti,161.90,310,no
+1ª Giornata Pentathlon 2025,Oliaro Giulio,100 Dorso,77.97,238,no
+1ª Giornata Pentathlon 2025,Perosino Edoardo,200 Misti,149.79,392,no
+1ª Giornata Pentathlon 2025,Perosino Edoardo,100 Dorso,68.62,349,no
+1ª Giornata Pentathlon 2025,Ruscelli Siria,200 Misti,171.31,359,no
+1ª Giornata Pentathlon 2025,Ruscelli Siria,100 Dorso,85.08,268,no
+1ª Giornata Pentathlon 2025,Savant Ros Sveva,200 Misti,179.88,310,no
+1ª Giornata Pentathlon 2025,Savant Ros Sveva,100 Dorso,84.88,270,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Belmare Diego,100 Stile Libero,66.53,306,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Ingrosso Emma,100 Stile Libero,69.95,370,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Lucchese Camilla,100 Stile Libero,71.60,345,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Midulla Arianna,100 Stile Libero,69.25,382,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Midulla Arianna,100 Misti,79.54,358,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Midulla Arianna,50 Rana,42.69,293,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Prudenzano Sofia,100 Stile Libero,79.40,253,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Ruscelli Siria,100 Stile Libero,67.14,419,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Ruscelli Siria,50 Rana,38.17,410,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Savant Ros Sveva,100 Stile Libero,72.83,328,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 1,Savant Ros Sveva,100 Misti,84.24,301,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Belmare Diego,100 Farfalla,77.08,238,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Belmare Diego,50 Farfalla,31.36,333,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Belmare Diego,50 Stile Libero,29.46,320,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Ingrosso Emma,100 Farfalla,85.02,256,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Ingrosso Emma,50 Farfalla,35.16,333,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Ingrosso Emma,50 Stile Libero,32.35,356,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Lucchese Camilla,200 Stile Libero,156.47,350,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Lucchese Camilla,50 Stile Libero,32.91,338,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Lucchese Camilla,100 Dorso,82.92,290,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Midulla Arianna,50 Stile Libero,31.79,375,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Prudenzano Sofia,50 Stile Libero,36.14,255,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Ruscelli Siria,100 Rana,83.45,417,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Ruscelli Siria,50 Stile Libero,30.00,446,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Savant Ros Sveva,200 Stile Libero,156.28,351,no
+2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2,Savant Ros Sveva,50 Stile Libero,31.87,372,no
+2ª Giornata Pentathlon 2025,De Giorgi Alessandro,100 Stile Libero,62.70,365,no
+2ª Giornata Pentathlon 2025,De Giorgi Alessandro,100 Rana,76.30,380,no
+2ª Giornata Pentathlon 2025,Ingrosso Emma,100 Stile Libero,69.95,370,no
+2ª Giornata Pentathlon 2025,Ingrosso Emma,100 Rana,96.97,265,no
+2ª Giornata Pentathlon 2025,Ingrosso Emma,100 Farfalla,82.40,282,no
+2ª Giornata Pentathlon 2025,Lambertoni Giulia,100 Stile Libero,77.59,271,no
+2ª Giornata Pentathlon 2025,Lambertoni Giulia,100 Rana,98.59,253,no
+2ª Giornata Pentathlon 2025,Lucchese Camilla,100 Stile Libero,70.79,357,no
+2ª Giornata Pentathlon 2025,Lucchese Camilla,100 Rana,99.84,243,no
+2ª Giornata Pentathlon 2025,Lucchese Camilla,100 Farfalla,89.01,223,no
+2ª Giornata Pentathlon 2025,Midulla Arianna,100 Stile Libero,67.55,411,no
+2ª Giornata Pentathlon 2025,Midulla Arianna,100 Rana,88.52,349,no
+2ª Giornata Pentathlon 2025,Midulla Arianna,100 Farfalla,79.49,314,no
+2ª Giornata Pentathlon 2025,Oliaro Giulio,100 Stile Libero,58.72,445,bronzo
+2ª Giornata Pentathlon 2025,Oliaro Giulio,100 Rana,91.76,218,no
+2ª Giornata Pentathlon 2025,Oliaro Giulio,100 Farfalla,69.26,328,no
+2ª Giornata Pentathlon 2025,Perosino Edoardo,100 Stile Libero,56.06,511,no
+2ª Giornata Pentathlon 2025,Perosino Edoardo,100 Rana,78.65,347,no
+2ª Giornata Pentathlon 2025,Perosino Edoardo,100 Farfalla,62.27,451,no
+2ª Giornata Pentathlon 2025,Ruscelli Siria,100 Stile Libero,66.39,433,no
+2ª Giornata Pentathlon 2025,Ruscelli Siria,100 Rana,81.70,444,no
+2ª Giornata Pentathlon 2025,Ruscelli Siria,100 Farfalla,91.71,204,no
+2ª Giornata Pentathlon 2025,Savant Ros Sveva,100 Stile Libero,72.81,328,no
+2ª Giornata Pentathlon 2025,Savant Ros Sveva,100 Rana,98.24,255,no
+2ª Giornata Pentathlon 2025,Savant Ros Sveva,100 Farfalla,92.04,202,no
+Campionato Regionale Master 2025 Giorno 1,De Giorgi Alessandro,200 Rana,172.03,341,no
+Campionato Regionale Master 2025 Giorno 1,Perosino Edoardo,100 Farfalla,61.68,464,no
+Campionato Regionale Master 2025 Giorno 2,De Giorgi Alessandro,50 Rana,34.63,373,no
+Campionato Regionale Master 2025 Giorno 2,Perosino Edoardo,100 Stile Libero,56.49,500,no
+Campionato Regionale Master 2025 Giorno 2,Toniazzo Francesca,50 Rana,48.33,202,no
+Campionato Regionale Master 2025 Giorno 2,Toniazzo Francesca,50 Stile Libero,34.55,292,no
+Trofeo Riviera Delle Alpi,Belmare Diego,100 Stile Libero,66.75,303,no
+Trofeo Riviera Delle Alpi,Belmare Diego,100 Farfalla,80.12,212,oro
+Trofeo Riviera Delle Alpi,De Giorgi Alessandro,100 Rana,75.72,389,oro
+Trofeo Riviera Delle Alpi,De Giorgi Alessandro,50 Rana,34.96,363,oro
+Trofeo Riviera Delle Alpi,Ingrosso Emma,100 Stile Libero,71.83,342,no
+Trofeo Riviera Delle Alpi,Ingrosso Emma,100 Farfalla,86.04,247,argento
+Trofeo Riviera Delle Alpi,Lambertoni Giulia,50 Stile Libero,36.31,251,no
+Trofeo Riviera Delle Alpi,Lambertoni Giulia,50 Rana,43.47,277,bronzo
+Trofeo Riviera Delle Alpi,Lucchese Camilla,50 Stile Libero,33.22,328,no
+Trofeo Riviera Delle Alpi,Lucchese Camilla,100 Dorso,82.22,297,argento
+Trofeo Riviera Delle Alpi,Midulla Arianna,100 Stile Libero,67.34,415,oro
+Trofeo Riviera Delle Alpi,Midulla Arianna,50 Stile Libero,31.84,373,no
+Trofeo Riviera Delle Alpi,Oliaro Giulio,100 Farfalla,73.75,271,oro
+Trofeo Riviera Delle Alpi,Oliaro Giulio,50 Stile Libero,26.61,434,argento
+Trofeo Riviera Delle Alpi,Prudenzano Sofia,50 Stile Libero,36.77,242,no
+Trofeo Riviera Delle Alpi,Prudenzano Sofia,100 Stile Libero,79.14,255,no
+Trofeo Riviera Delle Alpi,Ruscelli Siria,50 Stile Libero,30.85,410,argento
+Trofeo Riviera Delle Alpi,Ruscelli Siria,50 Rana,37.78,423,argento
+Trofeo Riviera Delle Alpi,Savant Ros Sveva,100 Stile Libero,71.97,340,argento
+Trofeo Riviera Delle Alpi,Savant Ros Sveva,50 Stile Libero,31.51,385,bronzo
+Trofeo Riviera Delle Alpi,Midulla Arianna,Staffetta 4x100 Stile Libero Femmine,276.40,411,oro
+Trofeo Riviera Delle Alpi,Lucchese Camilla,Staffetta 4x100 Stile Libero Femmine,276.40,411,oro
+Trofeo Riviera Delle Alpi,Ingrosso Emma,Staffetta 4x100 Stile Libero Femmine,276.40,411,oro
+Trofeo Riviera Delle Alpi,Ruscelli Siria,Staffetta 4x100 Stile Libero Femmine,276.40,411,oro
+Trofeo Riviera Delle Alpi,Midulla Arianna,100 Stile Libero,68.19,400,no
+Trofeo Riviera Delle Alpi,Lucchese Camilla,100 Stile Libero lanciato,71.14,352,no
+Trofeo Riviera Delle Alpi,Ingrosso Emma,100 Stile Libero lanciato,70.24,366,no
+Trofeo Riviera Delle Alpi,Ruscelli Siria,100 Stile Libero lanciato,66.83,425,no
+Trofeo Riviera Delle Alpi,Lucchese Camilla,Mistaffetta 4x100 Misti,292.47,364,oro
+Trofeo Riviera Delle Alpi,De Giorgi Alessandro,Mistaffetta 4x100 Misti,292.47,364,oro
+Trofeo Riviera Delle Alpi,Oliaro Giulio,Mistaffetta 4x100 Misti,292.47,364,oro
+Trofeo Riviera Delle Alpi,Ruscelli Siria,Mistaffetta 4x100 Misti,292.47,364,oro
+Trofeo Riviera Delle Alpi,Lucchese Camilla,100 Dorso,81.38,306,no
+Trofeo Riviera Delle Alpi,De Giorgi Alessandro,100 Rana lanciato,75.23,396,no
+Trofeo Riviera Delle Alpi,Oliaro Giulio,100 Farfalla lanciato,68.70,336,no
+Trofeo Riviera Delle Alpi,Ruscelli Siria,100 Stile Libero lanciato,67.16,418,no
+Trofeo Regionale Distanze Speciali,Belmare Diego,100 Stile Libero,69.31,309,argento
+Trofeo Regionale Distanze Speciali,Belmare Diego,50 Stile Libero,29.16,368,argento
+Trofeo Regionale Distanze Speciali,Belmare Diego,50 Farfalla,31.53,352,argento
+Trofeo Regionale Distanze Speciali,De Giorgi Alessandro,50 Rana,33.66,458,oro
+Trofeo Regionale Distanze Speciali,De Giorgi Alessandro,100 Rana,79.31,368,oro
+Trofeo Regionale Distanze Speciali,De Giorgi Alessandro,200 Rana,176.61,358,oro
+Trofeo Regionale Distanze Speciali,Ingrosso Emma,100 Stile Libero,71.27,381,oro
+Trofeo Regionale Distanze Speciali,Ingrosso Emma,50 Stile Libero,31.51,420,oro
+Trofeo Regionale Distanze Speciali,Ingrosso Emma,50 Farfalla,34.72,348,oro
+Trofeo Regionale Distanze Speciali,Lucchese Camilla,100 Dorso,84.39,313,oro
+Trofeo Regionale Distanze Speciali,Lucchese Camilla,100 Stile Libero,75.37,322,bronzo
+Trofeo Regionale Distanze Speciali,Lucchese Camilla,200 Stile Libero,159.91,351,oro
+Trofeo Regionale Distanze Speciali,Oliaro Giulio,100 Stile Libero,60.59,462,oro
+Trofeo Regionale Distanze Speciali,Ruscelli Siria,200 Rana,188.14,390,oro
+Trofeo Regionale Distanze Speciali,Ruscelli Siria,100 Stile Libero,68.47,430,oro
+Trofeo Regionale Distanze Speciali,Ruscelli Siria,50 Rana,37.28,478,oro
+11° Trofeo Nuoto Ponente Master,De Giorgi Alessandro,50 Stile Libero,28.14,367,no
+11° Trofeo Nuoto Ponente Master,De Giorgi Alessandro,100 Rana,75.67,389,no
+11° Trofeo Nuoto Ponente Master,De Giorgi Alessandro,200 Rana,170.51,349,no
+11° Trofeo Nuoto Ponente Master,Perosino Edoardo,100 Stile Libero,56.72,492,no
+11° Trofeo Nuoto Ponente Master,Perosino Edoardo,200 Stile Libero,129.07,456,no
+11° Trofeo Nuoto Ponente Master,Toniazzo Francesca,50 Stile Libero,34.09,304,no
+11° Trofeo Nuoto Ponente Master,Toniazzo Francesca,100 Stile Libero,75.24,297,no
+2° Trofeo Minitop,Belmare Diego,50 Stile Libero,29.05,334,no
+2° Trofeo Minitop,Belmare Diego,50 Farfalla,31.21,338,no
+2° Trofeo Minitop,Charafy Sara,50 Farfalla,42.22,192,no
+2° Trofeo Minitop,Charafy Sara,50 Stile Libero,35.34,273,no
+2° Trofeo Minitop,De Giorgi Alessandro,50 Stile Libero,27.81,380,no
+2° Trofeo Minitop,De Giorgi Alessandro,50 Rana,34.37,382,no
+2° Trofeo Minitop,Ingrosso Emma,50 Stile Libero,32.03,366,no
+2° Trofeo Minitop,Ingrosso Emma,50 Farfalla,34.27,360,no
+2° Trofeo Minitop,Lambertoni Giulia,50 Stile Libero,36.59,246,no
+2° Trofeo Minitop,Lambertoni Giulia,50 Rana,42.85,290,no
+2° Trofeo Minitop,Lucchese Camilla,50 Stile Libero,33.19,329,no
+2° Trofeo Minitop,Lucchese Camilla,50 Dorso,38.81,275,no
+2° Trofeo Minitop,Midulla Arianna,50 Stile Libero,31.37,390,no
+2° Trofeo Minitop,Midulla Arianna,50 Farfalla,36.40,300,no
+2° Trofeo Minitop,Oliaro Giulio,50 Stile Libero,27.09,412,no
+2° Trofeo Minitop,Oliaro Giulio,50 Farfalla,28.98,422,no
+2° Trofeo Minitop,Perosino Edoardo,50 Farfalla,27.75,481,no
+2° Trofeo Minitop,Perosino Edoardo,50 Rana,33.09,428,no
+2° Trofeo Minitop,Prudenzano Sofia,50 Stile Libero,36.58,246,no
+2° Trofeo Minitop,Ruscelli Siria,50 Rana,36.09,485,bronzo
+2° Trofeo Minitop,Ruscelli Siria,50 Stile Libero,31.56,383,no
+2° Trofeo Minitop,Savant Ros Sveva,50 Stile Libero,31.66,379,no
+2° Trofeo Minitop,Savant Ros Sveva,50 Dorso,38.67,278,no
+2° Trofeo Minitop,Tissoni Giulia,50 Stile Libero,33.88,310,no
+2° Trofeo Minitop,Tissoni Giulia,50 Dorso,38.13,290,no
+2° Trofeo Minitop,Toniazzo Francesca,50 Stile Libero,34.89,283,no
+2° Trofeo Minitop,Toniazzo Francesca,50 Rana,47.12,218,no
+2° Trofeo Minitop,Ruscelli Siria,Mistaffetta 4x50 Stile Libero,114.27,446,no
+2° Trofeo Minitop,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,114.27,446,no
+2° Trofeo Minitop,Midulla Arianna,Mistaffetta 4x50 Stile Libero,114.27,446,no
+2° Trofeo Minitop,Perosino Edoardo,Mistaffetta 4x50 Stile Libero,114.27,446,no
+2° Trofeo Minitop,Savant Ros Sveva,Mistaffetta 4x50 Stile Libero,118.30,402,no
+2° Trofeo Minitop,Belmare Diego,Mistaffetta 4x50 Stile Libero,118.30,402,no
+2° Trofeo Minitop,Ingrosso Emma,Mistaffetta 4x50 Stile Libero,118.30,402,no
+2° Trofeo Minitop,De Giorgi Alessandro,Mistaffetta 4x50 Stile Libero,118.30,402,no
+2° Trofeo Minitop,Ruscelli Siria,50 Stile Libero,31.53,384,no
+2° Trofeo Minitop,Oliaro Giulio,50 Stile Libero lanciato,26.41,444,no
+2° Trofeo Minitop,Midulla Arianna,50 Stile Libero lanciato,30.91,408,no
+2° Trofeo Minitop,Perosino Edoardo,50 Stile Libero lanciato,25.42,498,no
+2° Trofeo Minitop,Savant Ros Sveva,50 Stile Libero,31.39,389,no
+2° Trofeo Minitop,Belmare Diego,50 Stile Libero lanciato,28.54,352,no
+2° Trofeo Minitop,Ingrosso Emma,50 Stile Libero lanciato,31.87,372,no
+2° Trofeo Minitop,De Giorgi Alessandro,50 Stile Libero lanciato,26.57,436,no
+46° Trofeo Della Resistenza,Belmare Diego,100 Stile Libero,68.75,316,no
+46° Trofeo Della Resistenza,Belmare Diego,50 Stile Libero,29.48,356,no
+46° Trofeo Della Resistenza,Charafy Sara,50 Stile Libero,36.07,280,no
+46° Trofeo Della Resistenza,Charafy Sara,100 Stile Libero,80.20,268,no
+46° Trofeo Della Resistenza,De Giorgi Alessandro,50 Stile Libero,28.84,381,no
+46° Trofeo Della Resistenza,De Giorgi Alessandro,100 Rana,78.07,386,argento
+46° Trofeo Della Resistenza,Ingrosso Emma,50 Stile Libero,32.57,380,no
+46° Trofeo Della Resistenza,Ingrosso Emma,100 Farfalla,89.12,241,no
+46° Trofeo Della Resistenza,Lambertoni Giulia,50 Stile Libero,36.80,264,no
+46° Trofeo Della Resistenza,Lambertoni Giulia,100 Rana,99.93,264,no
+46° Trofeo Della Resistenza,Lucchese Camilla,100 Dorso,80.67,385,no
+46° Trofeo Della Resistenza,Lucchese Camilla,200 Stile Libero,155.98,378,no
+46° Trofeo Della Resistenza,Midulla Arianna,100 Stile Libero,68.83,424,no
+46° Trofeo Della Resistenza,Midulla Arianna,100 Farfalla,83.54,292,no
+46° Trofeo Della Resistenza,Oliaro Giulio,100 Stile Libero,59.71,483,no
+46° Trofeo Della Resistenza,Oliaro Giulio,100 Farfalla,70.82,340,no
+46° Trofeo Della Resistenza,Perosino Edoardo,100 Stile Libero,57.97,528,bronzo
+46° Trofeo Della Resistenza,Perosino Edoardo,200 Stile Libero,137.29,410,no
+46° Trofeo Della Resistenza,Ruscelli Siria,50 Stile Libero,31.70,413,no
+46° Trofeo Della Resistenza,Ruscelli Siria,100 Rana,83.26,456,argento
+46° Trofeo Della Resistenza,Savant Ros Sveva,50 Stile Libero,32.25,392,no
+46° Trofeo Della Resistenza,Savant Ros Sveva,100 Stile Libero,73.19,352,no
+46° Trofeo Della Resistenza,Tissoni Giulia,50 Stile Libero,34.03,333,no
+46° Trofeo Della Resistenza,Tissoni Giulia,100 Dorso,88.44,272,no
+46° Trofeo Della Resistenza,Toniazzo Francesca,50 Stile Libero,35.56,292,no
+46° Trofeo Della Resistenza,Toniazzo Francesca,100 Stile Libero,76.84,304,no
+46° Trofeo Della Resistenza,Belmare Diego,Staffetta 4x50 Stile Libero Maschi,108.20,461,no
+46° Trofeo Della Resistenza,De Giorgi Alessandro,Staffetta 4x50 Stile Libero Maschi,108.20,461,no
+46° Trofeo Della Resistenza,Oliaro Giulio,Staffetta 4x50 Stile Libero Maschi,108.20,461,no
+46° Trofeo Della Resistenza,Perosino Edoardo,Staffetta 4x50 Stile Libero Maschi,108.20,461,no
+46° Trofeo Della Resistenza,Savant Ros Sveva,Staffetta 4x50 Stile Libero Femmine,126.42,416,no
+46° Trofeo Della Resistenza,Midulla Arianna,Staffetta 4x50 Stile Libero Femmine,126.42,416,no
+46° Trofeo Della Resistenza,Ingrosso Emma,Staffetta 4x50 Stile Libero Femmine,126.42,416,no
+46° Trofeo Della Resistenza,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,126.42,416,no
+46° Trofeo Della Resistenza,Belmare Diego,50 Stile Libero,28.90,378,no
+46° Trofeo Della Resistenza,De Giorgi Alessandro,50 Stile Libero lanciato,27.21,453,no
+46° Trofeo Della Resistenza,Oliaro Giulio,50 Stile Libero lanciato,26.88,470,no
+46° Trofeo Della Resistenza,Perosino Edoardo,50 Stile Libero lanciato,25.55,548,no
+46° Trofeo Della Resistenza,Savant Ros Sveva,50 Stile Libero,32.01,401,no
+46° Trofeo Della Resistenza,Midulla Arianna,50 Stile Libero lanciato,31.67,414,no
+46° Trofeo Della Resistenza,Ingrosso Emma,50 Stile Libero lanciato,32.53,382,no
+46° Trofeo Della Resistenza,Ruscelli Siria,50 Stile Libero lanciato,30.22,476,no
+46° Trofeo Della Resistenza,Savant Ros Sveva,Mistaffetta 4x50 Misti,132.35,431,no
+46° Trofeo Della Resistenza,De Giorgi Alessandro,Mistaffetta 4x50 Misti,132.35,431,no
+46° Trofeo Della Resistenza,Perosino Edoardo,Mistaffetta 4x50 Misti,132.35,431,no
+46° Trofeo Della Resistenza,Ruscelli Siria,Mistaffetta 4x50 Misti,132.35,431,no
+46° Trofeo Della Resistenza,Lucchese Camilla,Mistaffetta 4x50 Misti,140.30,370,no
+46° Trofeo Della Resistenza,Belmare Diego,Mistaffetta 4x50 Misti,140.30,370,no
+46° Trofeo Della Resistenza,Oliaro Giulio,Mistaffetta 4x50 Misti,140.30,370,no
+46° Trofeo Della Resistenza,Midulla Arianna,Mistaffetta 4x50 Misti,140.30,370,no
+46° Trofeo Della Resistenza,Savant Ros Sveva,50 Dorso,40.06,301,no
+46° Trofeo Della Resistenza,De Giorgi Alessandro,50 Rana lanciato,33.50,464,no
+46° Trofeo Della Resistenza,Perosino Edoardo,50 Farfalla lanciato,28.33,485,no
+46° Trofeo Della Resistenza,Ruscelli Siria,50 Stile Libero lanciato,30.30,473,no
+46° Trofeo Della Resistenza,Lucchese Camilla,50 Dorso,38.13,349,no
+46° Trofeo Della Resistenza,Belmare Diego,50 Rana lanciato,41.02,253,no
+46° Trofeo Della Resistenza,Oliaro Giulio,50 Farfalla lanciato,28.68,468,no
+46° Trofeo Della Resistenza,Midulla Arianna,50 Stile Libero lanciato,31.77,410,no
+Campionati Regionali Open 2025,Belmare Diego,50 Stile Libero,29.51,355,no
+Campionati Regionali Open 2025,Belmare Diego,50 Farfalla,30.83,376,bronzo
+Campionati Regionali Open 2025,Charafy Sara,50 Stile Libero,36.00,282,no
+Campionati Regionali Open 2025,Charafy Sara,100 Stile Libero,81.28,257,no
+Campionati Regionali Open 2025,De Giorgi Alessandro,200 Rana,178.04,350,oro
+Campionati Regionali Open 2025,De Giorgi Alessandro,50 Rana,34.53,424,argento
+Campionati Regionali Open 2025,Ingrosso Emma,100 Stile Libero,70.74,390,no
+Campionati Regionali Open 2025,Ingrosso Emma,50 Farfalla,35.83,316,no
+Campionati Regionali Open 2025,Lambertoni Giulia,50 Stile Libero,36.19,277,no
+Campionati Regionali Open 2025,Lambertoni Giulia,100 Rana,99.03,271,no
+Campionati Regionali Open 2025,Lucchese Camilla,100 Dorso,82.17,339,no
+Campionati Regionali Open 2025,Lucchese Camilla,200 Stile Libero,151.49,413,no
+Campionati Regionali Open 2025,Midulla Arianna,100 Stile Libero,69.12,418,bronzo
+Campionati Regionali Open 2025,Midulla Arianna,50 Stile Libero,32.37,388,no
+Campionati Regionali Open 2025,Oliaro Giulio,100 Stile Libero,60.06,474,argento
+Campionati Regionali Open 2025,Oliaro Giulio,50 Stile Libero,28.41,398,no
+Campionati Regionali Open 2025,Perosino Edoardo,100 Stile Libero,58.16,523,oro
+Campionati Regionali Open 2025,Perosino Edoardo,200 Stile Libero,133.76,443,oro
+Campionati Regionali Open 2025,Prudenzano Sofia,50 Stile Libero,37.30,253,no
+Campionati Regionali Open 2025,Prudenzano Sofia,100 Stile Libero,81.43,256,no
+Campionati Regionali Open 2025,Ruscelli Siria,200 Rana,190.49,376,no
+Campionati Regionali Open 2025,Ruscelli Siria,50 Rana,37.38,474,oro
+Campionati Regionali Open 2025,Savant Ros Sveva,50 Stile Libero,32.40,386,no
+Campionati Regionali Open 2025,Savant Ros Sveva,100 Stile Libero,72.28,366,no
+Campionati Regionali Open 2025,Lucchese Camilla,Staffetta 4x50 Stile Libero Femmine,127.25,408,no
+Campionati Regionali Open 2025,Ingrosso Emma,Staffetta 4x50 Stile Libero Femmine,127.25,408,no
+Campionati Regionali Open 2025,Midulla Arianna,Staffetta 4x50 Stile Libero Femmine,127.25,408,no
+Campionati Regionali Open 2025,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,127.25,408,no
+Campionati Regionali Open 2025,Belmare Diego,Staffetta 4x50 Stile Libero Maschi,109.51,445,no
+Campionati Regionali Open 2025,De Giorgi Alessandro,Staffetta 4x50 Stile Libero Maschi,109.51,445,no
+Campionati Regionali Open 2025,Oliaro Giulio,Staffetta 4x50 Stile Libero Maschi,109.51,445,no
+Campionati Regionali Open 2025,Perosino Edoardo,Staffetta 4x50 Stile Libero Maschi,109.51,445,no
+Campionati Regionali Open 2025,Lucchese Camilla,50 Stile Libero,32.46,384,no
+Campionati Regionali Open 2025,Ingrosso Emma,50 Stile Libero lanciato,32.33,389,no
+Campionati Regionali Open 2025,Midulla Arianna,50 Stile Libero lanciato,31.79,409,no
+Campionati Regionali Open 2025,Ruscelli Siria,50 Stile Libero lanciato,30.68,455,no
+Campionati Regionali Open 2025,Belmare Diego,50 Stile Libero,29.20,367,no
+Campionati Regionali Open 2025,De Giorgi Alessandro,50 Stile Libero lanciato,27.59,435,no
+Campionati Regionali Open 2025,Oliaro Giulio,50 Stile Libero lanciato,26.36,499,no
+Campionati Regionali Open 2025,Perosino Edoardo,50 Stile Libero lanciato,26.29,503,no
+Campionati Regionali Open 2025,Lucchese Camilla,Staffetta 4x50 Misti Femmine,143.92,384,no
+Campionati Regionali Open 2025,Ruscelli Siria,Staffetta 4x50 Misti Femmine,143.92,384,no
+Campionati Regionali Open 2025,Ingrosso Emma,Staffetta 4x50 Misti Femmine,143.92,384,no
+Campionati Regionali Open 2025,Midulla Arianna,Staffetta 4x50 Misti Femmine,143.92,384,no
+Campionati Regionali Open 2025,Belmare Diego,Staffetta 4x50 Misti Maschi,126.56,416,bronzo
+Campionati Regionali Open 2025,De Giorgi Alessandro,Staffetta 4x50 Misti Maschi,126.56,416,bronzo
+Campionati Regionali Open 2025,Oliaro Giulio,Staffetta 4x50 Misti Maschi,126.56,416,bronzo
+Campionati Regionali Open 2025,Perosino Edoardo,Staffetta 4x50 Misti Maschi,126.56,416,bronzo
+Campionati Regionali Open 2025,Lucchese Camilla,50 Dorso,37.73,360,no
+Campionati Regionali Open 2025,Ruscelli Siria,50 Rana lanciato,37.65,464,no
+Campionati Regionali Open 2025,Ingrosso Emma,50 Farfalla lanciato,36.88,290,no
+Campionati Regionali Open 2025,Midulla Arianna,50 Stile Libero lanciato,31.52,420,no
+Campionati Regionali Open 2025,Belmare Diego,50 Dorso,37.57,246,no
+Campionati Regionali Open 2025,De Giorgi Alessandro,50 Rana lanciato,33.47,466,no
+Campionati Regionali Open 2025,Oliaro Giulio,50 Stile Libero lanciato,26.31,501,no
+Campionati Regionali Open 2025,Perosino Edoardo,50 Farfalla lanciato,29.05,450,no
+Manifestazione Estiva Master Giorno 1,De Giorgi Alessandro,100 Rana,78.74,376,no
+Manifestazione Estiva Master Giorno 2,De Giorgi Alessandro,50 Rana,34.96,408,no
+Manifestazione Estiva Master Giorno 2,Perosino Edoardo,50 Stile Libero,26.68,481,no
+Manifestazione Estiva Master Giorno 2,Perosino Edoardo,100 Stile Libero,58.07,510,no
+Manifestazione Estiva Master Giorno 2,Toniazzo Francesca,50 Stile Libero,35.14,303,no
+Manifestazione Estiva Master Giorno 2,Toniazzo Francesca,100 Stile Libero,77.09,301,no
+3° Trofeo Torino Nuoto,Oliaro Giulio,50 Dorso,31.46,347,no
+3° Trofeo Torino Nuoto,Toniazzo Francesca,50 Dorso,43.64,193,no
+3° Trofeo Torino Nuoto,Prudenzano Sofia,50 Dorso,44.16,186,no
+3° Trofeo Torino Nuoto,Belmare Diego,50 Dorso,34.97,252,no
+3° Trofeo Torino Nuoto,Lucchese Camilla,50 Dorso,36.50,331,no
+3° Trofeo Torino Nuoto,Midulla Arianna,50 Rana,42.57,295,no
+3° Trofeo Torino Nuoto,Lambertoni Giulia,50 Rana,43.45,278,no
+3° Trofeo Torino Nuoto,De Giorgi Alessandro,50 Rana,33.80,402,no
+3° Trofeo Torino Nuoto,Ruscelli Siria,50 Rana,38.79,391,no
+3° Trofeo Torino Nuoto,Charafy Sara,50 Stile Libero,36.09,256,no
+3° Trofeo Torino Nuoto,Ingrosso Emma,50 Stile Libero,31.50,385,no
+3° Trofeo Torino Nuoto,Oliaro Giulio,50 Stile Libero,26.86,422,no
+3° Trofeo Torino Nuoto,Perosino Edoardo,50 Stile Libero,26.26,452,no
+Campionati Nazionali Estivi 2025 Giorno 1,De Giorgi Alessandro,100 Rana,76.11,417,no
+Campionati Nazionali Estivi 2025 Giorno 1,Lambertoni Giulia,100 Rana,100.54,259,no
+Campionati Nazionali Estivi 2025 Giorno 1,Lucchese Camilla,200 Stile Libero,152.57,398,no
+Campionati Nazionali Estivi 2025 Giorno 1,Ruscelli Siria,100 Rana,83.33,455,no
+Campionati Nazionali Estivi 2025 Giorno 1,Tissoni Giulia,50 Dorso,39.68,310,no
+Campionati Nazionali Estivi 2025 Giorno 1,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,115.56,462,no
+Campionati Nazionali Estivi 2025 Giorno 1,Midulla Arianna,Mistaffetta 4x50 Stile Libero,115.56,462,no
+Campionati Nazionali Estivi 2025 Giorno 1,Ruscelli Siria,Mistaffetta 4x50 Stile Libero,115.56,462,no
+Campionati Nazionali Estivi 2025 Giorno 1,De Giorgi Alessandro,Mistaffetta 4x50 Stile Libero,115.56,462,no
+Campionati Nazionali Estivi 2025 Giorno 1,Oliaro Giulio,50 Stile Libero,26.44,494,no
+Campionati Nazionali Estivi 2025 Giorno 1,Midulla Arianna,50 Stile Libero lanciato,31.28,430,no
+Campionati Nazionali Estivi 2025 Giorno 1,Ruscelli Siria,50 Stile Libero lanciato,30.68,455,no
+Campionati Nazionali Estivi 2025 Giorno 1,De Giorgi Alessandro,50 Stile Libero lanciato,26.78,476,no
+Campionati Nazionali Estivi 2025 Giorno 1,Lucchese Camilla,Mistaffetta 4x50 Misti,129.48,453,no
+Campionati Nazionali Estivi 2025 Giorno 1,De Giorgi Alessandro,Mistaffetta 4x50 Misti,129.48,453,no
+Campionati Nazionali Estivi 2025 Giorno 1,Oliaro Giulio,Mistaffetta 4x50 Misti,129.48,453,no
+Campionati Nazionali Estivi 2025 Giorno 1,Ruscelli Siria,Mistaffetta 4x50 Misti,129.48,453,no
+Campionati Nazionali Estivi 2025 Giorno 1,Lucchese Camilla,50 Dorso,38.15,349,no
+Campionati Nazionali Estivi 2025 Giorno 1,De Giorgi Alessandro,50 Rana lanciato,32.65,502,no
+Campionati Nazionali Estivi 2025 Giorno 1,Oliaro Giulio,50 Farfalla lanciato,28.30,487,no
+Campionati Nazionali Estivi 2025 Giorno 1,Ruscelli Siria,50 Stile Libero lanciato,30.30,473,no
+Campionati Nazionali Estivi 2025 Giorno 2,Belmare Diego,50 Farfalla,30.99,371,no
+Campionati Nazionali Estivi 2025 Giorno 2,Charafy Sara,100 Stile Libero,82.92,242,no
+Campionati Nazionali Estivi 2025 Giorno 2,De Giorgi Alessandro,50 Rana,34.33,431,no
+Campionati Nazionali Estivi 2025 Giorno 2,Ingrosso Emma,100 Stile Libero,69.58,410,no
+Campionati Nazionali Estivi 2025 Giorno 2,Ingrosso Emma,50 Farfalla,34.82,345,no
+Campionati Nazionali Estivi 2025 Giorno 2,Midulla Arianna,100 Stile Libero,69.42,413,no
+Campionati Nazionali Estivi 2025 Giorno 2,Oliaro Giulio,100 Stile Libero,59.27,479,no
+Campionati Nazionali Estivi 2025 Giorno 2,Prudenzano Sofia,100 Stile Libero,80.52,264,no
+Campionati Nazionali Estivi 2025 Giorno 2,Ruscelli Siria,50 Rana,37.03,488,bronzo
+Campionati Nazionali Estivi 2025 Giorno 2,Savant Ros Sveva,100 Stile Libero,73.02,355,no
+Campionati Nazionali Estivi 2025 Giorno 2,Tissoni Giulia,100 Stile Libero,77.69,294,no
+Campionati Nazionali Estivi 2025 Giorno 2,Lucchese Camilla,Staffetta 4x50 Misti Femmine,139.78,415,no
+Campionati Nazionali Estivi 2025 Giorno 2,Ruscelli Siria,Staffetta 4x50 Misti Femmine,139.78,415,no
+Campionati Nazionali Estivi 2025 Giorno 2,Ingrosso Emma,Staffetta 4x50 Misti Femmine,139.78,415,no
+Campionati Nazionali Estivi 2025 Giorno 2,Midulla Arianna,Staffetta 4x50 Misti Femmine,139.78,415,no
+Campionati Nazionali Estivi 2025 Giorno 2,Lucchese Camilla,50 Dorso,36.84,387,no
+Campionati Nazionali Estivi 2025 Giorno 2,Ruscelli Siria,50 Rana lanciato,37.17,482,no
+Campionati Nazionali Estivi 2025 Giorno 2,Ingrosso Emma,50 Farfalla lanciato,34.55,353,no
+Campionati Nazionali Estivi 2025 Giorno 2,Midulla Arianna,50 Stile Libero lanciato,31.05,439,no
+Campionati Nazionali Estivi 2025 Giorno 3,Belmare Diego,50 Stile Libero,29.10,371,no
+Campionati Nazionali Estivi 2025 Giorno 3,Charafy Sara,50 Stile Libero,35.79,287,no
+Campionati Nazionali Estivi 2025 Giorno 3,Lambertoni Giulia,50 Stile Libero,35.46,295,no
+Campionati Nazionali Estivi 2025 Giorno 3,Lucchese Camilla,100 Dorso,81.64,342,no
+Campionati Nazionali Estivi 2025 Giorno 3,Midulla Arianna,50 Stile Libero,32.12,397,no
+Campionati Nazionali Estivi 2025 Giorno 3,Oliaro Giulio,50 Stile Libero,27.09,459,no
+Campionati Nazionali Estivi 2025 Giorno 3,Prudenzano Sofia,50 Stile Libero,37.08,258,no
+Campionati Nazionali Estivi 2025 Giorno 3,Savant Ros Sveva,50 Stile Libero,31.73,411,no
+Campionati Nazionali Estivi 2025 Giorno 3,Charafy Sara,Staffetta 4x50 Stile Libero Femmine,140.71,302,no
+Campionati Nazionali Estivi 2025 Giorno 3,Lambertoni Giulia,Staffetta 4x50 Stile Libero Femmine,140.71,302,no
+Campionati Nazionali Estivi 2025 Giorno 3,Prudenzano Sofia,Staffetta 4x50 Stile Libero Femmine,140.71,302,no
+Campionati Nazionali Estivi 2025 Giorno 3,Tissoni Giulia,Staffetta 4x50 Stile Libero Femmine,140.71,302,no
+Campionati Nazionali Estivi 2025 Giorno 3,Savant Ros Sveva,Staffetta 4x50 Stile Libero Femmine,124.01,441,no
+Campionati Nazionali Estivi 2025 Giorno 3,Midulla Arianna,Staffetta 4x50 Stile Libero Femmine,124.01,441,no
+Campionati Nazionali Estivi 2025 Giorno 3,Ingrosso Emma,Staffetta 4x50 Stile Libero Femmine,124.01,441,no
+Campionati Nazionali Estivi 2025 Giorno 3,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,124.01,441,no
+Campionati Nazionali Estivi 2025 Giorno 3,Charafy Sara,50 Stile Libero,35.09,304,no
+Campionati Nazionali Estivi 2025 Giorno 3,Lambertoni Giulia,50 Stile Libero lanciato,35.19,302,no
+Campionati Nazionali Estivi 2025 Giorno 3,Prudenzano Sofia,50 Stile Libero lanciato,36.31,274,no
+Campionati Nazionali Estivi 2025 Giorno 3,Tissoni Giulia,50 Stile Libero lanciato,34.18,329,no
+Campionati Nazionali Estivi 2025 Giorno 3,Savant Ros Sveva,50 Stile Libero,31.06,439,no
+Campionati Nazionali Estivi 2025 Giorno 3,Midulla Arianna,50 Stile Libero lanciato,32.04,400,no
+Campionati Nazionali Estivi 2025 Giorno 3,Ingrosso Emma,50 Stile Libero lanciato,31.08,438,no
+Campionati Nazionali Estivi 2025 Giorno 3,Ruscelli Siria,50 Stile Libero lanciato,29.83,495,no
+Campionati Nazionali Estivi Master 2025 Giorno 3,De Giorgi Alessandro,200 Rana,174.20,373,no
+Campionati Nazionali Estivi Master 2025 Giorno 4,De Giorgi Alessandro,50 Rana,33.34,471,no
+Campionati Nazionali Estivi Master 2025 Giorno 5,De Giorgi Alessandro,100 Rana,75.34,430,no
+Campionato Regionale Master 2025 Giorno 1,Perosino Edoardo,50 Stile Libero,25.57,471,no
+Campionato Regionale Master 2025 Giorno 2,De Giorgi Alessandro,50 Rana lanciato,33.30,420,no
+Campionato Regionale Master 2025 Giorno 2,Perosino Edoardo,50 Farfalla lanciato,27.23,479,no
+11° Trofeo Nuoto Ponente Master,Perosino Edoardo,50 Farfalla lanciato,27.55,463,no
+11° Trofeo Nuoto Ponente Master,De Giorgi Alessandro,50 Rana lanciato,33.30,420,no
+11° Trofeo Nuoto Ponente Master,Toniazzo Francesca,50 Stile Libero lanciato,33.87,306,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,Belmare Diego,50 Stile Libero,27.40,383,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,Belmare Diego,50 Farfalla,28.77,406,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,Ingrosso Emma,50 Stile Libero,31.62,376,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,Ingrosso Emma,50 Farfalla,35.00,320,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,Lucchese Camilla,100 Dorso,79.52,313,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,Lucchese Camilla,50 Stile Libero,33.15,326,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,Midulla Arianna,50 Stile Libero,31.34,386,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,Midulla Arianna,50 Farfalla,35.75,300,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,Ruscelli Siria,50 Stile Libero,30.82,406,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,Ruscelli Siria,200 Rana,190.67,335,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,Scattaglia Stella,100 Dorso,73.45,397,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,Scattaglia Stella,50 Stile Libero,31.38,385,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,Tissoni Giulia,50 Stile Libero,33.06,329,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,Tissoni Giulia,100 Dorso,84.69,259,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,Varolo Nicolò,100 Dorso,72.11,301,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,Varolo Nicolò,200 Misti,153.66,355,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1,De Giorgi Alessandro,50 Farfalla,30.77,332,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Belmare Diego,100 Stile Libero,61.44,388,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Belmare Diego,100 Farfalla,69.54,322,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Ingrosso Emma,100 Stile Libero,70.77,357,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Ingrosso Emma,100 Farfalla,81.84,267,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Lucchese Camilla,200 Dorso,175.33,305,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Lucchese Camilla,200 Stile Libero,151.62,385,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Lucchese Camilla,100 Stile Libero,70.70,359,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Midulla Arianna,100 Stile Libero,67.58,411,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Midulla Arianna,100 Farfalla,81.22,273,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Ruscelli Siria,100 Stile Libero,67.01,421,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Ruscelli Siria,100 Rana,85.20,392,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Ruscelli Siria,50 Rana,37.05,448,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Scattaglia Stella,50 Dorso,35.13,370,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Scattaglia Stella,100 Stile Libero,67.95,404,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Tissoni Giulia,100 Stile Libero,72.01,339,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Tissoni Giulia,50 Dorso,39.06,269,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Varolo Nicolò,200 Farfalla,155.34,325,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,Varolo Nicolò,400 Stile Libero,292.05,383,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,De Giorgi Alessandro,100 Stile Libero,60.48,407,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,De Giorgi Alessandro,100 Rana,75.06,399,no
+1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,De Giorgi Alessandro,50 Rana,33.54,411,no
+
+</script>
+
+<script>
+const mappaGare = {
+  "apertura": {data: "2022-12-04", piscina: "Sisport", vasca: 25},
+  "17° memorial davide cagnotto": {data: "2023-01-22", piscina: "Fossano", vasca: 25},
+  "1ª giornata pentathlon 2023": {data: "2023-02-12", piscina: "Fossano", vasca: 25},
+  "trofeo mimosa": {data: "2023-03-05", piscina: "Colletta", vasca: 25},
+  "2ª giornata pentathlon 2023": {data: "2023-03-19", piscina: "Sisport", vasca: 25},
+  "trofeo raspini": {data: "2023-04-16", piscina: "Pinerolo", vasca: 25},
+  "44° trofeo della resistenza": {data: "2023-04-25", piscina: "Sisport", vasca: 50},
+  "campionati regionali open 2023": {data: "2023-05-21", piscina: "Sisport", vasca: 50},
+  "campionati nazionali estivi 2023 giorno 1": {data: "2023-06-09", piscina: "Napoli", vasca: 50},
+  "campionati nazionali estivi 2023 giorno 2": {data: "2023-06-10", piscina: "Napoli", vasca: 50},
+  "campionati nazionali estivi 2023 giorno 3": {data: "2023-06-11", piscina: "Napoli", vasca: 50},
+  "coppa autunno": {data: "2023-11-19", piscina: "Fossano", vasca: 25},
+  "campionati nazionali invernali master 2023": {data: "2023-12-09", piscina: "Palazzo del Nuoto", vasca: 25},
+  "18° memorial davide cagnotto": {data: "2024-01-14", piscina: "Fossano", vasca: 25},
+  "1ª giornata pentathlon 2024": {data: "2024-01-28", piscina: "Fossano", vasca: 25},
+  "2ª giornata pentathlon 2024": {data: "2024-02-18", piscina: "Sisport", vasca: 25},
+  "coppa piemonte": {data: "2024-03-24", piscina: "Sisport", vasca: 25},
+  "45° trofeo della resistenza": {data: "2024-04-25", piscina: "Sisport", vasca: 50},
+  "1° trofeo minitop": {data: "2024-05-05", piscina: "Pinerolo", vasca: 25},
+  "campionati regionali open 2024": {data: "2024-05-12", piscina: "Sisport", vasca: 50},
+  "2° trofeo torino nuoto": {data: "2024-05-25", piscina: "Torino Nuoto", vasca: 25},
+  "campionati nazionali estivi 2024 giorno 1": {data: "2024-06-14", piscina: "Riccione", vasca: 50},
+  "campionati nazionali estivi 2024 giorno 2": {data: "2024-06-15", piscina: "Riccione", vasca: 50},
+  "campionati nazionali estivi 2024 giorno 3": {data: "2024-06-16", piscina: "Riccione", vasca: 50},
+  "memorial giuseppina ghibaudo": {data: "2024-10-20", piscina: "Saint Vincent", vasca: 25},
+  "15° trofeo master città di saronno": {data: "2024-11-10", piscina: "Saronno", vasca: 25},
+  "19° memorial davide cagnotto": {data: "2024-11-24", piscina: "Fossano", vasca: 25},
+  "campionati nazionali invernali master 2024 giorno 2": {data: "2024-12-07", piscina: "Palazzo del Nuoto", vasca: 25},
+  "campionati nazionali invernali master 2024 giorno 3": {data: "2024-12-08", piscina: "Palazzo del Nuoto", vasca: 25},
+  "1ª tappa coppa los angeles 2024/2025 giorno 1": {data: "2024-12-14", piscina: "Palazzo del Nuoto", vasca: 25},
+  "1ª tappa coppa los angeles 2024/2025 giorno 2": {data: "2024-12-15", piscina: "Sisport", vasca: 25},
+  "1ª giornata pentathlon 2025": {data: "2025-01-19", piscina: "Sisport", vasca: 25},
+  "2ª tappa coppa los angeles 2024/2025 giorno 1": {data: "2025-01-25", piscina: "Palazzo del Nuoto", vasca: 25},
+  "2ª tappa coppa los angeles 2024/2025 giorno 2": {data: "2025-01-26", piscina: "Sisport", vasca: 25},
+  "2ª giornata pentathlon 2025": {data: "2025-02-02", piscina: "Sisport", vasca: 25},
+  "campionato regionale master 2025 giorno 1": {data: "2025-02-08", piscina: "Palazzo del Nuoto", vasca: 25},
+  "campionato regionale master 2025 giorno 2": {data: "2025-02-09", piscina: "Palazzo del Nuoto", vasca: 25},
+  "trofeo riviera delle alpi": {data: "2025-02-23", piscina: "Saint Vincent", vasca: 25},
+  "trofeo regionale distanze speciali": {data: "2025-03-02", piscina: "Sisport", vasca: 50},
+  "11° trofeo nuoto ponente master": {data: "2025-03-30", piscina: "Genova Pra", vasca: 25},
+  "2° trofeo minitop": {data: "2025-04-13", piscina: "Pinerolo", vasca: 25},
+  "46° trofeo della resistenza": {data: "2025-04-25", piscina: "Sisport", vasca: 50},
+  "campionati regionali open 2025": {data: "2025-05-11", piscina: "Sisport", vasca: 50},
+  "manifestazione estiva master giorno 1": {data: "2025-05-17", piscina: "Palazzo del Nuoto", vasca: 50},
+  "manifestazione estiva master giorno 2": {data: "2025-05-18", piscina: "Palazzo del Nuoto", vasca: 50},
+  "3° trofeo torino nuoto": {data: "2025-05-24", piscina: "Torino Nuoto", vasca: 25},
+  "campionati nazionali estivi 2025 giorno 1": {data: "2025-06-13", piscina: "Riccione", vasca: 50},
+  "campionati nazionali estivi 2025 giorno 2": {data: "2025-06-14", piscina: "Riccione", vasca: 50},
+  "campionati nazionali estivi 2025 giorno 3": {data: "2025-06-15", piscina: "Riccione", vasca: 50},
+  "campionati nazionali estivi master 2025 giorno 3": {data: "2025-06-26", piscina: "Riccione", vasca: 50},
+  "campionati nazionali estivi master 2025 giorno 4": {data: "2025-06-27", piscina: "Riccione interna", vasca: 50},
+  "campionati nazionali estivi master 2025 giorno 5": {data: "2025-06-28", piscina: "Riccione", vasca: 50},
+  "1ª tappa coppa los angeles 2025/2026 giorno 1": {data: "2025-11-01", piscina: "Palazzo del Nuoto", vasca: 25},
+  "1ª tappa coppa los angeles 2025/2026 giorno 2": {data: "2025-11-02", piscina: "Palazzo del Nuoto", vasca: 25},
+};
+
+
+function normalizzaStringa(s){return s.trim().toLowerCase();}
+
+// Parsing dati
+const datiText = document.getElementById("dati").textContent.trim();
+const righe = datiText.split(/\r?\n/).filter(r => r.trim() !== "");
+const righeDati = righe.slice(1);
+
+const risultati = [];
+righeDati.forEach(riga => {
+    const campi = riga.split(",").map(x => x.trim());
+    if(campi.length < 6) return;
+    let [gara, atleta, prova, tempo, punti, medaglia] = campi;
+    const infoGara = mappaGare[normalizzaStringa(gara)] || {data:"?", piscina:"?", vasca:"?"};
+
+    // Determina il sesso
+    let sesso;
+    const femmineAssoluti = ['Bartalesi Beatrice', 'Bibbona Lucia', 'Damasio Gaia Ada', 'Lambertoni Giulia', 'Manfrino Elisa',
+        'Speranza Lucrezia', 'Toniazzo Francesca', 'Savant Ros Sveva'];
+    const maschiRagazziJuniores = ['Catalano Giovanni', 'Martini Lorenzo','Oliaro Giulio','Oliaro Pietro','Belmare Diego','Varolo Nicolò'];
+    const maschiAssoluti = ['De Giorgi Alessandro', 'Pedi Mattia', 'Perosino Edoardo', 'Tessitore Andrea'];
+    const femmineRagazziJuniores = ['Charafy Sara','Farruggia Vittoria', 'Fiora Virginia', 'Bagnasco Giulia','Ingrosso Emma', 'Lucchese Camilla','Midulla Arianna','Tissoni Giulia','Scattaglia Stella'];
+    const femmineJunioresAssoluti = ['Ichim Alexandra', 'Ruscelli Siria', 'Ferrero Miriam', 'Cecire Vittoria','Prudenzano Sofia'];
+
+    if(femmineAssoluti.includes(atleta)) sesso='F';
+    else if(maschiRagazziJuniores.includes(atleta) || maschiAssoluti.includes(atleta)) sesso='M';
+    else if(femmineRagazziJuniores.includes(atleta) || femmineJunioresAssoluti.includes(atleta)) sesso='F';
+    else sesso='F'; // default
+
+    risultati.push({
+        gara, atleta, prova, tempo: parseFloat(tempo), punti, medaglia, sesso,
+        data: infoGara.data, piscina: infoGara.piscina, vasca: infoGara.vasca
+    });
+});
+
+// Popola tendina senza staffette e accorpando 50 lanciati/da fermo
+const select = document.getElementById("provaSelect");
+const tutteLeProveSet = new Set();
+risultati.forEach(r=>{
+    const provaNorm = r.prova.toLowerCase().replace(/ lanciato/i,"").replace(/ da fermo/i,"");
+    if(!provaNorm.includes("staffetta")) tutteLeProveSet.add(provaNorm);
+});
+const tutteLeProve = Array.from(tutteLeProveSet).sort();
+tutteLeProve.forEach(prova=>{
+    const opt = document.createElement("option");
+    opt.value = prova; opt.textContent = prova;
+    select.appendChild(opt);
+});
+
+// Formatta tempo
+function formattaTempo(t){
+    if(t<60) return t.toFixed(2);
+    const min = Math.floor(t/60);
+    const sec = (t%60).toFixed(2).padStart(5,"0");
+    return `${min}:${sec}`;
+}
+
+function isLanciato(prova){
+    return prova.toLowerCase().includes("lanciato");
+}
+
+// Mostra classifiche
+function mostraClassifiche(provaSelezionata){
+    if(!provaSelezionata) return;
+    const container = document.getElementById("classifiche");
+    container.innerHTML = "";
+
+    const filtraProva = risultati.filter(r => r.prova.toLowerCase().replace(/ lanciato/i,"").replace(/ da fermo/i,"") === provaSelezionata);
+
+    // Classifiche per sesso/vasca
+    const gruppi = ["Maschi 25 metri","Maschi 50 metri","Femmine 25 metri","Femmine 50 metri"];
+    gruppi.forEach(gr => {
+        const [sessoTxt, vasca] = gr.split(" ");
+        const atletiRaw = filtraProva.filter(r => r.sesso=== (sessoTxt==='Maschi'?'M':'F') && String(r.vasca)===vasca);
+
+        // Prendi solo il miglior tempo per ogni atleta
+        const atleti = {};
+        atletiRaw.forEach(r=>{
+            const attuale = atleti[r.atleta];
+            if(!attuale || r.tempo < attuale.tempo) atleti[r.atleta] = r;
+        });
+
+        const listaOrdinata = Object.values(atleti).sort((a,b)=>a.tempo-b.tempo);
+        if(listaOrdinata.length===0) return;
+
+        const h2 = document.createElement("h2");
+        h2.textContent = `${gr}`;
+        container.appendChild(h2);
+
+        const table = document.createElement("table");
+        const thead = document.createElement("thead");
+        thead.innerHTML = "<tr><th>Pos.</th><th>Atleta</th><th>Tempo</th><th>Gara</th><th>Data</th><th>Piscina</th></tr>";
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+        listaOrdinata.forEach((r,pos)=>{
+            const tr = document.createElement("tr");
+            const cls = isLanciato(r.prova) ? "lanciato" : "";
+            tr.innerHTML = `<td class="${cls}">${pos+1}</td><td class="${cls}">${r.atleta}</td><td class="${cls}">${formattaTempo(r.tempo)}</td><td class="${cls}">${r.gara}</td><td class="${cls}">${r.data}</td><td class="${cls}">${r.piscina}</td>`;
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        container.appendChild(table);
+    });
+
+    // Classifica generale
+    const generale = {};
+    filtraProva.forEach(r=>{
+        const attuale = generale[r.atleta];
+        if(!attuale || r.tempo<attuale.tempo) generale[r.atleta]=r;
+    });
+    const ordGenerale = Object.values(generale).sort((a,b)=>a.tempo-b.tempo);
+
+    const h2g = document.createElement("h2");
+    h2g.textContent="Classifica Generale";
+    container.appendChild(h2g);
+
+    const tableG = document.createElement("table");
+    const theadG = document.createElement("thead");
+    theadG.innerHTML = "<tr><th>Pos.</th><th>Atleta</th><th>Tempo</th><th>Gara</th><th>Data</th><th>Piscina</th><th>Vasca</th></tr>";
+    tableG.appendChild(theadG);
+
+    const tbodyG = document.createElement("tbody");
+    ordGenerale.forEach((r,pos)=>{
+        const tr = document.createElement("tr");
+        const cls = isLanciato(r.prova) ? "lanciato" : "";
+        tr.innerHTML=`<td class="${cls}">${pos+1}</td><td class="${cls}">${r.atleta}</td><td class="${cls}">${formattaTempo(r.tempo)}</td><td class="${cls}">${r.gara}</td><td class="${cls}">${r.data}</td><td class="${cls}">${r.piscina}</td><td class="${cls}">${r.vasca}</td>`;
+        tbodyG.appendChild(tr);
+    });
+    tableG.appendChild(tbodyG);
+    container.appendChild(tableG);
+}
+
+select.addEventListener("change",()=>mostraClassifiche(select.value));
+</script>
+
+</body>
+</html>
