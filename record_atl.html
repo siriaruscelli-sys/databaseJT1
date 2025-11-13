@@ -1698,7 +1698,11 @@ function mostraRecord(){
                   <th>Gara</th><th>Tempo</th><th>Competizione</th><th>Data</th><th>Piscina</th>
                   </tr></thead><tbody>`;
         ordinati.forEach(r=>{
-            html+=`<tr>
+            // 🟨 Evidenzia Coppa Los Angeles 2025/2026
+            const evidenzia = r.gara.toLowerCase().includes("coppa los angeles 2025/2026");
+            const style = evidenzia ? 'style="background-color: yellow;"' : "";
+
+            html+=`<tr ${style}>
                      <td>${r.tipo}</td>
                      <td>${formattaTempo(r.tempo)}</td>
                      <td>${r.gara}</td>

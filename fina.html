@@ -15,10 +15,10 @@
       display: flex; flex-direction: column;
     }
     table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-    th, td { border: 1px solid #ccc; padding: 6px; text-align: center; background-color: #f0f0f0cc; }
-    th { background-color: #f0f0f0; }
+    th, td { border: 1px solid #ccc; padding: 6px; text-align: center; background-color: #ffffff7e; }
+    th { background-color: #ffffff7e; }
     h1 { margin-top: 40px; font-size: 3rem; text-align: center; color: #0b0eaf; text-shadow: 2px 2px 6px rgba(0,0,0,0.4); }
-    a { color: #ffffff; }
+    a { color: #ffffff7e; }
     a:hover { color: #ffe600; text-decoration: underline; }
     .center-controls { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 20px; }
   </style>
@@ -98,7 +98,6 @@
 
 <!-- Dati gare -->
 <script id="dati" type="text/plain">
-nome gara,nome atleta,gara,tempo,punti,medaglia
 Apertura,Bartalesi Beatrice,50 Stile Libero,30.28,434,no
 Apertura,Bartalesi Beatrice,100 Stile Libero,65.84,444,no
 Apertura,Catalano Giovanni,50 Stile Libero,28.02,372,no
@@ -1609,7 +1608,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Parsing info gare ---
   const metaRaw = JSON.parse(document.getElementById('info_gare').textContent);
-  // Normalizzo chiavi a minuscolo per ricerca
   const meta = {};
   Object.keys(metaRaw).forEach(k => { meta[k.toLowerCase()] = metaRaw[k]; });
 
@@ -1626,7 +1624,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const head = '<tr><th>Punti FINA</th><th>Prova</th><th>Tempo</th><th>Vasca</th><th>Piscina</th><th>Gara</th><th>Data</th></tr>';
     const body = items.map(r=>{
       const info = meta[r.gara.toLowerCase()] || {};
-      return `<tr>
+
+      // 🔸 Evidenzia Coppa Los Angeles 2025/2026 in giallo intenso
+      const evidenzia = r.gara.toLowerCase().includes("coppa los angeles 2025/2026");
+      const style = evidenzia ? 'style="background-color: #ffee00;"' : "";
+
+
+      return `<tr ${style}>
         <td>${r.points}</td>
         <td>${escapeHtml(r.prova)}</td>
         <td>${escapeHtml(r.timeFormatted)}</td>
@@ -1660,3 +1664,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
+

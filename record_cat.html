@@ -1584,21 +1584,21 @@ function chiaveMappa(nome){
 function getSessoCategoria(nome, dataStr) {
   const data = dataStr ? new Date(dataStr) : new Date();
   if (["Bartalesi Beatrice","Bibbona Lucia","Damasio Gaia Ada","Lambertoni Giulia",
-       "Manfrino Elisa","Speranza Lucrezia","Toniazzo Francesca","Savant Ros Sveva",'Scattaglia Stella'].includes(nome))
+       "Manfrino Elisa","Speranza Lucrezia","Toniazzo Francesca","Savant Ros Sveva","Scattaglia Stella"].includes(nome))
     return { sesso: "Femmine", categoria: "Assoluti" };
   if (["Catalano Giovanni","Martini Lorenzo"].includes(nome))
     return { sesso: "Maschi", categoria: data<inizio_stagione_23_24 ? "Ragazzi" : "Juniores" };
   if (["De Giorgi Alessandro","Pedi Mattia","Perosino Edoardo","Tessitore Andrea"].includes(nome))
     return { sesso: "Maschi", categoria: "Assoluti" };
-if (["Farruggia Vittoria", "Fiora Virginia", "Bagnasco Giulia", "Ingrosso Emma",
-     "Lucchese Camilla", "Midulla Arianna", "Tissoni Giulia"].includes(nome)) {
-  return {
-    sesso: "Femmine",
-    categoria: (data < inizio_stagione_23_24) ? "Ragazzi" :
-               (data >= inizio_stagione_23_24 && data < inizio_stagione_24_25) ? "Juniores" :
-               (data >= inizio_stagione_25_26) ? "Assoluti" : "Ragazzi"
-  };
-}
+  if (["Farruggia Vittoria", "Fiora Virginia", "Bagnasco Giulia", "Ingrosso Emma",
+       "Lucchese Camilla", "Midulla Arianna", "Tissoni Giulia"].includes(nome)) {
+    return {
+      sesso: "Femmine",
+      categoria: (data < inizio_stagione_23_24) ? "Ragazzi" :
+                 (data >= inizio_stagione_23_24 && data < inizio_stagione_24_25) ? "Juniores" :
+                 (data >= inizio_stagione_25_26) ? "Assoluti" : "Ragazzi"
+    };
+  }
   if (["Ichim Alexandra","Ruscelli Siria","Ferrero Miriam","Cecire Vittoria","Prudenzano Sofia"].includes(nome))
     return { sesso: "Femmine", categoria: data<inizio_stagione_24_25 ? "Juniores" : "Assoluti" };
   if (nome==="Oliaro Giulio") return { sesso: "Maschi", categoria: data<inizio_stagione_24_25 ? "Ragazzi" : "Juniores" };
@@ -1617,7 +1617,10 @@ function parseTempo(t){
   }
   return parseFloat(t);
 }
-function formatTempo(sec){ return sec===Infinity ? "" : (sec<60 ? sec.toFixed(2) : `${Math.floor(sec/60)}:${(sec%60).toFixed(2).padStart(5,"0")}`); }
+
+function formatTempo(sec){ 
+  return sec===Infinity ? "" : (sec<60 ? sec.toFixed(2) : `${Math.floor(sec/60)}:${(sec%60).toFixed(2).padStart(5,"0")}`);
+}
 
 const raw = document.getElementById("dati").textContent.trim();
 const righe = raw.split("\n").slice(1);
@@ -1654,6 +1657,7 @@ dati.forEach(r=>{
 });
 
 const contenuto = document.getElementById("contenuto");
+
 ["Maschi","Femmine"].forEach(sesso=>{
   [25,50].forEach(vasca=>{
     ["Ragazzi","Juniores","Assoluti"].forEach(cat=>{
@@ -1662,7 +1666,11 @@ const contenuto = document.getElementById("contenuto");
         let html = `<div class="sezione"><h2>${sesso} – Categoria ${cat} – Vasca ${vasca}m</h2><table><thead><tr>`;
         html+="<th>Gara</th><th>Tempo</th><th>Atleta</th><th>Competizione</th><th>Data</th><th>Piscina</th></tr></thead><tbody>";
         perCat.forEach(r=>{
-          html+=`<tr>
+          // 🔸 Evidenzia le righe delle gare "Coppa Los Angeles 2025/2026"
+          const evidenzia = r.competizione.toLowerCase().includes("coppa los angeles 2025/2026");
+          const style = evidenzia ? 'style="background-color: yellow;"' : "";
+
+          html+=`<tr ${style}>
             <td>${r.prova}</td>
             <td>${formatTempo(r.tempo)}</td>
             <td>${r.atleta}</td>

@@ -4,60 +4,68 @@
 <meta charset="UTF-8">
 <title>Classifiche Nuoto</title>
 <style>
-  body {
-    margin: 0;
-    padding: 20px;
-    font-family: Georgia, 'Times New Roman', Times, serif, sans-serif;
-    background-image: url("https://wallpapers.com/images/featured/sfondo-di-acqua-di-piscina-am94qlj0a89gmo8j.jpg");
-    background-size: cover;        
-    background-position: center;   
-    background-repeat: repeat;  
-    color: #070674;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: Georgia, 'Times New Roman', Times, serif, sans-serif;
+  background-image: url("https://wallpapers.com/images/featured/sfondo-di-acqua-di-piscina-am94qlj0a89gmo8j.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat;
+  color: #070674;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-table { 
-    border-collapse: collapse; 
-    width: 100%; 
-    margin-top: 10px;
-    background-color: #ffffff7e; 
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 10px;
+  background-color: #ffffff7e;
 }
-th, td { 
-    border: 1px solid #c4c4c4; 
-    padding: 6px; 
-    text-align: left; 
+
+th, td {
+  border: 1px solid #c4c4c4;
+  padding: 6px;
+  text-align: left;
 }
-th { 
-    background-color: #f0f0f0; 
+
+th {
+  background-color: #f0f0f0;
 }
-input, select, button { 
-    padding: 5px; 
-    margin-right: 10px; 
+
+input, select, button {
+  padding: 5px;
+  margin-right: 10px;
 }
-h1 { 
-    margin-top: 40px; 
-    text-align: center;     /* Centra il titolo */
-    font-size: 3rem;        /* Rende il titolo più grande */
+
+h1 {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 3rem;
 }
+
 a.homepage-link {
-    display: block;
-    text-align: center;     /* Centra il link */
-    margin-top: 10px;
-    font-weight: bold;
-    text-decoration: none;
-    color: #0e289c;
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #0e289c;
 }
+
 a.homepage-link:hover {
-    color: #081146;
-    text-decoration: underline;
+  color: #081146;
+  text-decoration: underline;
 }
 </style>
 </head>
-<body>
 
+<body>
 <h1>Classifiche per gara</h1>
-<a href="homepage.html">Torna alla Homepage</a><br>
+<a href="homepage.html" class="homepage-link">Torna alla Homepage</a><br>
+
 <label for="provaSelect">Seleziona la prova:</label>
 <select id="provaSelect">
   <option value="">-- Seleziona una prova --</option>
@@ -1513,12 +1521,11 @@ Campionato Regionale Master 2025 Giorno 2,Perosino Edoardo,50 Farfalla lanciato,
 1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,De Giorgi Alessandro,100 Stile Libero,60.48,407,no
 1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,De Giorgi Alessandro,100 Rana,75.06,399,no
 1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2,De Giorgi Alessandro,50 Rana,33.54,411,no
-
 </script>
 
 <script>
 const mappaGare = {
-  "apertura": {data: "2022-12-04", piscina: "Sisport", vasca: 25},
+   "apertura": {data: "2022-12-04", piscina: "Sisport", vasca: 25},
   "17° memorial davide cagnotto": {data: "2023-01-22", piscina: "Fossano", vasca: 25},
   "1ª giornata pentathlon 2023": {data: "2023-02-12", piscina: "Fossano", vasca: 25},
   "trofeo mimosa": {data: "2023-03-05", piscina: "Colletta", vasca: 25},
@@ -1574,7 +1581,6 @@ const mappaGare = {
   "1ª tappa coppa los angeles 2025/2026 giorno 2": {data: "2025-11-02", piscina: "Palazzo del Nuoto", vasca: 25},
 };
 
-
 function normalizzaStringa(s){return s.trim().toLowerCase();}
 
 // Parsing dati
@@ -1584,127 +1590,143 @@ const righeDati = righe.slice(1);
 
 const risultati = [];
 righeDati.forEach(riga => {
-    const campi = riga.split(",").map(x => x.trim());
-    if(campi.length < 6) return;
-    let [gara, atleta, prova, tempo, punti, medaglia] = campi;
-    const infoGara = mappaGare[normalizzaStringa(gara)] || {data:"?", piscina:"?", vasca:"?"};
+  const campi = riga.split(",").map(x => x.trim());
+  if(campi.length < 6) return;
+  let [gara, atleta, prova, tempo, punti, medaglia] = campi;
+  const infoGara = mappaGare[normalizzaStringa(gara)] || {data:"?", piscina:"?", vasca:"?"};
 
-    // Determina il sesso
-    let sesso;
-    const femmineAssoluti = ['Bartalesi Beatrice', 'Bibbona Lucia', 'Damasio Gaia Ada', 'Lambertoni Giulia', 'Manfrino Elisa',
-        'Speranza Lucrezia', 'Toniazzo Francesca', 'Savant Ros Sveva'];
-    const maschiRagazziJuniores = ['Catalano Giovanni', 'Martini Lorenzo','Oliaro Giulio','Oliaro Pietro','Belmare Diego','Varolo Nicolò'];
-    const maschiAssoluti = ['De Giorgi Alessandro', 'Pedi Mattia', 'Perosino Edoardo', 'Tessitore Andrea'];
-    const femmineRagazziJuniores = ['Charafy Sara','Farruggia Vittoria', 'Fiora Virginia', 'Bagnasco Giulia','Ingrosso Emma', 'Lucchese Camilla','Midulla Arianna','Tissoni Giulia','Scattaglia Stella'];
-    const femmineJunioresAssoluti = ['Ichim Alexandra', 'Ruscelli Siria', 'Ferrero Miriam', 'Cecire Vittoria','Prudenzano Sofia'];
+  // Determina il sesso
+  const femmineAssoluti = ['Bartalesi Beatrice','Bibbona Lucia','Damasio Gaia Ada','Lambertoni Giulia','Manfrino Elisa','Speranza Lucrezia','Toniazzo Francesca','Savant Ros Sveva'];
+  const maschiRagazziJuniores = ['Catalano Giovanni','Martini Lorenzo','Oliaro Giulio','Oliaro Pietro','Belmare Diego','Varolo Nicolò'];
+  const maschiAssoluti = ['De Giorgi Alessandro','Pedi Mattia','Perosino Edoardo','Tessitore Andrea'];
+  const femmineRagazziJuniores = ['Charafy Sara','Farruggia Vittoria','Fiora Virginia','Bagnasco Giulia','Ingrosso Emma','Lucchese Camilla','Midulla Arianna','Tissoni Giulia','Scattaglia Stella'];
+  const femmineJunioresAssoluti = ['Ichim Alexandra','Ruscelli Siria','Ferrero Miriam','Cecire Vittoria','Prudenzano Sofia'];
 
-    if(femmineAssoluti.includes(atleta)) sesso='F';
-    else if(maschiRagazziJuniores.includes(atleta) || maschiAssoluti.includes(atleta)) sesso='M';
-    else if(femmineRagazziJuniores.includes(atleta) || femmineJunioresAssoluti.includes(atleta)) sesso='F';
-    else sesso='F'; // default
+  let sesso='F';
+  if(femmineAssoluti.includes(atleta)) sesso='F';
+  else if(maschiRagazziJuniores.includes(atleta) || maschiAssoluti.includes(atleta)) sesso='M';
+  else if(femmineRagazziJuniores.includes(atleta) || femmineJunioresAssoluti.includes(atleta)) sesso='F';
 
-    risultati.push({
-        gara, atleta, prova, tempo: parseFloat(tempo), punti, medaglia, sesso,
-        data: infoGara.data, piscina: infoGara.piscina, vasca: infoGara.vasca
-    });
+  risultati.push({
+    gara, atleta, prova, tempo: parseFloat(tempo), punti, medaglia, sesso,
+    data: infoGara.data, piscina: infoGara.piscina, vasca: infoGara.vasca
+  });
 });
 
-// Popola tendina senza staffette e accorpando 50 lanciati/da fermo
+// Popola tendina
 const select = document.getElementById("provaSelect");
 const tutteLeProveSet = new Set();
 risultati.forEach(r=>{
-    const provaNorm = r.prova.toLowerCase().replace(/ lanciato/i,"").replace(/ da fermo/i,"");
-    if(!provaNorm.includes("staffetta")) tutteLeProveSet.add(provaNorm);
+  const provaNorm = r.prova.toLowerCase().replace(/ lanciato/i,"").replace(/ da fermo/i,"");
+  if(!provaNorm.includes("staffetta")) tutteLeProveSet.add(provaNorm);
 });
 const tutteLeProve = Array.from(tutteLeProveSet).sort();
 tutteLeProve.forEach(prova=>{
-    const opt = document.createElement("option");
-    opt.value = prova; opt.textContent = prova;
-    select.appendChild(opt);
+  const opt = document.createElement("option");
+  opt.value = prova;
+  opt.textContent = prova;
+  select.appendChild(opt);
 });
 
 // Formatta tempo
 function formattaTempo(t){
-    if(t<60) return t.toFixed(2);
-    const min = Math.floor(t/60);
-    const sec = (t%60).toFixed(2).padStart(5,"0");
-    return `${min}:${sec}`;
+  if(t<60) return t.toFixed(2);
+  const min = Math.floor(t/60);
+  const sec = (t%60).toFixed(2).padStart(5,"0");
+  return `${min}:${sec}`;
 }
 
 function isLanciato(prova){
-    return prova.toLowerCase().includes("lanciato");
+  return prova.toLowerCase().includes("lanciato");
 }
 
 // Mostra classifiche
 function mostraClassifiche(provaSelezionata){
-    if(!provaSelezionata) return;
-    const container = document.getElementById("classifiche");
-    container.innerHTML = "";
+  if(!provaSelezionata) return;
+  const container = document.getElementById("classifiche");
+  container.innerHTML = "";
 
-    const filtraProva = risultati.filter(r => r.prova.toLowerCase().replace(/ lanciato/i,"").replace(/ da fermo/i,"") === provaSelezionata);
+  const filtraProva = risultati.filter(r => r.prova.toLowerCase().replace(/ lanciato/i,"").replace(/ da fermo/i,"") === provaSelezionata);
 
-    // Classifiche per sesso/vasca
-    const gruppi = ["Maschi 25 metri","Maschi 50 metri","Femmine 25 metri","Femmine 50 metri"];
-    gruppi.forEach(gr => {
-        const [sessoTxt, vasca] = gr.split(" ");
-        const atletiRaw = filtraProva.filter(r => r.sesso=== (sessoTxt==='Maschi'?'M':'F') && String(r.vasca)===vasca);
+  const gruppi = ["Maschi 25 metri","Maschi 50 metri","Femmine 25 metri","Femmine 50 metri"];
+  gruppi.forEach(gr => {
+    const [sessoTxt, vasca] = gr.split(" ");
+    const atletiRaw = filtraProva.filter(r => r.sesso=== (sessoTxt==='Maschi'?'M':'F') && String(r.vasca)===vasca);
 
-        // Prendi solo il miglior tempo per ogni atleta
-        const atleti = {};
-        atletiRaw.forEach(r=>{
-            const attuale = atleti[r.atleta];
-            if(!attuale || r.tempo < attuale.tempo) atleti[r.atleta] = r;
-        });
-
-        const listaOrdinata = Object.values(atleti).sort((a,b)=>a.tempo-b.tempo);
-        if(listaOrdinata.length===0) return;
-
-        const h2 = document.createElement("h2");
-        h2.textContent = `${gr}`;
-        container.appendChild(h2);
-
-        const table = document.createElement("table");
-        const thead = document.createElement("thead");
-        thead.innerHTML = "<tr><th>Pos.</th><th>Atleta</th><th>Tempo</th><th>Gara</th><th>Data</th><th>Piscina</th></tr>";
-        table.appendChild(thead);
-
-        const tbody = document.createElement("tbody");
-        listaOrdinata.forEach((r,pos)=>{
-            const tr = document.createElement("tr");
-            const cls = isLanciato(r.prova) ? "lanciato" : "";
-            tr.innerHTML = `<td class="${cls}">${pos+1}</td><td class="${cls}">${r.atleta}</td><td class="${cls}">${formattaTempo(r.tempo)}</td><td class="${cls}">${r.gara}</td><td class="${cls}">${r.data}</td><td class="${cls}">${r.piscina}</td>`;
-            tbody.appendChild(tr);
-        });
-        table.appendChild(tbody);
-        container.appendChild(table);
+    const atleti = {};
+    atletiRaw.forEach(r=>{
+      const attuale = atleti[r.atleta];
+      if(!attuale || r.tempo < attuale.tempo) atleti[r.atleta] = r;
     });
 
-    // Classifica generale
-    const generale = {};
-    filtraProva.forEach(r=>{
-        const attuale = generale[r.atleta];
-        if(!attuale || r.tempo<attuale.tempo) generale[r.atleta]=r;
+    const listaOrdinata = Object.values(atleti).sort((a,b)=>a.tempo-b.tempo);
+    if(listaOrdinata.length===0) return;
+
+    const h2 = document.createElement("h2");
+    h2.textContent = `${gr}`;
+    container.appendChild(h2);
+
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    thead.innerHTML = "<tr><th>Pos.</th><th>Atleta</th><th>Tempo</th><th>Gara</th><th>Data</th><th>Piscina</th></tr>";
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    listaOrdinata.forEach((r,pos)=>{
+      const tr = document.createElement("tr");
+      const cls = isLanciato(r.prova) ? "lanciato" : "";
+      const evidenzia = r.gara.toLowerCase().includes("coppa los angeles 2025/2026");
+      const style = evidenzia ? 'style="background-color: yellow;"' : "";
+
+      tr.innerHTML = `
+        <td class="${cls}" ${style}>${pos+1}</td>
+        <td class="${cls}" ${style}>${r.atleta}</td>
+        <td class="${cls}" ${style}>${formattaTempo(r.tempo)}</td>
+        <td class="${cls}" ${style}>${r.gara}</td>
+        <td class="${cls}" ${style}>${r.data}</td>
+        <td class="${cls}" ${style}>${r.piscina}</td>`;
+      tbody.appendChild(tr);
     });
-    const ordGenerale = Object.values(generale).sort((a,b)=>a.tempo-b.tempo);
+    table.appendChild(tbody);
+    container.appendChild(table);
+  });
 
-    const h2g = document.createElement("h2");
-    h2g.textContent="Classifica Generale";
-    container.appendChild(h2g);
+  // Classifica Generale
+  const generale = {};
+  filtraProva.forEach(r=>{
+    const attuale = generale[r.atleta];
+    if(!attuale || r.tempo<attuale.tempo) generale[r.atleta]=r;
+  });
+  const ordGenerale = Object.values(generale).sort((a,b)=>a.tempo-b.tempo);
 
-    const tableG = document.createElement("table");
-    const theadG = document.createElement("thead");
-    theadG.innerHTML = "<tr><th>Pos.</th><th>Atleta</th><th>Tempo</th><th>Gara</th><th>Data</th><th>Piscina</th><th>Vasca</th></tr>";
-    tableG.appendChild(theadG);
+  const h2g = document.createElement("h2");
+  h2g.textContent="Classifica Generale";
+  container.appendChild(h2g);
 
-    const tbodyG = document.createElement("tbody");
-    ordGenerale.forEach((r,pos)=>{
-        const tr = document.createElement("tr");
-        const cls = isLanciato(r.prova) ? "lanciato" : "";
-        tr.innerHTML=`<td class="${cls}">${pos+1}</td><td class="${cls}">${r.atleta}</td><td class="${cls}">${formattaTempo(r.tempo)}</td><td class="${cls}">${r.gara}</td><td class="${cls}">${r.data}</td><td class="${cls}">${r.piscina}</td><td class="${cls}">${r.vasca}</td>`;
-        tbodyG.appendChild(tr);
-    });
-    tableG.appendChild(tbodyG);
-    container.appendChild(tableG);
+  const tableG = document.createElement("table");
+  const theadG = document.createElement("thead");
+  theadG.innerHTML = "<tr><th>Pos.</th><th>Atleta</th><th>Tempo</th><th>Gara</th><th>Data</th><th>Piscina</th><th>Vasca</th></tr>";
+  tableG.appendChild(theadG);
+
+  const tbodyG = document.createElement("tbody");
+  ordGenerale.forEach((r,pos)=>{
+    const tr = document.createElement("tr");
+    const cls = isLanciato(r.prova) ? "lanciato" : "";
+    const evidenzia = r.gara.toLowerCase().includes("coppa los angeles 2025/2026");
+    const style = evidenzia ? 'style="background-color: yellow;"' : "";
+
+    tr.innerHTML = `
+      <td class="${cls}" ${style}>${pos+1}</td>
+      <td class="${cls}" ${style}>${r.atleta}</td>
+      <td class="${cls}" ${style}>${formattaTempo(r.tempo)}</td>
+      <td class="${cls}" ${style}>${r.gara}</td>
+      <td class="${cls}" ${style}>${r.data}</td>
+      <td class="${cls}" ${style}>${r.piscina}</td>
+      <td class="${cls}" ${style}>${r.vasca}</td>`;
+    tbodyG.appendChild(tr);
+  });
+  tableG.appendChild(tbodyG);
+  container.appendChild(tableG);
 }
 
 select.addEventListener("change",()=>mostraClassifiche(select.value));

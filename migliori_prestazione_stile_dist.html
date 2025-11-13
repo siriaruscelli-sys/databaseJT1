@@ -21,7 +21,7 @@ table {
     border-collapse: collapse; 
     width: 100%; 
     margin-top: 10px;
-    background-color: #ffffff7e; 
+    background-color: #ffffffb3; 
 }
 th, td { 
     border: 1px solid #c4c4c4; 
@@ -31,18 +31,19 @@ th, td {
 th { 
     background-color: #f0f0f0; 
 }
+tr:hover { background-color: #f0f8ff; }
 input, select, button { 
     padding: 5px; 
     margin-right: 10px; 
 }
 h1 { 
     margin-top: 40px; 
-    text-align: center;     /* Centra il titolo */
-    font-size: 3rem;        /* Rende il titolo più grande */
+    text-align: center;     
+    font-size: 3rem;        
 }
 a.homepage-link {
     display: block;
-    text-align: center;     /* Centra il link */
+    text-align: center;     
     margin-top: 10px;
     font-weight: bold;
     text-decoration: none;
@@ -56,8 +57,9 @@ a.homepage-link:hover {
 </head>
 <body>
 
-<h1>🏆 Miglior prestazioni per stile e distanza 🏆</h1>
-  <a href="homepage.html">Torna alla Homepage</a><br>
+<h1>🏆 Migliori Prestazioni per Stile e Distanza 🏆</h1>
+<a class="homepage-link" href="homepage.html">Torna alla Homepage</a>
+
 <div style="text-align:center; margin-bottom:20px;">
   Stile:
   <select id="stile">
@@ -77,6 +79,13 @@ a.homepage-link:hover {
     <option value="400">400</option>
     <option value="800">800</option>
     <option value="1500">1500</option>
+  </select>
+
+  Vasca:
+  <select id="vasca">
+    <option value="">Tutte</option>
+    <option value="25">25</option>
+    <option value="50">50</option>
   </select>
 
   <button id="mostra">Mostra Classifica</button>
@@ -109,7 +118,7 @@ Apertura,Speranza Lucrezia,100 Dorso,82.46,294,no
 Apertura,Speranza Lucrezia,50 Stile Libero,34.48,294,no
 Apertura,Toniazzo Francesca,50 Stile Libero,33.13,331,no
 Apertura,Toniazzo Francesca,100 Stile Libero,72.76,329,no
-Apertura,Manfrino Elisa,4x50 Misti Femmine,145.36,349,no
+Apertura,Manfrino Elisa,Staffetta 4x50 Misti Femmine,145.36,349,no
 Apertura,Bartalesi Beatrice,Staffetta 4x50 Misti Femmine,145.36,349,no
 Apertura,Speranza Lucrezia,Staffetta 4x50 Misti Femmine,145.36,349,no
 Apertura,Ruscelli Siria,Staffetta 4x50 Misti Femmine,145.36,349,no
@@ -1542,7 +1551,8 @@ function normalizzaStringa(s) {
   return s;
 }
 
-// --- Mappa gare ---
+// --- Mappa gare (semplificata per esempio) ---
+// --- Mappa gare completa ---
 const mappaGare = {
   [normalizzaStringa("Apertura")]: {data: "2022-12-04", piscina: "Sisport", vasca: 25},
   [normalizzaStringa("17° Memorial Davide Cagnotto")]: {data: "2023-01-22", piscina: "Fossano", vasca: 25},
@@ -1557,6 +1567,7 @@ const mappaGare = {
   [normalizzaStringa("Campionati Nazionali Estivi 2023 giorno 3")]: {data: "2023-06-11", piscina: "Napoli", vasca: 50},
   [normalizzaStringa("Coppa Autunno")]: {data: "2023-11-19", piscina: "Fossano", vasca: 25},
   [normalizzaStringa("Campionati Nazionali Invernali Master 2023")]: {data: "2023-12-09", piscina: "Palazzo del Nuoto", vasca: 25},
+
   [normalizzaStringa("18° Memorial Davide Cagnotto")]: {data: "2024-01-14", piscina: "Fossano", vasca: 25},
   [normalizzaStringa("1ª Giornata Pentathlon 2024")]: {data: "2024-01-28", piscina: "Fossano", vasca: 25},
   [normalizzaStringa("2ª Giornata Pentathlon 2024")]: {data: "2024-02-18", piscina: "Sisport", vasca: 25},
@@ -1575,6 +1586,7 @@ const mappaGare = {
   [normalizzaStringa("Campionati Nazionali Invernali Master 2024 Giorno 3")]: {data: "2024-12-08", piscina: "Palazzo del Nuoto", vasca: 25},
   [normalizzaStringa("1ª Tappa Coppa Los Angeles 2024/2025 Giorno 1")]: {data: "2024-12-14", piscina: "Palazzo del Nuoto", vasca: 25},
   [normalizzaStringa("1ª Tappa Coppa Los Angeles 2024/2025 Giorno 2")]: {data: "2024-12-15", piscina: "Sisport", vasca: 25},
+
   [normalizzaStringa("1ª Giornata Pentathlon 2025")]: {data: "2025-01-19", piscina: "Sisport", vasca: 25},
   [normalizzaStringa("2ª Tappa Coppa Los Angeles 2024/2025 Giorno 1")]: {data: "2025-01-25", piscina: "Palazzo del Nuoto", vasca: 25},
   [normalizzaStringa("2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2")]: {data: "2025-01-26", piscina: "Sisport", vasca: 25},
@@ -1600,6 +1612,7 @@ const mappaGare = {
   [normalizzaStringa("1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2")]: {data: "2025-11-02", piscina: "Palazzo del Nuoto", vasca: 25},
 };
 
+
 // --- Leggi CSV ---
 const raw = document.getElementById("dati").textContent.trim();
 const righe = raw.split("\n");
@@ -1608,15 +1621,9 @@ const dati = righe.map(riga=>{
   return {gara, nome, tipoOriginale: tipo, tempo: parseFloat(tempo), punti: parseFloat(punti)};
 });
 
-// --- Funzioni ---
-function normalizzaStringa(s){
-  return s.normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
-}
-
 function normalizzaTipo(tipo){
   return tipo.replace(/\s*lanciato/i,"").replace(/\s*da fermo/i,"").trim().toLowerCase();
 }
-
 function normalizzaDistanza(tipo){
   const t = normalizzaTipo(tipo);
   if(t.startsWith("50")) return "50";
@@ -1628,54 +1635,50 @@ function normalizzaDistanza(tipo){
   return null;
 }
 
-function getSessoCategoria(nome){
-  const femmineAssoluti = ['Bartalesi Beatrice','Bibbona Lucia','Damasio Gaia Ada','Lambertoni Giulia','Manfrino Elisa','Speranza Lucrezia','Toniazzo Francesca','Savant Ros Sveva'];
-  const maschiJuniores = ['Catalano Giovanni','Martini Lorenzo'];
-  if(femmineAssoluti.includes(nome)) return {sesso:"Femmine", categoria:"Assoluti"};
-  if(maschiJuniores.includes(nome)) return {sesso:"Maschi", categoria:"Juniores"};
-  return {sesso:"?", categoria:"?"};
-}
-
-// --- Costruisci classifica ---
-function costruisciClassifica(stile, distanza){
+function costruisciClassifica(stile, distanza, vasca){
   const migliori = {};
   dati.forEach(d=>{
-    // --- Escludi staffette ---
-    if(d.tipoOriginale.toLowerCase().includes("staffetta") || d.tipoOriginale.toLowerCase().includes("4*")) return;
-
+    if(d.tipoOriginale.toLowerCase().includes("staffetta")) return;
     if(!normalizzaTipo(d.tipoOriginale).includes(stile)) return;
     if(distanza && normalizzaDistanza(d.tipoOriginale)!=distanza) return;
+    
+    const infoGara = mappaGare[normalizzaStringa(d.gara)] || {};
+    if(vasca && infoGara.vasca != vasca) return;
 
     if(!migliori[d.nome] || d.punti>migliori[d.nome].punti || (d.punti===migliori[d.nome].punti && d.tempo<migliori[d.nome].tempo)){
-      const garaNorm = normalizzaStringa(d.gara);
-      const infoGara = mappaGare[garaNorm] || {data:"?", piscina:"?", vasca:"?"};
-      const {sesso, categoria} = getSessoCategoria(d.nome);
-      migliori[d.nome] = {...d, sesso, categoria, data: infoGara.data, piscina: infoGara.piscina, vasca: infoGara.vasca};
+      migliori[d.nome] = {...d, ...infoGara};
     }
   });
   return Object.values(migliori).sort((a,b)=>b.punti - a.punti || a.tempo - b.tempo);
 }
 
-function formatTempo(sec){ return sec<60?sec.toFixed(2):`${Math.floor(sec/60)}:${(sec%60).toFixed(2).padStart(5,"0")}`; }
+function formatTempo(sec){ 
+  return sec<60 ? sec.toFixed(2) : `${Math.floor(sec/60)}:${(sec%60).toFixed(2).padStart(5,"0")}`;
+}
 
 function mostraClassifica(){
   const stile = document.getElementById("stile").value.toLowerCase();
   const distanza = document.getElementById("distanza").value;
-  const classifica = costruisciClassifica(stile,distanza);
+  const vasca = document.getElementById("vasca").value;
+  const classifica = costruisciClassifica(stile,distanza,vasca);
   let html = `<table><thead><tr>
   <th>Pos</th><th>Atleta</th><th>Punti</th><th>Gara</th><th>Tempo</th><th>Competizione</th><th>Data</th><th>Piscina</th><th>Vasca</th>
   </tr></thead><tbody>`;
+
   classifica.forEach((d,i)=>{
-    html+=`<tr>
+    const nomeGara = d.gara || "";
+    const evidenzia = nomeGara.toLowerCase().includes("coppa los angeles 2025/2026");
+    const style = evidenzia ? 'style="background-color: yellow;"' : "";
+    html+=`<tr ${style}>
       <td>${i+1}</td>
       <td>${d.nome}</td>
       <td>${d.punti}</td>
       <td>${d.tipoOriginale}</td>
       <td>${formatTempo(d.tempo)}</td>
       <td>${d.gara}</td>
-      <td>${d.data}</td>
-      <td>${d.piscina}</td>
-      <td>${d.vasca} m</td>
+      <td>${d.data || "-"}</td>
+      <td>${d.piscina || "-"}</td>
+      <td>${d.vasca || "-"}</td>
     </tr>`;
   });
   html+="</tbody></table>";

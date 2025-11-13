@@ -44,15 +44,15 @@ table {
 }
 
 th, td {
-    border: 1px solid #ccc;
+    border: 1px solid #c4c4c4;
     padding: 6px;
     text-align: center;
-    background-color: #f0f0f0cc;
+    background-color: #ffffff7e;
 }
 
 th {
     background-color: #0040aa;
-    color: #fff;
+    color: #f0f0f0;
 }
 </style>
 </head>
@@ -1616,7 +1616,8 @@ dati.forEach(d => {
                 individuale: d["gara"],
                 giorno: infoGara.data || "",
                 piscina: infoGara.piscina || "",
-                vasca: infoGara.vasca || ""
+                vasca: infoGara.vasca || "",
+                nomeGara: d["nome gara"] || ""
             };
         }
     }
@@ -1636,16 +1637,24 @@ html += "<tr><th>Pos</th><th>Atleta</th><th>Punteggio</th><th>Individuale</th><t
 classificaOrdinata.forEach((entry,index) => {
     const atleta = entry[0];
     const data = entry[1];
+
+    // 🔸 Evidenzia in giallo acceso se la gara è "Coppa Los Angeles 2025/2026"
+    const garaNome = data.nomeGara.toLowerCase();
+    const evidenzia = garaNome.includes("coppa los angeles 2025/2026");
+    const style = evidenzia ? 'style="background-color: #ffee00;"' : "";
+
+    // --- Formattazione tempo ---
     let tempoFormattato;
     if (data.tempo < 60) {
         tempoFormattato = data.tempo.toFixed(2);
     } else {
-        const minuti = Math.floor(data.tempo/60);
+        const minuti = Math.floor(data.tempo / 60);
         const secondi = (data.tempo % 60).toFixed(2);
-        tempoFormattato = `${minuti}:${secondi.padStart(5,"0")}`;
+        tempoFormattato = `${minuti}:${secondi.padStart(5, "0")}`;
     }
-    html += `<tr>
-        <td>${index+1}</td>
+
+    html += `<tr ${style}>
+        <td>${index + 1}</td>
         <td>${atleta}</td>
         <td>${data.punti}</td>
         <td>${data.individuale}</td>
@@ -1655,10 +1664,9 @@ classificaOrdinata.forEach((entry,index) => {
         <td>${data.vasca} m</td>
     </tr>`;
 });
+
 html += "</table>";
 document.getElementById("risultati").innerHTML = html;
-
-
 </script>
 </body>
 </html>

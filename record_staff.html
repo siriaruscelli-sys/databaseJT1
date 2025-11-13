@@ -1612,7 +1612,7 @@ gareData.forEach(g=>{
     if(isNaN(t)) return;
 
     const indivLower = g.individuale.toLowerCase();
-    // Considera solo le staffette (contiene "staffetta" o "x" ma NON gare lanciate individuali)
+    // Considera solo le staffette
     if (!(indivLower.includes("staffetta") || g.individuale.includes("x"))) return;
 
     const chiave = g.individuale+'_'+g.vasca;
@@ -1629,13 +1629,17 @@ gareData.forEach(g=>{
     }
 });
 
-// Funzione per creare tabella
+// Funzione per creare tabella con evidenziazione Coppa Los Angeles
 function creaTabella(records, titolo, colonne){
     if(Object.keys(records).length===0) return `<h3>${titolo}</h3><p>Nessun record</p>`;
     let html=`<h3>${titolo}</h3><table><thead><tr>`;
     colonne.forEach(c=>html+=`<th>${c}</th>`); html+='</tr></thead><tbody>';
     Object.values(records).forEach(r=>{
-        html+='<tr>';
+        // 🟨 Evidenzia Coppa Los Angeles 2025/2026
+        const evidenzia = r.gara.toLowerCase().includes("coppa los angeles 2025/2026");
+        const style = evidenzia ? 'style="background-color: #fff59d;"' : "";
+
+        html+=`<tr ${style}>`;
         colonne.forEach(c=>{
             if(c==='Tempo') html+=`<td>${formattaTempo(r.tempo)}</td>`;
             else if(c==='Atleta') html+=`<td>${r.atleti?r.atleti.join(', '):''}</td>`;
@@ -1654,7 +1658,6 @@ function creaTabella(records, titolo, colonne){
 document.getElementById('recordStaffette').innerHTML=
     creaTabella(recordStaffette.Staffette25,'🏊‍♀️ Staffette 25m', ['Gara','Tempo','Atleta','Competizione','Data','Piscina']) +
     creaTabella(recordStaffette.Staffette50,'🏊‍♀️ Staffette 50m', ['Gara','Tempo','Atleta','Competizione','Data','Piscina']);
-
 </script>
 
 </body>

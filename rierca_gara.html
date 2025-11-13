@@ -1615,6 +1615,7 @@ const mappa_gare = {
   "1ª tappa coppa los angeles 2025/2026 giorno 2": {data: "2025-11-02", piscina: "Palazzo del Nuoto", vasca: 25},
 };
 
+
 function normalizzaStringa(s) {
     return (s||"").trim().toLowerCase().replace(/\s+/g, " ");
 }
@@ -1680,7 +1681,12 @@ function cercaGara() {
             let partecipanti = gruppi[key].join(", ");
             let [nomeGara, tempo] = key.split("_");
             let info = mappa_gare[normalizzaStringa(nomeGara)] || {};
-            html += `<tr>
+            
+            // 🟨 Evidenzia Coppa Los Angeles 2025/2026
+            const evidenzia = nomeGara.toLowerCase().includes("coppa los angeles 2025/2026");
+            const style = evidenzia ? 'style="background-color: yellow;"' : "";
+
+            html += `<tr ${style}>
                 <td>${record.find(r=>r.nomeGara===nomeGara).gara}</td>
                 <td>${formattaTempo(parseFloat(tempo))}</td>
                 <td>${partecipanti}</td>
@@ -1703,7 +1709,12 @@ function cercaGara() {
         </tr>`;
     record.forEach((r) => {
         let info = mappa_gare[normalizzaStringa(r.nomeGara)] || {};
-        html += `<tr>
+
+        // 🟨 Evidenzia Coppa Los Angeles 2025/2026
+        const evidenzia = r.nomeGara.toLowerCase().includes("coppa los angeles 2025/2026");
+        const style = evidenzia ? 'style="background-color: yellow;"' : "";
+
+        html += `<tr ${style}>
             <td>${r.nomeAtleta}</td>
             <td>${formattaTempo(r.tempo)}</td>
             <td>${r.nomeGara}</td>

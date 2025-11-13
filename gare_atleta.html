@@ -1590,136 +1590,147 @@ Campionato Regionale Master 2025 Giorno 2,Perosino Edoardo,50 Farfalla lanciato,
   "1ª tappa coppa los angeles 2025/2026 giorno 2": {data: "2025-11-02", piscina: "Palazzo del Nuoto", vasca: 25},
 };
 
-    // --- Funzioni di utilità ---
-    function chiaveGara(nome) {
-      return (nome || "").trim().toLowerCase();
-    }
 
-    function formatTempo(t) {
-      if (!t) return "";
-      let sec = parseFloat(t.replace(",", "."));
-      if (isNaN(sec)) return t;
-      if (sec < 60) return sec.toFixed(2);
-      let minuti = Math.floor(sec / 60);
-      let secondi = (sec - minuti * 60).toFixed(2);
-      return `${minuti}:${secondi.padStart(5,"0")}`;
-    }
+// --- Funzioni di utilità ---
+function chiaveGara(nome) {
+  return (nome || "").trim().toLowerCase();
+}
 
-    function formatData(s) {
-      if (!s) return "";
-      let d = new Date(s);
-      if (isNaN(d)) return s;
-      return d.toLocaleDateString("it-IT");
-    }
+function formatTempo(t) {
+  if (!t) return "";
+  let sec = parseFloat(t.replace(",", "."));
+  if (isNaN(sec)) return t;
+  if (sec < 60) return sec.toFixed(2);
+  let minuti = Math.floor(sec / 60);
+  let secondi = (sec - minuti * 60).toFixed(2);
+  return `${minuti}:${secondi.padStart(5,"0")}`;
+}
 
-    // --- Lettura dati CSV ---
-    const raw = document.getElementById("dati").textContent.trim();
-    const righe = raw.split("\n").map(r => r.split(","));
-    const intestazioni = righe[0];
-    let dati = righe.slice(1).map(r => {
-      let obj = {};
-      intestazioni.forEach((h,i) => obj[h.trim()] = (r[i]||"").trim());
-      return obj;
+function formatData(s) {
+  if (!s) return "";
+  let d = new Date(s);
+  if (isNaN(d)) return s;
+  return d.toLocaleDateString("it-IT");
+}
+
+// --- Lettura dati CSV ---
+const raw = document.getElementById("dati").textContent.trim();
+const righe = raw.split("\n").map(r => r.split(","));
+const intestazioni = righe[0];
+let dati = righe.slice(1).map(r => {
+  let obj = {};
+  intestazioni.forEach((h,i) => obj[h.trim()] = (r[i]||"").trim());
+  return obj;
+});
+
+const selectAtleti = document.getElementById("atleti");
+const selectGare = document.getElementById("gare");
+const risultati = document.getElementById("risultati");
+
+// --- Popola tendina atleti ---
+let nomiAtleti = [...new Set(dati.map(d => d["nome atleta"]))].sort();
+nomiAtleti.forEach(nome => {
+  let opt = document.createElement("option");
+  opt.value = nome.toLowerCase();
+  opt.textContent = nome;
+  selectAtleti.appendChild(opt);
+});
+
+// --- Popola tendina gare ---
+let nomiGare = [...new Set(dati.map(d => d["gara"]))].sort();
+nomiGare.forEach(nome => {
+  let opt = document.createElement("option");
+  opt.value = nome.toLowerCase();
+  opt.textContent = nome;
+  selectGare.appendChild(opt);
+});
+
+// --- Funzione per mostrare tabella ---
+function mostraTabella(filtroAtleta, filtroGara) {
+  let filtrati = dati.filter(d => {
+    let okAtleta = filtroAtleta ? d["nome atleta"].toLowerCase() === filtroAtleta : true;
+    let okGara   = filtroGara ? d["gara"].toLowerCase() === filtroGara : true;
+    return okAtleta && okGara;
+  });
+
+  if (filtrati.length === 0) {
+    risultati.innerHTML = "<p>Nessun risultato trovato.</p>";
+    return;
+  }
+
+  // Arricchisci con dati mappa_gare
+  filtrati = filtrati.map(d => {
+    let info = mappa_gare[chiaveGara(d["nome gara"])] || {};
+    return {
+      "gara": d["gara"],
+      "tempo": formatTempo(d["tempo"]),
+      "nome gara": d["nome gara"],
+      "data": formatData(info.data),
+      "piscina": info.piscina || "",
+      "vasca (m)": info.vasca || ""
+    };
+  });
+
+  // --- Funzione per convertire tempo in secondi per ordinamento ---
+  function parseTempo(t) {
+    if (!t) return Infinity;
+    if (t.includes(":")) {
+      let [m,s] = t.split(":");
+      return parseInt(m)*60 + parseFloat(s);
+    }
+    return parseFloat(t);
+  }
+
+  // Separazione gare individuali e staffette
+  let individuali = filtrati.filter(d => !d["gara"].toLowerCase().includes("staffetta"));
+  let staffette   = filtrati.filter(d => d["gara"].toLowerCase().includes("staffetta"));
+
+  // Ordina in base al tempo
+  individuali.sort((a,b) => parseTempo(a["tempo"]) - parseTempo(b["tempo"]));
+  staffette.sort((a,b) => parseTempo(a["tempo"]) - parseTempo(b["tempo"]));
+
+  // --- Intestazioni da mostrare ---
+  const intest = ["nome gara", "gara", "tempo", "data", "piscina", "vasca (m)"];
+
+  // --- Crea tabella HTML ---
+  function creaTabella(titolo, lista) {
+    if (!lista.length) return "";
+    let html = `<h2>${titolo}</h2><table><thead><tr>`;
+    intest.forEach(h => html += `<th>${h}</th>`);
+    html += "</tr></thead><tbody>";
+
+    lista.forEach(r => {
+      // 🔸 Evidenzia in giallo se è Coppa Los Angeles 2025/2026
+      const evidenzia = r["nome gara"].toLowerCase().includes("coppa los angeles 2025/2026");
+      const style = evidenzia ? 'style="background-color: yellow;"' : "";
+
+      html += `<tr ${style}>`;
+      intest.forEach(h => html += `<td>${r[h]}</td>`);
+      html += "</tr>";
     });
 
-    const selectAtleti = document.getElementById("atleti");
-    const selectGare = document.getElementById("gare");
-    const risultati = document.getElementById("risultati");
+    html += "</tbody></table>";
+    return html;
+  }
 
-    // --- Popola tendina atleti ---
-    let nomiAtleti = [...new Set(dati.map(d => d["nome atleta"]))].sort();
-    nomiAtleti.forEach(nome => {
-      let opt = document.createElement("option");
-      opt.value = nome.toLowerCase();
-      opt.textContent = nome;
-      selectAtleti.appendChild(opt);
-    });
+  risultati.innerHTML = 
+    creaTabella("Gare individuali", individuali) + 
+    creaTabella("Staffette", staffette);
+}
 
-    // --- Popola tendina gare ---
-    let nomiGare = [...new Set(dati.map(d => d["gara"]))].sort();
-    nomiGare.forEach(nome => {
-      let opt = document.createElement("option");
-      opt.value = nome.toLowerCase();
-      opt.textContent = nome;
-      selectGare.appendChild(opt);
-    });
+// --- Event listener ---
+function aggiornaTabella() {
+  let valAtleta = selectAtleti.value;
+  let valGara   = selectGare.value;
+  if (!valAtleta && !valGara) {
+    risultati.innerHTML = "<p>Inserisci un nome o una gara per iniziare la ricerca.</p>";
+  } else {
+    mostraTabella(valAtleta, valGara);
+  }
+}
 
-    // --- Funzione per mostrare tabella ---
-    function mostraTabella(filtroAtleta, filtroGara) {
-      let filtrati = dati.filter(d => {
-        let okAtleta = filtroAtleta ? d["nome atleta"].toLowerCase() === filtroAtleta : true;
-        let okGara   = filtroGara ? d["gara"].toLowerCase() === filtroGara : true;
-        return okAtleta && okGara;
-      });
-
-      if (filtrati.length === 0) {
-        risultati.innerHTML = "<p>Nessun risultato trovato.</p>";
-        return;
-      }
-
-      // Arricchisci con dati mappa_gare
-      filtrati = filtrati.map(d => {
-        let info = mappa_gare[chiaveGara(d["nome gara"])] || {};
-        return {
-          "gara": d["gara"],
-          "tempo": formatTempo(d["tempo"]),
-          "nome gara": d["nome gara"],
-          "data": formatData(info.data),
-          "piscina": info.piscina || "",
-          "vasca (m)": info.vasca || ""
-        };
-      });
-
-      // --- Funzione per convertire tempo in secondi per ordinamento ---
-      function parseTempo(t) {
-        if (!t) return Infinity;
-        if (t.includes(":")) {
-          let [m,s] = t.split(":");
-          return parseInt(m)*60 + parseFloat(s);
-        }
-        return parseFloat(t);
-      }
-
-      // Separazione gare individuali e staffette
-      let individuali = filtrati.filter(d => !d["gara"].toLowerCase().includes("staffetta"));
-      let staffette   = filtrati.filter(d => d["gara"].toLowerCase().includes("staffetta"));
-
-      // Ordina in base al tempo
-      individuali.sort((a,b) => parseTempo(a["tempo"]) - parseTempo(b["tempo"]));
-      staffette.sort((a,b) => parseTempo(a["tempo"]) - parseTempo(b["tempo"]));
-
-      const intest = ["gara","tempo","nome gara","data","piscina","vasca (m)"];
-
-      function creaTabella(titolo, lista) {
-        if (!lista.length) return "";
-        let html = `<h2>${titolo}</h2><table><thead><tr>`;
-        intest.forEach(h => html += `<th>${h}</th>`);
-        html += "</tr></thead><tbody>";
-        lista.forEach(r => {
-          html += "<tr>";
-          intest.forEach(h => html += `<td>${r[h]}</td>`);
-          html += "</tr>";
-        });
-        html += "</tbody></table>";
-        return html;
-      }
-
-      risultati.innerHTML = creaTabella("Gare individuali", individuali) + creaTabella("Staffette", staffette);
-    }
-
-    // --- Event listener ---
-    function aggiornaTabella() {
-      let valAtleta = selectAtleti.value;
-      let valGara   = selectGare.value;
-      if (!valAtleta && !valGara) {
-        risultati.innerHTML = "<p>Inserisci un nome o una gara per iniziare la ricerca.</p>";
-      } else {
-        mostraTabella(valAtleta, valGara);
-      }
-    }
-
-    selectAtleti.addEventListener("change", aggiornaTabella);
-    selectGare.addEventListener("change", aggiornaTabella);
-  </script>
+selectAtleti.addEventListener("change", aggiornaTabella);
+selectGare.addEventListener("change", aggiornaTabella);
+</script>
 </body>
 </html>
