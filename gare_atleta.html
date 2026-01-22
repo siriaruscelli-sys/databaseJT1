@@ -1713,6 +1713,30 @@ Campionati Nazionali Invernali 2026 Giorno 2,Scattaglia Stella,100 Dorso,73.60,3
 Campionati Nazionali Invernali 2026 Giorno 2,Tissoni Giulia,100 Dorso,81.54,290,no
 Campionati Nazionali Invernali 2026 Giorno 2,Varolo Nicolò,200 Misti,149.38,387,argento
 Campionati Nazionali Invernali 2026 Giorno 2,Vignola Elena,50 Stile Libero,31.90,366,no
+Giocati il 5 2025/2026 1ª Giornata,Belmare Diego,100 Misti,71.02,334,no
+Giocati il 5 2025/2026 1ª Giornata,Belmare Diego,50 Rana,38.35,275,no
+Giocati il 5 2025/2026 1ª Giornata,Bolognesi Lorenzo,100 Misti,84.81,196,no
+Giocati il 5 2025/2026 1ª Giornata,Bolognesi Lorenzo,50 Rana,41.01,225,no
+Giocati il 5 2025/2026 1ª Giornata,De Giorgi Alessandro,100 Misti,69.70,353,no
+Giocati il 5 2025/2026 1ª Giornata,De Giorgi Alessandro,50 Rana,33.85,400,no
+Giocati il 5 2025/2026 1ª Giornata,Ingrosso Emma,100 Misti,83.24,290,no
+Giocati il 5 2025/2026 1ª Giornata,Ingrosso Emma,50 Rana,44.16,265,no
+Giocati il 5 2025/2026 1ª Giornata,Lambertoni Giulia,100 Misti,90.88,222,no
+Giocati il 5 2025/2026 1ª Giornata,Lambertoni Giulia,50 Rana,44.06,266,no
+Giocati il 5 2025/2026 1ª Giornata,Lucchese Camilla,100 Misti,81.78,306,no
+Giocati il 5 2025/2026 1ª Giornata,Lucchese Camilla,50 Rana,44.21,264,no
+Giocati il 5 2025/2026 1ª Giornata,Midulla Arianna,100 Misti,77.71,356,no
+Giocati il 5 2025/2026 1ª Giornata,Midulla Arianna,50 Rana,41.54,318,no
+Giocati il 5 2025/2026 1ª Giornata,Oliaro Giulio,100 Misti,68.45,373,no
+Giocati il 5 2025/2026 1ª Giornata,Oliaro Giulio,50 Rana,38.39,274,no
+Giocati il 5 2025/2026 1ª Giornata,Ruscelli Siria,100 Misti,77.19,363,no
+Giocati il 5 2025/2026 1ª Giornata,Ruscelli Siria,50 Rana,36.04,487,no
+Giocati il 5 2025/2026 1ª Giornata,Tissoni Giulia,100 Misti,83.36,288,no
+Giocati il 5 2025/2026 1ª Giornata,Tissoni Giulia,50 Rana,43.95,268,no
+Giocati il 5 2025/2026 1ª Giornata,Varolo Nicolò,100 Misti,67.96,381,no
+Giocati il 5 2025/2026 1ª Giornata,Varolo Nicolò,50 Rana,37.65,291,no
+Giocati il 5 2025/2026 1ª Giornata,Vignola Elena,100 Misti,83.74,285,no
+Giocati il 5 2025/2026 1ª Giornata,Vignola Elena,50 Rana,45.87,236,no
   </script>
 
   <script>
@@ -1778,7 +1802,8 @@ Campionati Nazionali Invernali 2026 Giorno 2,Vignola Elena,50 Stile Libero,31.90
   "2ª tappa coppa los angeles 2025/2026 giorno 2": { "data": "2025-11-23", "piscina": "Sisport", "vasca": 25 },
   "1ª giornata interregionale 2025/2026": {data: "2025-12-14", piscina: "Tortona", vasca: 25},
   "campionati nazionali invernali 2026 giorno 1": {data: "2026-01-10", piscina: "Palazzo del Nuoto", vasca: 25},
-  "campionati nazionali invernali 2026 giorno 2": {data: "2026-01-11", piscina: "Palazzo del Nuoto", vasca: 25}
+  "campionati nazionali invernali 2026 giorno 2": {data: "2026-01-11", piscina: "Palazzo del Nuoto", vasca: 25},
+  "giocati il 5 2025/2026 1ª giornata": {data: "2026-01-18", piscina: "Pinerolo", vasca: 25}, 
 };
 
 
@@ -1892,7 +1917,7 @@ function mostraTabella(filtroAtleta, filtroGara) {
 
     lista.forEach(r => {
       // 🔸 Evidenzia in giallo se è Coppa Los Angeles 2025/2026
-      const evidenzia = r["nome gara"].toLowerCase().includes("campionati nazionali invernali 2026");
+      const evidenzia = r["nome gara"].toLowerCase().includes("giocati il 5 2025/2026 1ª giornata");
       const style = evidenzia ? 'style="background-color: yellow;"' : "";
 
       html += `<tr ${style}>`;
