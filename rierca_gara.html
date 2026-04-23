@@ -1922,6 +1922,45 @@ Trofeo Primavera,Bolognesi Lorenzo,50 Stile Libero,31.04,263,no
 Trofeo Primavera,Belmare Diego,50 Stile Libero lanciato,26.23,436,no
 Trofeo Primavera,De Giorgi Alessandro,50 Stile Libero lanciato,26.27,434,no
 Trofeo Primavera,Oliaro Giulio,50 Stile Libero lanciato,24.55,532,no
+Manifestazione Nuoto per Salvamento,Belmare Diego,50 Ostacoli,29.88,0,argento
+Manifestazione Nuoto per Salvamento,Belmare Diego,100 Trasporto Manichino,70.74,0,argento
+Manifestazione Nuoto per Salvamento,Bolognesi Lorenzo,50 Ostacoli,36.61,0,no
+Manifestazione Nuoto per Salvamento,Bolognesi Lorenzo,100 Trasporto Manichino,82.77,0,no
+Manifestazione Nuoto per Salvamento,De Giorgi Alessandro,50 Ostacoli,30.49,0,oro
+Manifestazione Nuoto per Salvamento,De Giorgi Alessandro,100 Trasporto Manichino,69.73,0,oro
+Manifestazione Nuoto per Salvamento,Ingrosso Emma,50 Ostacoli,35.61,0,no
+Manifestazione Nuoto per Salvamento,Ingrosso Emma,100 Trasporto Manichino,79.89,0,no
+Manifestazione Nuoto per Salvamento,Lambertoni Giulia,50 Ostacoli,38.71,0,argento
+Manifestazione Nuoto per Salvamento,Lambertoni Giulia,100 Trasporto Manichino,84.17,0,argento
+Manifestazione Nuoto per Salvamento,Lucchese Camilla,50 Ostacoli,35.21,0,no
+Manifestazione Nuoto per Salvamento,Lucchese Camilla,100 Trasporto Manichino,74.59,0,oro
+Manifestazione Nuoto per Salvamento,Midulla Arianna,50 Ostacoli,35.36,0,no
+Manifestazione Nuoto per Salvamento,Midulla Arianna,100 Trasporto Manichino,77.59,0,argento
+Manifestazione Nuoto per Salvamento,Oliaro Giulio,50 Ostacoli,29.06,0,oro
+Manifestazione Nuoto per Salvamento,Oliaro Giulio,100 Trasporto Manichino,71.20,0,no
+Manifestazione Nuoto per Salvamento,Prudenzano Sofia,50 Ostacoli,41.99,0,no
+Manifestazione Nuoto per Salvamento,Prudenzano Sofia,100 Trasporto Manichino,90.15,0,no
+Manifestazione Nuoto per Salvamento,Ruscelli Siria,50 Ostacoli,34.03,0,oro
+Manifestazione Nuoto per Salvamento,Ruscelli Siria,100 Trasporto Manichino,79.81,0,no
+Manifestazione Nuoto per Salvamento,Tissoni Giulia,50 Ostacoli,35.78,0,no
+Manifestazione Nuoto per Salvamento,Tissoni Giulia,100 Trasporto Manichino,79.43,0,bronzo
+Manifestazione Nuoto per Salvamento,Vignola Elena,50 Ostacoli,35.09,0,argento
+Manifestazione Nuoto per Salvamento,Vignola Elena,100 Trasporto Manichino,83.71,0,no
+Manifestazione Nuoto per Salvamento,Midulla Arianna,Staffetta 4x50 Mista Salvamento Femmine,137.03,0,oro
+Manifestazione Nuoto per Salvamento,Lucchese Camilla,Staffetta 4x50 Mista Salvamento Femmine,137.03,0,oro
+Manifestazione Nuoto per Salvamento,Ingrosso Emma,Staffetta 4x50 Mista Salvamento Femmine,137.03,0,oro
+Manifestazione Nuoto per Salvamento,Ruscelli Siria,Staffetta 4x50 Mista Salvamento Femmine,137.03,0,oro
+Manifestazione Nuoto per Salvamento,Lambertoni Giulia,Staffetta 4x50 Mista Salvamento Femmine,141.41,0,argento
+Manifestazione Nuoto per Salvamento,Prudenzano Sofia,Staffetta 4x50 Mista Salvamento Femmine,141.41,0,argento
+Manifestazione Nuoto per Salvamento,Vignola Elena,Staffetta 4x50 Mista Salvamento Femmine,141.41,0,argento
+Manifestazione Nuoto per Salvamento,Tissoni Giulia,Staffetta 4x50 Mista Salvamento Femmine,141.41,0,argento
+Manifestazione Nuoto per Salvamento,Belmare Diego,Staffetta 4x50 Mista Salvamento Maschi,119.25,0,oro
+Manifestazione Nuoto per Salvamento,Bolognesi Lorenzo,Staffetta 4x50 Mista Salvamento Maschi,119.25,0,oro
+Manifestazione Nuoto per Salvamento,De Giorgi Alessandro,Staffetta 4x50 Mista Salvamento Maschi,119.25,0,oro
+Manifestazione Nuoto per Salvamento,Oliaro Giulio,Staffetta 4x50 Mista Salvamento Maschi,119.25,0,oro
+Manifestazione Nuoto per Salvamento,Midulla Arianna,50 Stile Libero,32.16,357,no
+Manifestazione Nuoto per Salvamento,Lambertoni Giulia,50 Stile Libero,36.08,253,no
+Manifestazione Nuoto per Salvamento,Belmare Diego,50 Stile Libero,27.37,384,no
 </script>
 
 <script>
@@ -1993,7 +2032,8 @@ const mappa_gare = {
   "giocati il 5 2025/2026 2ª giornata": {data: "2026-02-01", piscina: "Pinerolo", vasca: 25},
   "campionato regionale di categoria 2026 3ª giornata": {data: "2026-03-14", piscina: "Palazzo del Nuoto", vasca: 25},
   "4ª giornata interregionale 2025/2026": {data: "2026-03-15", piscina: "Tortona", vasca: 25},
-  "trofeo primavera": {data: "2026-03-22", piscina: "Pinerolo", vasca: 25}
+  "trofeo primavera": {data: "2026-03-22", piscina: "Pinerolo", vasca: 25},
+  "manifestazione nuoto per salvamento": {data: "2026-04-12", piscina: "Torrazza", vasca: 25}
 };
 
 function normalizzaStringa(s) {
@@ -2063,7 +2103,7 @@ function cercaGara() {
             let info = mappa_gare[normalizzaStringa(nomeGara)] || {};
             
             // 🟨 Evidenzia Coppa Los Angeles 2025/2026
-            const evidenzia = nomeGara.toLowerCase().includes("trofeo primavera");
+            const evidenzia = nomeGara.toLowerCase().includes("manifestazione nuoto per salvamento");
             const style = evidenzia ? 'style="background-color: yellow;"' : "";
 
             html += `<tr ${style}>
@@ -2091,7 +2131,7 @@ function cercaGara() {
         let info = mappa_gare[normalizzaStringa(r.nomeGara)] || {};
 
         // 🟨 Evidenzia Coppa Los Angeles 2025/2026
-        const evidenzia = r.nomeGara.toLowerCase().includes("trofeo primavera");
+        const evidenzia = r.nomeGara.toLowerCase().includes("manifestazione nuoto per salvamento");
         const style = evidenzia ? 'style="background-color: yellow;"' : "";
 
         html += `<tr ${style}>
