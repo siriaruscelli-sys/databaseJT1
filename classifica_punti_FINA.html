@@ -5,77 +5,88 @@
 <title>Classifica Atleti e Staffette</title>
 <style>
 body {
-    margin: 0;
-    padding: 20px;
-    font-family: Georgia, 'Times New Roman', Times, serif, sans-serif;
-    background-image: url("https://wallpapers.com/images/featured/sfondo-di-acqua-di-piscina-am94qlj0a89gmo8j.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: repeat;
-    color: #070674;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+ margin: 0;
+ padding: 20px;
+ font-family: Georgia, 'Times New Roman', Times, serif, sans-serif;
+ background-image: url("https://wallpapers.com/images/featured/sfondo-di-acqua-di-piscina-am94qlj0a89gmo8j.jpg");
+ background-size: cover;
+ background-position: center;
+ background-repeat: repeat;
+ color: #070674;
+ min-height: 100vh;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
 }
+
 
 h1 {
-    margin-top: 40px;
-    font-size: 3rem;
-    text-align: center;
-    color: #ffffff;
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+ margin-top: 20px;
+ font-size: 3rem;
+ text-align: center;
+ color: #ffffff;
+ text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
 }
+
 
 #risultati {
-    width: 100%;
-    max-width: 1200px;
-    margin-top: 20px;
-    background: rgba(255,255,255,0.85);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+ width: 100%;
+ max-width: 1200px;
+ margin-top: 20px;
+ background: rgba(255,255,255,0.85);
+ padding: 15px;
+ border-radius: 10px;
+ box-shadow: 0 4px 8px rgba(0,0,0,0.5);
 }
+
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+ width: 100%;
+ border-collapse: collapse;
+ margin-top: 10px;
 }
+
 
 th, td {
-    border: 1px solid #c4c4c4;
-    padding: 6px;
-    text-align: center;
-    background-color: #ffffff7e;
+ border: 1px solid #c4c4c4;
+ padding: 6px;
+ text-align: center;
+ background-color: #ffffff7e;
 }
 
+
 th {
-    background-color: #0040aa;
-    color: #f0f0f0;
+ background-color: #0040aa;
+ color: #f0f0f0;
 }
 </style>
 </head>
 <body>
 
+
 <h1>🏆 Classifica Atleti 🏆</h1>
+
 
 <!-- MENU VASCA -->
 <select id="poolSelect">
-  <option value="all">Classifica Generale</option>
-  <option value="25">Vasca 25m</option>
-  <option value="50">Vasca 50m</option>
+ <option value="all">Classifica Generale</option>
+ <option value="25">Vasca 25m</option>
+ <option value="50">Vasca 50m</option>
 </select>
+
 
 <br><br>
 <a href="homepage.html">Torna alla Homepage</a><br>
+
 
 <div id="risultati"></div>
 
 
 
+
 <!-- Dati gare -->
 <script id="dati" type="text/plain">
+
 nome gara,nome atleta,gara,tempo,punti,medaglia
 Apertura,Bartalesi Beatrice,50 Stile Libero,30.28,434,no
 Apertura,Bartalesi Beatrice,100 Stile Libero,65.84,444,no
@@ -1780,7 +1791,7 @@ Giocati il 5 2025/2026 2ª Giornata,Bolognesi Lorenzo,50 Stile Libero,32.84,222,
 Giocati il 5 2025/2026 2ª Giornata,De Giorgi Alessandro,50 Farfalla,30.52,340,no
 Giocati il 5 2025/2026 2ª Giornata,De Giorgi Alessandro,50 Dorso,35.74,236,no
 Giocati il 5 2025/2026 2ª Giornata,De Giorgi Alessandro,50 Stile Libero,26.57,420,bronzo
-Giocati il 5 2025/2026 2ª Giornata,Ingrosso Emma,50 Farfalla,34.04,369,no
+Giocati il 5 2025/2026 2ª Giornata,Ingrosso Emma,50 Farfalla,34.04,347,no
 Giocati il 5 2025/2026 2ª Giornata,Ingrosso Emma,50 Dorso,39.85,253,no
 Giocati il 5 2025/2026 2ª Giornata,Ingrosso Emma,50 Stile Libero,31.70,373,no
 Giocati il 5 2025/2026 2ª Giornata,Lambertoni Giulia,50 Farfalla,39.86,230,no
@@ -1986,66 +1997,69 @@ Manifestazione Nuoto per Salvamento,Belmare Diego,50 Stile Libero,27.37,384,no
 47° Trofeo Della Resistenza,De Giorgi Alessandro,50 Rana lanciato,31.82,482,no
 47° Trofeo Della Resistenza,Oliaro Giulio,50 Farfalla lanciato,26.36,529,no
 47° Trofeo Della Resistenza,Ruscelli Siria,50 Stile Libero lanciato,28.94,490,no
+  </script>
 
-<script>
-const mappa_gare = {
-   "apertura": {data: "2022-12-04", piscina: "Sisport", vasca: 25},
-  "17° memorial davide cagnotto": {data: "2023-01-22", piscina: "Fossano", vasca: 25},
-  "1ª giornata pentathlon 2023": {data: "2023-02-12", piscina: "Fossano", vasca: 25},
-  "trofeo mimosa": {data: "2023-03-05", piscina: "Colletta", vasca: 25},
-  "2ª giornata pentathlon 2023": {data: "2023-03-19", piscina: "Sisport", vasca: 25},
-  "trofeo raspini": {data: "2023-04-16", piscina: "Pinerolo", vasca: 25},
-  "44° trofeo della resistenza": {data: "2023-04-25", piscina: "Sisport", vasca: 50},
-  "campionati regionali open 2023": {data: "2023-05-21", piscina: "Sisport", vasca: 50},
-  "campionati nazionali estivi 2023 giorno 1": {data: "2023-06-09", piscina: "Napoli", vasca: 50},
-  "campionati nazionali estivi 2023 giorno 2": {data: "2023-06-10", piscina: "Napoli", vasca: 50},
-  "campionati nazionali estivi 2023 giorno 3": {data: "2023-06-11", piscina: "Napoli", vasca: 50},
-  "coppa autunno": {data: "2023-11-19", piscina: "Fossano", vasca: 25},
-  "campionati nazionali invernali master 2023": {data: "2023-12-09", piscina: "Palazzo del Nuoto", vasca: 25},
-  "18° memorial davide cagnotto": {data: "2024-01-14", piscina: "Fossano", vasca: 25},
-  "1ª giornata pentathlon 2024": {data: "2024-01-28", piscina: "Fossano", vasca: 25},
-  "2ª giornata pentathlon 2024": {data: "2024-02-18", piscina: "Sisport", vasca: 25},
-  "coppa piemonte": {data: "2024-03-24", piscina: "Sisport", vasca: 25},
-  "45° trofeo della resistenza": {data: "2024-04-25", piscina: "Sisport", vasca: 50},
-  "1° trofeo minitop": {data: "2024-05-05", piscina: "Pinerolo", vasca: 25},
-  "campionati regionali open 2024": {data: "2024-05-12", piscina: "Sisport", vasca: 50},
-  "2° trofeo torino nuoto": {data: "2024-05-25", piscina: "Torino Nuoto", vasca: 25},
-  "campionati nazionali estivi 2024 giorno 1": {data: "2024-06-14", piscina: "Riccione", vasca: 50},
-  "campionati nazionali estivi 2024 giorno 2": {data: "2024-06-15", piscina: "Riccione", vasca: 50},
-  "campionati nazionali estivi 2024 giorno 3": {data: "2024-06-16", piscina: "Riccione", vasca: 50},
-  "memorial giuseppina ghibaudo": {data: "2024-10-20", piscina: "Saint Vincent", vasca: 25},
-  "15° trofeo master città di saronno": {data: "2024-11-10", piscina: "Saronno", vasca: 25},
-  "19° memorial davide cagnotto": {data: "2024-11-24", piscina: "Fossano", vasca: 25},
-  "campionati nazionali invernali master 2024 giorno 2": {data: "2024-12-07", piscina: "Palazzo del Nuoto", vasca: 25},
-  "campionati nazionali invernali master 2024 giorno 3": {data: "2024-12-08", piscina: "Palazzo del Nuoto", vasca: 25},
-  "1ª tappa coppa los angeles 2024/2025 giorno 1": {data: "2024-12-14", piscina: "Palazzo del Nuoto", vasca: 25},
-  "1ª tappa coppa los angeles 2024/2025 giorno 2": {data: "2024-12-15", piscina: "Sisport", vasca: 25},
-  "1ª giornata pentathlon 2025": {data: "2025-01-19", piscina: "Sisport", vasca: 25},
-  "2ª tappa coppa los angeles 2024/2025 giorno 1": {data: "2025-01-25", piscina: "Palazzo del Nuoto", vasca: 25},
-  "2ª tappa coppa los angeles 2024/2025 giorno 2": {data: "2025-01-26", piscina: "Sisport", vasca: 25},
-  "2ª giornata pentathlon 2025": {data: "2025-02-02", piscina: "Sisport", vasca: 25},
-  "campionato regionale master 2025 giorno 1": {data: "2025-02-08", piscina: "Palazzo del Nuoto", vasca: 25},
-  "campionato regionale master 2025 giorno 2": {data: "2025-02-09", piscina: "Palazzo del Nuoto", vasca: 25},
-  "trofeo riviera delle alpi": {data: "2025-02-23", piscina: "Saint Vincent", vasca: 25},
-  "trofeo regionale distanze speciali": {data: "2025-03-02", piscina: "Sisport", vasca: 50},
-  "11° trofeo nuoto ponente master": {data: "2025-03-30", piscina: "Genova Pra", vasca: 25},
-  "2° trofeo minitop": {data: "2025-04-13", piscina: "Pinerolo", vasca: 25},
-  "46° trofeo della resistenza": {data: "2025-04-25", piscina: "Sisport", vasca: 50},
-  "campionati regionali open 2025": {data: "2025-05-11", piscina: "Sisport", vasca: 50},
-  "manifestazione estiva master giorno 1": {data: "2025-05-17", piscina: "Palazzo del Nuoto", vasca: 50},
-  "manifestazione estiva master giorno 2": {data: "2025-05-18", piscina: "Palazzo del Nuoto", vasca: 50},
-  "3° trofeo torino nuoto": {data: "2025-05-24", piscina: "Torino Nuoto", vasca: 25},
-  "campionati nazionali estivi 2025 giorno 1": {data: "2025-06-13", piscina: "Riccione", vasca: 50},
-  "campionati nazionali estivi 2025 giorno 2": {data: "2025-06-14", piscina: "Riccione", vasca: 50},
-  "campionati nazionali estivi 2025 giorno 3": {data: "2025-06-15", piscina: "Riccione", vasca: 50},
-  "campionati nazionali estivi master 2025 giorno 3": {data: "2025-06-26", piscina: "Riccione", vasca: 50},
-  "campionati nazionali estivi master 2025 giorno 4": {data: "2025-06-27", piscina: "Riccione interna", vasca: 50},
-  "campionati nazionali estivi master 2025 giorno 5": {data: "2025-06-28", piscina: "Riccione", vasca: 50},
+  <script>
+    // --- Mappa gare con data, piscina e vasca ---
+    const mappa_gare = {
+      "apertura": {"data": "2022-12-04", "piscina": "Sisport", "vasca": 25},
+  "17° memorial davide cagnotto": {"data": "2023-01-22", "piscina": "Fossano", "vasca": 25},
+  "1ª giornata pentathlon 2023": {"data": "2023-02-12", "piscina": "Fossano", "vasca": 25},
+  "trofeo mimosa": {"data": "2023-03-05", "piscina": "Colletta", "vasca": 25},
+  "2ª giornata pentathlon 2023": {"data": "2023-03-19", "piscina": "Sisport", "vasca": 25},
+  "trofeo raspini": {"data": "2023-04-16", "piscina": "Pinerolo", "vasca": 25},
+  "44° trofeo della resistenza": {"data": "2023-04-25", "piscina": "Sisport", "vasca": 50},
+  "campionati regionali open 2023": {"data": "2023-05-21", "piscina": "Sisport", "vasca": 50},
+  "campionati nazionali estivi 2023 giorno 1": {"data": "2023-06-09", "piscina": "Napoli", "vasca": 50},
+  "campionati nazionali estivi 2023 giorno 2": {"data": "2023-06-10", "piscina": "Napoli", "vasca": 50},
+  "campionati nazionali estivi 2023 giorno 3": {"data": "2023-06-11", "piscina": "Napoli", "vasca": 50},
+  "coppa autunno": {"data": "2023-11-19", "piscina": "Fossano", "vasca": 25},
+  "campionati nazionali invernali master 2023": {"data": "2023-12-09", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "18° memorial davide cagnotto": {"data": "2024-01-14", "piscina": "Fossano", "vasca": 25},
+  "1ª giornata pentathlon 2024": {"data": "2024-01-28", "piscina": "Fossano", "vasca": 25},
+  "2ª giornata pentathlon 2024": {"data": "2024-02-18", "piscina": "Sisport", "vasca": 25},
+  "coppa piemonte": {"data": "2024-03-24", "piscina": "Sisport", "vasca": 25},
+  "45° trofeo della resistenza": {"data": "2024-04-25", "piscina": "Sisport", "vasca": 50},
+  "1° trofeo minitop": {"data": "2024-05-05", "piscina": "Pinerolo", "vasca": 25},
+  "campionati regionali open 2024": {"data": "2024-05-12", "piscina": "Sisport", "vasca": 50},
+  "2° trofeo torino nuoto": {"data": "2024-05-25", "piscina": "Torino Nuoto", "vasca": 25},
+  "campionati nazionali estivi 2024 giorno 1": {"data": "2024-06-14", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi 2024 giorno 2": {"data": "2024-06-15", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi 2024 giorno 3": {"data": "2024-06-16", "piscina": "Riccione", "vasca": 50},
+  "memorial giuseppina ghibaudo": {"data": "2024-10-20", "piscina": "Saint Vincent", "vasca": 25},
+  "15° trofeo master città di saronno": {"data": "2024-11-10", "piscina": "Saronno", "vasca": 25},
+  "19° memorial davide cagnotto": {"data": "2024-11-24", "piscina": "Fossano", "vasca": 25},
+  "campionati nazionali invernali master 2024 giorno 2": {"data": "2024-12-07", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "campionati nazionali invernali master 2024 giorno 3": {"data": "2024-12-08", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "1ª tappa coppa los angeles 2024/2025 giorno 1": {"data": "2024-12-14", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "1ª tappa coppa los angeles 2024/2025 giorno 2": {"data": "2024-12-15", "piscina": "Sisport", "vasca": 25},
+  "1ª giornata pentathlon 2025": {"data": "2025-01-19", "piscina": "Sisport", "vasca": 25},
+  "2ª tappa coppa los angeles 2024/2025 giorno 1": {"data": "2025-01-25", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "2ª tappa coppa los angeles 2024/2025 giorno 2": {"data": "2025-01-26", "piscina": "Sisport", "vasca": 25},
+  "2ª giornata pentathlon 2025": {"data": "2025-02-02", "piscina": "Sisport", "vasca": 25},
+  "campionato regionale master 2025 giorno 1": {"data": "2025-02-08", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "campionato regionale master 2025 giorno 2": {"data": "2025-02-09", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "trofeo riviera delle alpi": {"data": "2025-02-23", "piscina": "Saint Vincent", "vasca": 25},
+  "trofeo regionale distanze speciali": {"data": "2025-03-02", "piscina": "Sisport", "vasca": 50},
+  "11° trofeo nuoto ponente master": {"data": "2025-03-30", "piscina": "Genova Pra", "vasca": 25},
+  "2° trofeo minitop": {"data": "2025-04-13", "piscina": "Pinerolo", "vasca": 25},
+  "46° trofeo della resistenza": {"data": "2025-04-25", "piscina": "Sisport", "vasca": 50},
+  "campionati regionali open 2025": {"data": "2025-05-11", "piscina": "Sisport", "vasca": 50},
+  "manifestazione estiva master giorno 1": {"data": "2025-05-17", "piscina": "Palazzo del Nuoto", "vasca": 50},
+  "manifestazione estiva master giorno 2": {"data": "2025-05-18", "piscina": "Palazzo del Nuoto", "vasca": 50},
+  "3° trofeo torino nuoto": {"data": "2025-05-24", "piscina": "Torino Nuoto", "vasca": 25},
+  "campionati nazionali estivi 2025 giorno 1": {"data": "2025-06-13", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi 2025 giorno 2": {"data": "2025-06-14", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi 2025 giorno 3": {"data": "2025-06-15", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi master 2025 giorno 3": {"data": "2025-06-26", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi master 2025 giorno 4": {"data": "2025-06-27", "piscina": "Riccione interna", "vasca": 50},
+  "campionati nazionali estivi master 2025 giorno 5": {"data": "2025-06-28", "piscina": "Riccione", "vasca": 50},
   "1ª tappa coppa los angeles 2025/2026 giorno 1": {data: "2025-11-01", piscina: "Palazzo del Nuoto", vasca: 25},
   "1ª tappa coppa los angeles 2025/2026 giorno 2": {data: "2025-11-02", piscina: "Palazzo del Nuoto", vasca: 25},
   "apertura stagione 2025/2026": {data: "2025-11-16", piscina: "Pinerolo", vasca: 25},
   "2ª tappa coppa los angeles 2025/2026 giorno 1": {data: "2025-11-22", piscina: "Palazzo del Nuoto", vasca: 25},
   "2ª tappa coppa los angeles 2025/2026 giorno 2": {data: "2025-11-23", piscina: "Sisport", vasca: 25},
+  "2ª tappa coppa los angeles 2025/2026 giorno 2": { "data": "2025-11-23", "piscina": "Sisport", "vasca": 25 },
   "1ª giornata interregionale 2025/2026": {data: "2025-12-14", piscina: "Tortona", vasca: 25},
   "campionati nazionali invernali 2026 giorno 1": {data: "2026-01-10", piscina: "Palazzo del Nuoto", vasca: 25},
   "campionati nazionali invernali 2026 giorno 2": {data: "2026-01-11", piscina: "Palazzo del Nuoto", vasca: 25},
@@ -2060,112 +2074,130 @@ const mappa_gare = {
   "manifestazione nuoto per salvamento": {data: "2026-04-12", piscina: "Torrazza", vasca: 25},
   "47° trofeo della resistenza": {data: "2026-04-25", piscina: "Sisport", vasca: 25}
 };
-</script>
 
-<script>
+
+
 // --- Lettura dati ---
 const raw = document.getElementById("dati").textContent.trim();
 const righe = raw.split("\n");
 const intestazioni = righe[0].split(",");
 
+
 let dati = righe.slice(1).map(r => {
-    const valori = r.split(",");
-    let obj = {};
-    intestazioni.forEach((h,i) => obj[h.trim()] = valori[i].trim());
-    return obj;
+ const valori = r.split(",");
+ let obj = {};
+ intestazioni.forEach((h,i) => obj[h.trim()] = valori[i].trim());
+ return obj;
 });
+
 
 // --- FUNZIONE RENDER ---
 function render(){
 
+
 const poolType = document.getElementById("poolSelect").value;
+
 
 // --- Classifica ---
 const classifica = {};
 const staffette = [];
 
+
 dati.forEach(d => {
-    const chiaveGara = d["nome gara"].trim().toLowerCase();
-    const infoGara = mappa_gare[chiaveGara] || {};
+ const chiaveGara = d["nome gara"].trim().toLowerCase();
+ const infoGara = mappa_gare[chiaveGara] || {};
 
-    // filtro vasca
-    if (poolType !== "all" && String(infoGara.vasca) !== poolType) return;
+ // filtro vasca
+ if (poolType !== "all" && String(infoGara.vasca) !== poolType) return;
 
-    const tempo = parseFloat(d["tempo"]);
-    const punti_FINA = parseInt(d["punti"]);
 
-    if (d["gara"].toLowerCase().includes("staffetta")) {
-        let partecipanti = d["nome atleta"].split(",").map(p => p.trim()).slice(0,4).join(", ");
-        staffette.push({
-            punteggio: punti_FINA,
-            nomeStaffetta: d["gara"],
-            tempo: tempo,
-            partecipanti: partecipanti
-        });
-    } else {
-        const atleta = d["nome atleta"];
-        if (!(atleta in classifica) || punti_FINA > classifica[atleta].punti) {
-            classifica[atleta] = {
-                punti: punti_FINA,
-                tempo: tempo,
-                individuale: d["gara"],
-                giorno: infoGara.data || "",
-                piscina: infoGara.piscina || "",
-                vasca: infoGara.vasca || "",
-                nomeGara: d["nome gara"] || ""
-            };
-        }
-    }
+ const tempo = parseFloat(d["tempo"]);
+ const punti_FINA = parseInt(d["punti"]);
+
+
+if (d["gara"].toLowerCase().includes("staffetta")) {
+ let partecipanti = d["nome atleta"].split(",").map(p => p.trim()).slice(0,4).join(", ");
+ staffette.push({
+ punteggio: punti_FINA,
+ nomeStaffetta: d["gara"],
+ tempo: tempo,
+ partecipanti: partecipanti
+ });
+ } else {
+ const atleta = d["nome atleta"];
+ if (!(atleta in classifica) || punti_FINA > classifica[atleta].punti) {
+ classifica[atleta] = {
+ punti: punti_FINA,
+ tempo: tempo,
+ individuale: d["gara"],
+ giorno: infoGara.data || "",
+ piscina: infoGara.piscina || "",
+ vasca: infoGara.vasca || "",
+ nomeGara: d["nome gara"] || ""
+ };
+ }
+ }
 });
+
 
 // --- Ordina ---
 const classificaOrdinata = Object.entries(classifica)
-    .sort((a,b) => b[1].punti - a[1].punti);
+ .sort((a,b) => b[1].punti - a[1].punti);
+
 
 // --- Tabella ---
 let html = "<h2>Classifica Individuale</h2><table>";
 html += "<tr><th>Pos</th><th>Atleta</th><th>Punteggio</th><th>Individuale</th><th>Tempo</th><th>Giorno</th><th>Piscina</th><th>Vasca</th></tr>";
 
+
 classificaOrdinata.forEach((entry,index) => {
-    const atleta = entry[0];
-    const data = entry[1];
+ const atleta = entry[0];
+ const data = entry[1];
 
-    const garaNome = data.nomeGara.toLowerCase();
-    const evidenzia = garaNome.includes("47° trofeo della resistenza");
-    const style = evidenzia ? 'style="background-color: #ffee00;"' : "";
 
-    let tempoFormattato;
-    if (data.tempo < 60) {
-        tempoFormattato = data.tempo.toFixed(2);
-    } else {
-        const minuti = Math.floor(data.tempo / 60);
-        const secondi = (data.tempo % 60).toFixed(2);
-        tempoFormattato = `${minuti}:${secondi.padStart(5, "0")}`;
-    }
+const garaNome = data.nomeGara.toLowerCase();
+const evidenzia = garaNome.includes("47° trofeo della resistenza");
+ const style = evidenzia ? 'style="background-color: #ffee00;"' : "";
 
-    html += `<tr ${style}>
-        <td>${index + 1}</td>
-        <td>${atleta}</td>
-        <td>${data.punti}</td>
-        <td>${data.individuale}</td>
-        <td>${tempoFormattato}</td>
-        <td>${data.giorno}</td>
-        <td>${data.piscina}</td>
-        <td>${data.vasca} m</td>
-    </tr>`;
+
+ let tempoFormattato;
+ if (data.tempo < 60) {
+ tempoFormattato = data.tempo.toFixed(2);
+ } else {
+ const minuti = Math.floor(data.tempo / 60);
+ const secondi = (data.tempo % 60).toFixed(2);
+ tempoFormattato = `${minuti}:${secondi.padStart(5, "0")}`;
+ }
+
+
+ html += `<tr ${style}>
+ <td>${index + 1}</td>
+ <td>${atleta}</td>
+ <td>${data.punti}</td>
+ <td>${data.individuale}</td>
+ <td>${tempoFormattato}</td>
+ <td>${data.giorno}</td>
+ <td>${data.piscina}</td>
+ <td>${data.vasca} m</td>
+</tr>`;
 });
+
 
 html += "</table>";
 document.getElementById("risultati").innerHTML = html;
 }
 
+
 // --- EVENTO ---
 document.getElementById("poolSelect").addEventListener("change", render);
+
 
 // prima visualizzazione
 render();
 
+
 </script>
+
 
 </body>
 </html>

@@ -1825,7 +1825,7 @@ Giocati il 5 2025/2026 2ª Giornata,Bolognesi Lorenzo,50 Stile Libero,32.84,222,
 Giocati il 5 2025/2026 2ª Giornata,De Giorgi Alessandro,50 Farfalla,30.52,340,no
 Giocati il 5 2025/2026 2ª Giornata,De Giorgi Alessandro,50 Dorso,35.74,236,no
 Giocati il 5 2025/2026 2ª Giornata,De Giorgi Alessandro,50 Stile Libero,26.57,420,bronzo
-Giocati il 5 2025/2026 2ª Giornata,Ingrosso Emma,50 Farfalla,34.04,369,no
+Giocati il 5 2025/2026 2ª Giornata,Ingrosso Emma,50 Farfalla,34.04,347,no
 Giocati il 5 2025/2026 2ª Giornata,Ingrosso Emma,50 Dorso,39.85,253,no
 Giocati il 5 2025/2026 2ª Giornata,Ingrosso Emma,50 Stile Libero,31.70,373,no
 Giocati il 5 2025/2026 2ª Giornata,Lambertoni Giulia,50 Farfalla,39.86,230,no
@@ -2123,22 +2123,38 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showAthlete(atleta){
-    const res = document.getElementById('results');
-    if(!atleta){ res.innerHTML='<p>Seleziona un atleta.</p>'; return; }
+  const res = document.getElementById('results');
+  if(!atleta){ res.innerHTML='<p>Seleziona un atleta.</p>'; return; }
 
-    const poolType = document.getElementById('poolSelect').value;
+  const poolType = document.getElementById('poolSelect').value;
 
-    const myRows = rows
+  function filterRows(includeRelay){
+    return rows
       .filter(r => {
-        if (r.atleta !== atleta || r.isRelay) return false;
+        if (r.atleta !== atleta) return false;
+
+        // separazione individuali / staffette
+        if (includeRelay !== r.isRelay) return false;
+
+        // filtro vasca
         if (poolType === "all") return true;
         const info = meta[r.gara.toLowerCase()] || {};
         return String(info.vasca) === poolType;
       })
       .sort((a,b)=>b.points - a.points);
-
-    res.innerHTML = `<h2>Gare di ${escapeHtml(atleta)}</h2>` + renderTable(myRows);
   }
+
+  const individuali = filterRows(false);
+  const staffette = filterRows(true);
+
+  let html = `<h2>Gare individuali di ${escapeHtml(atleta)}</h2>`;
+  html += renderTable(individuali);
+
+  html += `<h2 style="margin-top:30px;">Staffette di ${escapeHtml(atleta)}</h2>`;
+  html += renderTable(staffette);
+
+  res.innerHTML = html;
+}
 
   document.getElementById('athleteSelect').addEventListener('change', e=>{
     showAthlete(e.target.value);
