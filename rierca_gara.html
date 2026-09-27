@@ -20,7 +20,7 @@
 
   h1 {
     text-align: center;
-    margin-top: 40px;
+    margin-top: 20px;
     font-size: 3rem;
     text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.4);
   }
@@ -29,47 +29,64 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .gruppo-filtri {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 10px;
-    margin-top: 18px;
+    max-width: 1000px;
   }
 
   a.homepage-link {
     display: block;
-    text-align: center;     /* Centra il link */
-    margin-top: 10px;
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
     font-weight: bold;
     text-decoration: none;
     color: #0e289c;
-}
-a.homepage-link:hover {
+    font-size: 1.1rem;
+  }
+  a.homepage-link:hover {
     color: #081146;
     text-decoration: underline;
-}
+  }
+
   select {
-    width: 320px;
+    width: 220px;
     max-width: 90%;
     padding: 8px 12px;
     border-radius: 6px;
-    border: 1px solid #002f6d;
-    color: #000;
+    border: 1.5px solid #002f6d;
+    color: #002f6d;
+    font-weight: bold;
+    background-color: #fff;
+    cursor: pointer;
   }
 
   button {
-    padding: 8px 16px;
+    padding: 9px 24px;
     border-radius: 6px;
     border: none;
     background: #002f6d;
     color: #fff;
+    font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: background 0.2s;
   }
   button:hover { background: #0040aa; }
 
   #risultati {
     background: #ffffffd0;
-    padding: 15px;
+    padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     margin-top: 20px;
     color: #000;
   }
@@ -78,34 +95,67 @@ a.homepage-link:hover {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
+    background: #fff;
   }
   th, td {
     border: 1px solid #333;
-    padding: 6px 10px;
+    padding: 8px 10px;
     text-align: center;
   }
   th {
     background: #0040aa;
     color: #fff;
+    font-size: 1.05rem;
   }
 
-  h2{
+  h2 {
     color: #070961;
+    margin-top: 0;
   }
 </style>
 </head>
 <body>
+
   <h1>RICERCA PER GARA</h1>
 
   <div class="controlli-centrati">
-    <a href="homepage.html">Torna alla Homepage</a>
-    <select id="garaSelect">
-      <option value="">-- Seleziona una gara --</option>
-    </select>
+    <a href="homepage.html" class="homepage-link">Torna alla Homepage</a>
+    
+    <div class="gruppo-filtri">
+      <!-- Seleziona Gara -->
+      <select id="garaSelect">
+        <option value="">-- Seleziona una gara --</option>
+      </select>
+
+      <!-- Filtro Sesso -->
+      <select id="sessoSelect">
+        <option value="">Tutti i sessi</option>
+        <option value="M">Maschi (M)</option>
+        <option value="F">Femmine (F)</option>
+      </select>
+
+      <!-- Filtro Vasca -->
+      <select id="vascaSelect">
+        <option value="">Tutte le vasche</option>
+        <option value="25">Vasca Corta (25m)</option>
+        <option value="50">Vasca Lunga (50m)</option>
+      </select>
+
+      <!-- Filtro Stagione -->
+      <select id="stagioneSelect">
+        <option value="">Tutte le stagioni</option>
+        <option value="2022/2023">Stagione 2022/2023</option>
+        <option value="2023/2024">Stagione 2023/2024</option>
+        <option value="2024/2025">Stagione 2024/2025</option>
+        <option value="2025/2026">Stagione 2025/2026</option>
+        <option value="2026/2027">Stagione 2026/2027</option>
+      </select>
+    </div>
+
     <button onclick="cercaGara()">Cerca</button>
   </div>
 
-  <div id="risultati"></div>
+  <div id="risultati">Seleziona una gara per visualizzare i risultati.</div>
 
 <script id="dati" type="text/plain">
 nome gara,nome atleta,gara,tempo,punti,medaglia
@@ -2294,117 +2344,195 @@ const mappa_gare = {
   "campionati nazionali estivi 2026 giorno 3": {data: "2026-06-14", piscina: "Riccione", vasca: 50},
 };
 
-function normalizzaStringa(s) {
-    return (s||"").trim().toLowerCase().replace(/\s+/g, " ");
-}
+const anagrafica_atleti = {
+      "bagnasco giulia": { sesso: "F" },
+      "bartalesi beatrice": { sesso: "F" },
+      "belmare diego": { sesso: "M" },
+      "bibbona lucia": { sesso: "F" },
+      "bolognesi lorenzo": { sesso: "M" },
+      "catalano giovanni": { sesso: "M" },
+      "cecire vittoria": { sesso: "F" },
+      "charafy sara": { sesso: "F" },
+      "damasio gaia ada": { sesso: "F" },
+      "de giorgi alessandro": { sesso: "M" },
+      "farruggia vittoria": { sesso: "F" },
+      "ferrero miriam": { sesso: "F" },
+      "fiora virginia": { sesso: "F" },
+      "ichim alexandra": { sesso: "F" },
+      "ingrosso emma": { sesso: "F" },
+      "lambertoni giulia": { sesso: "F" },
+      "lucchese camilla": { sesso: "F" },
+      "manfrino elisa": { sesso: "F" },
+      "marchesi tommaso": { sesso: "M" },
+      "martini lorenzo": { sesso: "M" },
+      "midulla arianna": { sesso: "F" },
+      "minervini giada": { sesso: "F" },
+      "oliaro giulio": { sesso: "M" },
+      "oliaro pietro": { sesso: "M" },
+      "pedi mattia": { sesso: "M" },
+      "perosino edoardo": { sesso: "M" },
+      "popescu alejandro": { sesso: "M" },
+      "prudenzano sofia": { sesso: "F" },
+      "ruscelli siria": { sesso: "F" },
+      "savant ros sveva": { sesso: "F" },
+      "scattaglia stella": { sesso: "F" },
+      "speranza lucrezia": { sesso: "F" },
+      "tessitore andrea": { sesso: "M" },
+      "tissoni giulia": { sesso: "F" },
+      "toniazzo francesca": { sesso: "F" },
+      "varolo nicolò": { sesso: "M" },
+      "vignola elena": { sesso: "F" }
+    };
 
-function formattaTempo(t) {
-    if (isNaN(t)) return t;
-    return t < 60 
+    function normalizzaStringa(s) {
+      return (s||"").trim().toLowerCase().replace(/\s+/g, " ");
+    }
+
+    function formattaTempo(t) {
+      if (isNaN(t)) return t;
+      return t < 60 
         ? t.toFixed(2) 
         : `${Math.floor(t/60)}:${(t % 60).toFixed(2).padStart(5, '0')}`;
-}
-
-const text = document.getElementById("dati").textContent.trim();
-const lines = text.split('\n').slice(1); 
-const dati = lines.filter(l=>l.trim()).map(line => {
-  const [nomeGara, nomeAtleta, gara, tempo, punti, medaglia] = line.split(',');
-  return { nomeGara, nomeAtleta, gara, tempo: parseFloat(tempo), punti, medaglia };
-});
-
-const selectGara = document.getElementById("garaSelect");
-let tutteLeGare = [...new Set(dati.map(d => d.gara))].sort();
-tutteLeGare.forEach(g => {
-  let opt = document.createElement("option");
-  opt.value = g.toLowerCase();
-  opt.textContent = g;
-  selectGara.appendChild(opt);
-});
-
-function cercaGara() {
-    const garaRichiesta = selectGara.value;
-    const div = document.getElementById('risultati');
-    div.innerHTML = "Caricamento dati...";
-
-    if (!garaRichiesta) {
-      div.innerHTML = "Seleziona una gara.";
-      return;
     }
 
-    let record = dati.filter(r => normalizzaStringa(r.gara) === garaRichiesta);
+    function getStagioneFromData(dataStr) {
+      if (!dataStr || dataStr === "ND") return "";
+      const parts = dataStr.split("-");
+      if (parts.length < 2) return "";
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10);
+      if (isNaN(y) || isNaN(m)) return "";
+      return (m >= 9) ? `${y}/${y + 1}` : `${y - 1}/${y}`;
+    }
 
-    if (record.length === 0) {
-        div.innerHTML = "Nessun risultato trovato.";
+    // Caricamento Dati CSV
+    const text = document.getElementById("dati").textContent.trim();
+    const lines = text.split('\n').slice(1); 
+    const dati = lines.filter(l=>l.trim()).map(line => {
+      const [nomeGara, nomeAtleta, gara, tempo, punti, medaglia] = line.split(',');
+      return { nomeGara, nomeAtleta, gara, tempo: parseFloat(tempo), punti, medaglia };
+    });
+
+    // Popolamento Select Gare
+    const selectGara = document.getElementById("garaSelect");
+    const selectSesso = document.getElementById("sessoSelect");
+    const selectVasca = document.getElementById("vascaSelect");
+    const selectStagione = document.getElementById("stagioneSelect");
+
+    let tutteLeGare = [...new Set(dati.map(d => d.gara))].sort();
+    tutteLeGare.forEach(g => {
+      let opt = document.createElement("option");
+      opt.value = g.toLowerCase();
+      opt.textContent = g;
+      selectGara.appendChild(opt);
+    });
+
+    // Event Listener per aggiornamento automatico al cambio opzioni
+    selectGara.addEventListener("change", cercaGara);
+    selectSesso.addEventListener("change", cercaGara);
+    selectVasca.addEventListener("change", cercaGara);
+    selectStagione.addEventListener("change", cercaGara);
+
+    function cercaGara() {
+      const garaRichiesta = selectGara.value;
+      const sessoRichiesto = selectSesso.value;
+      const vascaRichiesta = selectVasca.value;
+      const stagioneRichiesta = selectStagione.value;
+
+      const div = document.getElementById('risultati');
+
+      if (!garaRichiesta) {
+        div.innerHTML = "Seleziona una gara dai filtri in alto.";
         return;
-    }
+      }
 
-    // Ordina per tempo crescente
-    record.sort((a, b) => a.tempo - b.tempo);
+      // Filtraggio Dati Completo
+      let record = dati.filter(r => {
+        let matchGara = normalizzaStringa(r.gara) === garaRichiesta;
+        
+        // Filtro Sesso
+        let infoAtl = anagrafica_atleti[r.nomeAtleta.toLowerCase()];
+        let matchSesso = sessoRichiesto ? (infoAtl && infoAtl.sesso === sessoRichiesto) : true;
 
-    // --- CASO STAFFETTA ---
-    if (garaRichiesta.includes("staffetta")) {
+        // Filtro Vasca e Stagione da mappa_gare
+        let infoGara = mappa_gare[normalizzaStringa(r.nomeGara)] || {};
+        let matchVasca = vascaRichiesta ? (String(infoGara.vasca) === vascaRichiesta) : true;
+        
+        let stagioneCalcolata = getStagioneFromData(infoGara.data);
+        let matchStagione = stagioneRichiesta ? (stagioneCalcolata === stagioneRichiesta) : true;
+
+        return matchGara && matchSesso && matchVasca && matchStagione;
+      });
+
+      if (record.length === 0) {
+        div.innerHTML = "<p style='text-align:center;'>Nessun risultato trovato con i filtri selezionati.</p>";
+        return;
+      }
+
+      // Ordina per tempo crescente
+      record.sort((a, b) => a.tempo - b.tempo);
+
+      // --- CASO STAFFETTA ---
+      if (garaRichiesta.includes("staffetta")) {
         let html = `<h2>Staffette: ${record[0].gara}</h2>`;
         html += `<table>
           <tr><th>Tipo staffetta</th><th>Tempo</th><th>Partecipanti</th><th>Evento</th><th>Data</th><th>Piscina</th><th>Vasca (m)</th></tr>`;
 
-        // Raggruppa le righe per squadra in base a nome gara + tempo
         let gruppi = {};
         record.forEach(r => {
-            let key = r.nomeGara + "_" + r.tempo;
-            if (!gruppi[key]) gruppi[key] = [];
-            gruppi[key].push(r.nomeAtleta);
+          let key = r.nomeGara + "_" + r.tempo;
+          if (!gruppi[key]) gruppi[key] = [];
+          gruppi[key].push(r.nomeAtleta);
         });
 
         for (let key in gruppi) {
-            let partecipanti = gruppi[key].join(", ");
-            let [nomeGara, tempo] = key.split("_");
-            let info = mappa_gare[normalizzaStringa(nomeGara)] || {};
-            
-            // 🟨 Evidenzia Coppa Los Angeles 2025/2026
-            const evidenzia = nomeGara.toLowerCase().includes("campionati nazionali estivi 2026");
-            const style = evidenzia ? 'style="background-color: yellow;"' : "";
+          let partecipanti = gruppi[key].join(", ");
+          let [nomeGara, tempo] = key.split("_");
+          let info = mappa_gare[normalizzaStringa(nomeGara)] || {};
+          
+          const evidenzia = nomeGara.toLowerCase().includes("campionati nazionali estivi 2026");
+          const style = evidenzia ? 'style="background-color: yellow;"' : "";
 
-            html += `<tr ${style}>
-                <td>${record.find(r=>r.nomeGara===nomeGara).gara}</td>
-                <td>${formattaTempo(parseFloat(tempo))}</td>
-                <td>${partecipanti}</td>
-                <td>${nomeGara}</td>
-                <td>${info.data || ""}</td>
-                <td>${info.piscina || ""}</td>
-                <td>${info.vasca || ""}</td>
-            </tr>`;
+          html += `<tr ${style}>
+            <td>${record.find(r=>r.nomeGara===nomeGara).gara}</td>
+            <td><strong>${formattaTempo(parseFloat(tempo))}</strong></td>
+            <td>${partecipanti}</td>
+            <td>${nomeGara}</td>
+            <td>${info.data || ""}</td>
+            <td>${info.piscina || ""}</td>
+            <td>${info.vasca ? info.vasca + "m" : ""}</td>
+          </tr>`;
         }
 
         div.innerHTML = html + "</table>";
         return;
-    }
+      }
 
-    // --- CASO GARE INDIVIDUALI ---
-    let html = `<h2>Classifica per la gara: ${record[0].gara}</h2>`;
-    html += `<table>
+      // --- CASO GARE INDIVIDUALI ---
+      let html = `<h2>Classifica per la gara: ${record[0].gara}</h2>`;
+      html += `<table>
         <tr>
-            <th>Atleta</th><th>Tempo</th><th>Evento</th><th>Data</th><th>Piscina</th><th>Vasca (m)</th>
+          <th>Atleta</th><th>Tempo</th><th>Evento</th><th>Data</th><th>Piscina</th><th>Vasca (m)</th>
         </tr>`;
-    record.forEach((r) => {
+      record.forEach((r) => {
         let info = mappa_gare[normalizzaStringa(r.nomeGara)] || {};
 
-        // 🟨 Evidenzia Coppa Los Angeles 2025/2026
         const evidenzia = r.nomeGara.toLowerCase().includes("campionati nazionali estivi 2026");
         const style = evidenzia ? 'style="background-color: yellow;"' : "";
 
         html += `<tr ${style}>
-            <td>${r.nomeAtleta}</td>
-            <td>${formattaTempo(r.tempo)}</td>
-            <td>${r.nomeGara}</td>
-            <td>${info.data || ""}</td>
-            <td>${info.piscina || ""}</td>
-            <td>${info.vasca || ""}</td>
+          <td><strong>${r.nomeAtleta}</strong></td>
+          <td><strong>${formattaTempo(r.tempo)}</strong></td>
+          <td>${r.nomeGara}</td>
+          <td>${info.data || ""}</td>
+          <td>${info.piscina || ""}</td>
+          <td>${info.vasca ? info.vasca + "m" : ""}</td>
         </tr>`;
-    });
-    html += `</table>`;
+      });
+      html += `</table>`;
 
-    div.innerHTML = html;
-}
-</script>
+      div.innerHTML = html;
+    }
+  </script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Classifica Nuoto</title>
+<title>Ricerca Staffette e Frazionisti con Top 5 e Record</title>
 <style>
 body {
     margin: 0;
@@ -13,87 +13,252 @@ body {
     background-position: center;   
     background-repeat: repeat;  
     color: #070674;
-    height: 100vh;
+    min-height: 100vh;
+}
+.container {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 25px;
+    border-radius: 10px;
+    max-width: 1350px;
+    margin: 0 auto;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+h2, h3 { 
+    text-align: center;
+    color: #070674;
+}
+h2 { font-size: 2.5rem; margin-top: 10px; }
+h3 { font-size: 1.8rem; margin-top: 20px; }
+
+.controls {
+    margin: 25px 0;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+select {
+    padding: 10px 15px;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    border: 2px solid #070674;
+    background-color: #fff;
+    color: #070674;
+    cursor: pointer;
 }
 table { 
     border-collapse: collapse; 
     width: 100%; 
-    margin-top: 10px;
-    background-color: #ffffffb3; 
+    margin-top: 20px;
+    background-color: #ffffff; 
 }
 th, td { 
     border: 1px solid #c4c4c4; 
-    padding: 6px; 
+    padding: 10px; 
     text-align: left; 
+    font-size: 1.05rem;
 }
 th { 
-    background-color: #f0f0f0; 
+    background-color: #e9ecef; 
+    font-size: 1.1rem;
 }
-tr:hover { background-color: #f0f8ff; }
-input, select, button { 
-    padding: 5px; 
-    margin-right: 10px; 
+td.atleti-cell {
+    min-width: 280px;
+    line-height: 1.4;
 }
-h1 { 
-    margin-top: 40px; 
-    text-align: center;     
-    font-size: 3rem;        
+.clickable-time, .clickable-podio {
+    color: #0e289c;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
+    font-size: 1.1rem;
+}
+.details-row {
+    background-color: #f8f9fa;
+}
+.details-container {
+    padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+}
+.frazione-item, .podio-item {
+    padding: 6px 0;
+    border-bottom: 1px dashed #ced4da;
+    font-size: 1.05rem;
+}
+.frazione-item:last-child, .podio-item:last-child {
+    border-bottom: none;
 }
 a.homepage-link {
     display: block;
-    text-align: center;     
+    text-align: center;
     margin-top: 10px;
     font-weight: bold;
     text-decoration: none;
     color: #0e289c;
+    font-size: 1.1rem;
 }
-a.homepage-link:hover {
-    color: #081146;
-    text-decoration: underline;
+
+/* Stili Grafico Canvas - Altezza impostata a 1220px */
+#chartSection {
+    margin-top: 40px;
+    padding: 25px;
+    background: #eef7ff;
+    border-radius: 12px;
+    border: 2px solid #0e289c;
+    position: relative;
+    display: none;
+}
+#chartContainer {
+    position: relative;
+    width: 100%;
+    height: 1220px;
+}
+#chartCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.chart-tooltip {
+    position: absolute;
+    display: none;
+    background: rgba(7, 6, 116, 0.95);
+    color: #ffffff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 100;
+    line-height: 1.45;
+    max-width: 450px;
+}
+.chart-message {
+    margin-top: 30px;
+    padding: 18px;
+    background-color: #e2e8f0;
+    border-left: 5px solid #070674;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 1.15rem;
+    color: #070674;
+}
+.chart-legend {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #cbd5e1;
+    flex-wrap: wrap;
+    font-size: 1rem;
+    font-weight: bold;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* Sezione Top 5 Classifica */
+#top5Section {
+    margin-top: 30px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #070674;
+}
+.badge-svg {
+    vertical-align: middle;
+    display: inline-block;
+}
+.record-cell-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+/* Evidenziazione verde per la squadra */
+.row-nostra-squadra {
+    background-color: #01fd48 !important;
+}
+.row-master {
+    background-color: #ffffff !important;
 }
 </style>
 </head>
 <body>
 
-<h1>🏆 Migliori Prestazioni per Stile e Distanza 🏆</h1>
-<a class="homepage-link" href="homepage.html">Torna alla Homepage</a>
+<div class="container">
+    <h2>🏆 Record e Passaggi Staffette 🏆</h2>
+    <a href="homepage.html" class="homepage-link">Torna alla Homepage</a>
 
-<div style="text-align:center; margin-bottom:20px;">
-  Stile:
-  <select id="stile">
-    <option value="stile libero">Stile Libero</option>
-    <option value="rana">Rana</option>
-    <option value="dorso">Dorso</option>
-    <option value="farfalla">Farfalla</option>
-    <option value="misti">Misti</option>
-  </select>
+    <div class="controls">
+        <div>
+            <label for="selectStaffetta"><strong>Seleziona Staffetta: </strong></label>
+            <select id="selectStaffetta">
+                <option value="">-- Seleziona una staffetta --</option>
+            </select>
+        </div>
 
-  Distanza:
-  <select id="distanza">
-    <option value="">Tutte</option>
-    <option value="50">50</option>
-    <option value="100">100</option>
-    <option value="200">200</option>
-    <option value="400">400</option>
-    <option value="800">800</option>
-    <option value="1500">1500</option>
-  </select>
+        <div>
+            <label for="selectVasca"><strong>Vasca: </strong></label>
+            <select id="selectVasca">
+                <option value="tutte">Tutte le vasche</option>
+                <option value="25">Vasca 25m</option>
+                <option value="50">Vasca 50m</option>
+            </select>
+        </div>
+    </div>
 
-  Vasca:
-  <select id="vasca">
-    <option value="">Tutte</option>
-    <option value="25">25</option>
-    <option value="50">50</option>
-  </select>
+    <div id="risultati"></div>
 
-  <button id="mostra">Mostra Classifica</button>
+    <!-- MESSAGGIO GUIDA VASCA -->
+    <div id="chartMessage" class="chart-message" style="display: none;">
+        💡 <strong>Seleziona la lunghezza della vasca (25m o 50m)</strong> nel menu in alto per visualizzare il grafico dettagliato dell'andamento dei tempi e la classifica Top 5 della società.
+    </div>
+
+    <!-- SEZIONE GRAFICO AMPLIATA -->
+    <div id="chartSection">
+        <h3 id="chartTitle">Andamento Tempi</h3>
+        <div id="chartContainer">
+            <canvas id="chartCanvas"></canvas>
+            <div id="chartTooltip" class="chart-tooltip"></div>
+        </div>
+
+        <!-- LEGENDA COLORI -->
+        <div class="chart-legend">
+            <div class="legend-item">
+                <span class="legend-dot" style="background-color: #2a9d8f;"></span>
+                <span>🟢 Battuto Podio Scorsa Stagione</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot" style="background-color: #e9c46a;"></span>
+                <span>🟡 Battuto Podio Edizioni Precedenti</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot" style="background-color: #e63946;"></span>
+                <span>🔴 Nessun Podio Battuto</span>
+            </div>
+        </div>
+
+        <!-- SEZIONE TOP 5 CLASSIFICA -->
+        <div id="top5Section">
+            <h3 style="margin-top:0;">🥇 Top 5 Migliori Staffette Societarie</h3>
+            <div id="top5Content"></div>
+        </div>
+    </div>
 </div>
-
-<div id="contenuto"></div>
-
-<script id="dati" type="text/plain">
+<!-- DATI DELLE GARE -->
+<script id="gare_raw" type="text/plain">
 Apertura,Bartalesi Beatrice,50 Stile Libero,30.28,434,no
 Apertura,Bartalesi Beatrice,100 Stile Libero,65.84,444,no
 Apertura,Catalano Giovanni,50 Stile Libero,28.02,372,no
@@ -262,14 +427,14 @@ Trofeo Raspini,Bartalesi Beatrice,Mistaffetta 4x50 Stile Libero,116.15,433,no
 Trofeo Raspini,Toniazzo Francesca,Mistaffetta 4x50 Stile Libero,116.15,433,no
 Trofeo Raspini,Perosino Edoardo,Mistaffetta 4x50 Stile Libero,116.15,433,no
 Trofeo Raspini,Pedi Mattia,Mistaffetta 4x50 Stile Libero,116.15,433,no
-Trofeo Raspini,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,121.45,378,no
-Trofeo Raspini,Fiora Virginia,Mistaffetta 4x50 Stile Libero,121.45,378,no
-Trofeo Raspini,Farruggia Vittoria,Mistaffetta 4x50 Stile Libero,121.45,378,no
-Trofeo Raspini,Catalano Giovanni,Mistaffetta 4x50 Stile Libero,121.45,378,no
 Trofeo Raspini,Bartalesi Beatrice,50 Stile Libero,29.98,447,no
 Trofeo Raspini,Toniazzo Francesca,50 Stile Libero lanciato,33.55,319,no
 Trofeo Raspini,Perosino Edoardo,50 Stile Libero lanciato,25.73,481,no
 Trofeo Raspini,Pedi Mattia,50 Stile Libero lanciato,26.51,439,no
+Trofeo Raspini,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,121.45,378,no
+Trofeo Raspini,Fiora Virginia,Mistaffetta 4x50 Stile Libero,121.45,378,no
+Trofeo Raspini,Farruggia Vittoria,Mistaffetta 4x50 Stile Libero,121.45,378,no
+Trofeo Raspini,Catalano Giovanni,Mistaffetta 4x50 Stile Libero,121.45,378,no
 Trofeo Raspini,Oliaro Giulio,50 Stile Libero,28.80,342,no
 Trofeo Raspini,Fiora Virginia,50 Stile Libero lanciato,31.91,371,no
 Trofeo Raspini,Farruggia Vittoria,50 Stile Libero lanciato,33.28,327,no
@@ -775,22 +940,22 @@ Coppa Piemonte,Bartalesi Beatrice,100 Stile Libero lanciato,63.99,484,no
 1° Trofeo Minitop,Pedi Mattia,Mistaffetta 4x50 Stile Libero,115.68,430,no
 1° Trofeo Minitop,Ruscelli Siria,Mistaffetta 4x50 Stile Libero,115.68,430,no
 1° Trofeo Minitop,Perosino Edoardo,Mistaffetta 4x50 Stile Libero,115.68,430,no
-1° Trofeo Minitop,Belmare Diego,Mistaffetta 4x50 Stile Libero,121.95,367,no
-1° Trofeo Minitop,Ingrosso Emma,Mistaffetta 4x50 Stile Libero,121.95,367,no
-1° Trofeo Minitop,Farruggia Vittoria,Mistaffetta 4x50 Stile Libero,121.95,367,no
-1° Trofeo Minitop,De Giorgi Alessandro,Mistaffetta 4x50 Stile Libero,121.95,367,no
-1° Trofeo Minitop,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,121.96,367,no
-1° Trofeo Minitop,Bibbona Lucia,Mistaffetta 4x50 Stile Libero,121.96,367,no
-1° Trofeo Minitop,Lucchese Camilla,Mistaffetta 4x50 Stile Libero,121.96,367,no
-1° Trofeo Minitop,Catalano Giovanni,Mistaffetta 4x50 Stile Libero,121.96,367,no
 1° Trofeo Minitop,Cecire Vittoria,50 Stile Libero,31.35,391,no
 1° Trofeo Minitop,Pedi Mattia,50 Stile Libero lanciato,28.00,373,no
 1° Trofeo Minitop,Ruscelli Siria,50 Stile Libero lanciato,30.47,426,no
 1° Trofeo Minitop,Perosino Edoardo,50 Stile Libero lanciato,26.20,455,no
+1° Trofeo Minitop,Belmare Diego,Mistaffetta 4x50 Stile Libero,121.95,367,no
+1° Trofeo Minitop,Ingrosso Emma,Mistaffetta 4x50 Stile Libero,121.95,367,no
+1° Trofeo Minitop,Farruggia Vittoria,Mistaffetta 4x50 Stile Libero,121.95,367,no
+1° Trofeo Minitop,De Giorgi Alessandro,Mistaffetta 4x50 Stile Libero,121.95,367,no
 1° Trofeo Minitop,Belmare Diego,50 Stile Libero,29.02,335,no
 1° Trofeo Minitop,Ingrosso Emma,50 Stile Libero lanciato,32.77,342,no
 1° Trofeo Minitop,Farruggia Vittoria,50 Stile Libero lanciato,32.63,347,no
 1° Trofeo Minitop,De Giorgi Alessandro,50 Stile Libero lanciato,27.59,390,no
+1° Trofeo Minitop,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,121.96,367,no
+1° Trofeo Minitop,Bibbona Lucia,Mistaffetta 4x50 Stile Libero,121.96,367,no
+1° Trofeo Minitop,Lucchese Camilla,Mistaffetta 4x50 Stile Libero,121.96,367,no
+1° Trofeo Minitop,Catalano Giovanni,Mistaffetta 4x50 Stile Libero,121.96,367,no
 1° Trofeo Minitop,Oliaro Giulio,50 Stile Libero,27.57,390,no
 1° Trofeo Minitop,Bibbona Lucia,50 Stile Libero lanciato,32.98,336,no
 1° Trofeo Minitop,Lucchese Camilla,50 Stile Libero lanciato,33.61,317,no
@@ -891,22 +1056,22 @@ Campionati Nazionali Estivi 2024 Giorno 1,Catalano Giovanni,Mistaffetta 4x50 Mis
 Campionati Nazionali Estivi 2024 Giorno 1,Ruscelli Siria,Mistaffetta 4x50 Misti,135.55,384,no
 Campionati Nazionali Estivi 2024 Giorno 1,Ingrosso Emma,Mistaffetta 4x50 Misti,135.55,384,no
 Campionati Nazionali Estivi 2024 Giorno 1,Oliaro Giulio,Mistaffetta 4x50 Misti,135.55,384,no
-Campionati Nazionali Estivi 2024 Giorno 1,Lucchese Camilla,Mistaffetta 4x50 Misti,132.87,421,no
-Campionati Nazionali Estivi 2024 Giorno 1,De Giorgi Alessandro,Mistaffetta 4x50 Misti,132.87,421,no
-Campionati Nazionali Estivi 2024 Giorno 1,Perosino Edoardo,Mistaffetta 4x50 Misti,132.87,421,no
-Campionati Nazionali Estivi 2024 Giorno 1,Cecire Vittoria,Mistaffetta 4x50 Misti,132.87,421,no
-Campionati Nazionali Estivi 2024 Giorno 1,Savant Ros Sveva,Mistaffetta 4x50 Misti,149.53,292,no
-Campionati Nazionali Estivi 2024 Giorno 1,Lambertoni Giulia,Mistaffetta 4x50 Misti,149.53,292,no
-Campionati Nazionali Estivi 2024 Giorno 1,Belmare Diego,Mistaffetta 4x50 Misti,149.53,292,no
-Campionati Nazionali Estivi 2024 Giorno 1,Martini Lorenzo,Mistaffetta 4x50 Misti,149.53,292,no
 Campionati Nazionali Estivi 2024 Giorno 1,Catalano Giovanni,50 Dorso,33.02,362,no
 Campionati Nazionali Estivi 2024 Giorno 1,Ruscelli Siria,50 Rana lanciato,39.86,391,no
 Campionati Nazionali Estivi 2024 Giorno 1,Ingrosso Emma,50 Farfalla lanciato,35.54,324,no
 Campionati Nazionali Estivi 2024 Giorno 1,Oliaro Giulio,50 Stile Libero lanciato,27.13,457,no
+Campionati Nazionali Estivi 2024 Giorno 1,Lucchese Camilla,Mistaffetta 4x50 Misti,132.87,421,no
+Campionati Nazionali Estivi 2024 Giorno 1,De Giorgi Alessandro,Mistaffetta 4x50 Misti,132.87,421,no
+Campionati Nazionali Estivi 2024 Giorno 1,Perosino Edoardo,Mistaffetta 4x50 Misti,132.87,421,no
+Campionati Nazionali Estivi 2024 Giorno 1,Cecire Vittoria,Mistaffetta 4x50 Misti,132.87,421,no
 Campionati Nazionali Estivi 2024 Giorno 1,Lucchese Camilla,50 Dorso,39.07,324,no
 Campionati Nazionali Estivi 2024 Giorno 1,De Giorgi Alessandro,50 Rana lanciato,34.69,418,no
 Campionati Nazionali Estivi 2024 Giorno 1,Perosino Edoardo,50 Farfalla lanciato,28.00,503,no
 Campionati Nazionali Estivi 2024 Giorno 1,Cecire Vittoria,50 Stile Libero lanciato,31.11,437,no
+Campionati Nazionali Estivi 2024 Giorno 1,Savant Ros Sveva,Mistaffetta 4x50 Misti,149.53,292,no
+Campionati Nazionali Estivi 2024 Giorno 1,Lambertoni Giulia,Mistaffetta 4x50 Misti,149.53,292,no
+Campionati Nazionali Estivi 2024 Giorno 1,Belmare Diego,Mistaffetta 4x50 Misti,149.53,292,no
+Campionati Nazionali Estivi 2024 Giorno 1,Martini Lorenzo,Mistaffetta 4x50 Misti,149.53,292,no
 Campionati Nazionali Estivi 2024 Giorno 1,Savant Ros Sveva,50 Dorso,40.61,289,no
 Campionati Nazionali Estivi 2024 Giorno 1,Lambertoni Giulia,50 Rana lanciato,43.95,292,no
 Campionati Nazionali Estivi 2024 Giorno 1,Belmare Diego,50 Farfalla lanciato,32.46,322,no
@@ -915,22 +1080,22 @@ Campionati Nazionali Estivi 2024 Giorno 1,Lucchese Camilla,Mistaffetta 4x50 Stil
 Campionati Nazionali Estivi 2024 Giorno 1,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,119.68,419,no
 Campionati Nazionali Estivi 2024 Giorno 1,Ichim Alexandra,Mistaffetta 4x50 Stile Libero,119.68,419,no
 Campionati Nazionali Estivi 2024 Giorno 1,Catalano Giovanni,Mistaffetta 4x50 Stile Libero,119.68,419,no
-Campionati Nazionali Estivi 2024 Giorno 1,Ruscelli Siria,Mistaffetta 4x50 Stile Libero,116.69,447,no
-Campionati Nazionali Estivi 2024 Giorno 1,Cecire Vittoria,Mistaffetta 4x50 Stile Libero,116.69,447,no
-Campionati Nazionali Estivi 2024 Giorno 1,Pedi Mattia,Mistaffetta 4x50 Stile Libero,116.69,447,no
-Campionati Nazionali Estivi 2024 Giorno 1,Perosino Edoardo,Mistaffetta 4x50 Stile Libero,116.69,447,no
-Campionati Nazionali Estivi 2024 Giorno 1,Ingrosso Emma,Mistaffetta 4x50 Stile Libero,122.89,383,no
-Campionati Nazionali Estivi 2024 Giorno 1,Farruggia Vittoria,Mistaffetta 4x50 Stile Libero,122.89,383,no
-Campionati Nazionali Estivi 2024 Giorno 1,Belmare Diego,Mistaffetta 4x50 Stile Libero,122.89,383,no
-Campionati Nazionali Estivi 2024 Giorno 1,De Giorgi Alessandro,Mistaffetta 4x50 Stile Libero,122.89,383,no
 Campionati Nazionali Estivi 2024 Giorno 1,Lucchese Camilla,50 Stile Libero,33.61,346,no
 Campionati Nazionali Estivi 2024 Giorno 1,Oliaro Giulio,50 Stile Libero lanciato,27.16,456,no
 Campionati Nazionali Estivi 2024 Giorno 1,Ichim Alexandra,50 Stile Libero lanciato,32.14,396,no
 Campionati Nazionali Estivi 2024 Giorno 1,Catalano Giovanni,50 Stile Libero lanciato,26.77,476,no
+Campionati Nazionali Estivi 2024 Giorno 1,Ruscelli Siria,Mistaffetta 4x50 Stile Libero,116.69,447,no
+Campionati Nazionali Estivi 2024 Giorno 1,Cecire Vittoria,Mistaffetta 4x50 Stile Libero,116.69,447,no
+Campionati Nazionali Estivi 2024 Giorno 1,Pedi Mattia,Mistaffetta 4x50 Stile Libero,116.69,447,no
+Campionati Nazionali Estivi 2024 Giorno 1,Perosino Edoardo,Mistaffetta 4x50 Stile Libero,116.69,447,no
 Campionati Nazionali Estivi 2024 Giorno 1,Ruscelli Siria,50 Stile Libero,31.65,415,no
 Campionati Nazionali Estivi 2024 Giorno 1,Cecire Vittoria,50 Stile Libero lanciato,30.79,450,no
 Campionati Nazionali Estivi 2024 Giorno 1,Pedi Mattia,50 Stile Libero lanciato,28.12,411,no
 Campionati Nazionali Estivi 2024 Giorno 1,Perosino Edoardo,50 Stile Libero lanciato,26.13,512,no
+Campionati Nazionali Estivi 2024 Giorno 1,Ingrosso Emma,Mistaffetta 4x50 Stile Libero,122.89,383,no
+Campionati Nazionali Estivi 2024 Giorno 1,Farruggia Vittoria,Mistaffetta 4x50 Stile Libero,122.89,383,no
+Campionati Nazionali Estivi 2024 Giorno 1,Belmare Diego,Mistaffetta 4x50 Stile Libero,122.89,383,no
+Campionati Nazionali Estivi 2024 Giorno 1,De Giorgi Alessandro,Mistaffetta 4x50 Stile Libero,122.89,383,no
 Campionati Nazionali Estivi 2024 Giorno 1,Ingrosso Emma,50 Stile Libero,33.32,355,no
 Campionati Nazionali Estivi 2024 Giorno 1,Farruggia Vittoria,50 Stile Libero lanciato,32.33,389,no
 Campionati Nazionali Estivi 2024 Giorno 1,Belmare Diego,50 Stile Libero lanciato,29.67,350,no
@@ -1070,14 +1235,14 @@ Memorial Giuseppina Ghibaudo,Ruscelli Siria,50 Stile Libero lanciato,30.91,408,n
 19° Memorial Davide Cagnotto,Ruscelli Siria,Mistaffetta 4x50 Stile Libero,118.65,406,no
 19° Memorial Davide Cagnotto,Savant Ros Sveva,Mistaffetta 4x50 Stile Libero,118.65,406,no
 19° Memorial Davide Cagnotto,Perosino Edoardo,Mistaffetta 4x50 Stile Libero,118.65,406,no
-19° Memorial Davide Cagnotto,Belmare Diego,Mistaffetta 4x50 Stile Libero,121.65,377,bronzo
-19° Memorial Davide Cagnotto,Midulla Arianna,Mistaffetta 4x50 Stile Libero,121.65,377,bronzo
-19° Memorial Davide Cagnotto,Ingrosso Emma,Mistaffetta 4x50 Stile Libero,121.65,377,bronzo
-19° Memorial Davide Cagnotto,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,121.65,377,bronzo
 19° Memorial Davide Cagnotto,De Giorgi Alessandro,50 Stile Libero,28.31,361,no
 19° Memorial Davide Cagnotto,Ruscelli Siria,50 Stile Libero lanciato,31.29,393,no
 19° Memorial Davide Cagnotto,Savant Ros Sveva,50 Stile Libero lanciato,31.84,373,no
 19° Memorial Davide Cagnotto,Perosino Edoardo,50 Stile Libero lanciato,27.10,411,no
+19° Memorial Davide Cagnotto,Belmare Diego,Mistaffetta 4x50 Stile Libero,121.65,377,bronzo
+19° Memorial Davide Cagnotto,Midulla Arianna,Mistaffetta 4x50 Stile Libero,121.65,377,bronzo
+19° Memorial Davide Cagnotto,Ingrosso Emma,Mistaffetta 4x50 Stile Libero,121.65,377,bronzo
+19° Memorial Davide Cagnotto,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,121.65,377,bronzo
 19° Memorial Davide Cagnotto,Belmare Diego,50 Stile Libero,29.82,308,no
 19° Memorial Davide Cagnotto,Midulla Arianna,50 Stile Libero lanciato,32.56,349,no
 19° Memorial Davide Cagnotto,Ingrosso Emma,50 Stile Libero lanciato,32.41,354,no
@@ -1086,14 +1251,14 @@ Memorial Giuseppina Ghibaudo,Ruscelli Siria,50 Stile Libero lanciato,30.91,408,n
 19° Memorial Davide Cagnotto,De Giorgi Alessandro,Mistaffetta 4x50 Misti,134.15,368,no
 19° Memorial Davide Cagnotto,Perosino Edoardo,Mistaffetta 4x50 Misti,134.15,368,no
 19° Memorial Davide Cagnotto,Ruscelli Siria,Mistaffetta 4x50 Misti,134.15,368,no
-19° Memorial Davide Cagnotto,Tissoni Giulia,Mistaffetta 4x50 Misti,141.63,313,bronzo
-19° Memorial Davide Cagnotto,Belmare Diego,Mistaffetta 4x50 Misti,141.63,313,bronzo
-19° Memorial Davide Cagnotto,Oliaro Giulio,Mistaffetta 4x50 Misti,141.63,313,bronzo
-19° Memorial Davide Cagnotto,Midulla Arianna,Mistaffetta 4x50 Misti,141.63,313,bronzo
 19° Memorial Davide Cagnotto,Lucchese Camilla,50 Dorso,38.94,272,no
 19° Memorial Davide Cagnotto,De Giorgi Alessandro,50 Rana lanciato,35.40,350,no
 19° Memorial Davide Cagnotto,Perosino Edoardo,50 Farfalla lanciato,28.58,440,no
 19° Memorial Davide Cagnotto,Ruscelli Siria,50 Stile Libero lanciato,31.04,403,no
+19° Memorial Davide Cagnotto,Tissoni Giulia,Mistaffetta 4x50 Misti,141.63,313,bronzo
+19° Memorial Davide Cagnotto,Belmare Diego,Mistaffetta 4x50 Misti,141.63,313,bronzo
+19° Memorial Davide Cagnotto,Oliaro Giulio,Mistaffetta 4x50 Misti,141.63,313,bronzo
+19° Memorial Davide Cagnotto,Midulla Arianna,Mistaffetta 4x50 Misti,141.63,313,bronzo
 19° Memorial Davide Cagnotto,Tissoni Giulia,50 Dorso,38.29,286,no
 19° Memorial Davide Cagnotto,Belmare Diego,50 Rana lanciato,41.62,215,no
 19° Memorial Davide Cagnotto,Oliaro Giulio,50 Farfalla lanciato,29.13,416,no
@@ -1284,14 +1449,14 @@ Trofeo Regionale Distanze Speciali,Ruscelli Siria,50 Rana,37.28,478,oro
 2° Trofeo Minitop,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,114.27,446,no
 2° Trofeo Minitop,Midulla Arianna,Mistaffetta 4x50 Stile Libero,114.27,446,no
 2° Trofeo Minitop,Perosino Edoardo,Mistaffetta 4x50 Stile Libero,114.27,446,no
-2° Trofeo Minitop,Savant Ros Sveva,Mistaffetta 4x50 Stile Libero,118.30,402,no
-2° Trofeo Minitop,Belmare Diego,Mistaffetta 4x50 Stile Libero,118.30,402,no
-2° Trofeo Minitop,Ingrosso Emma,Mistaffetta 4x50 Stile Libero,118.30,402,no
-2° Trofeo Minitop,De Giorgi Alessandro,Mistaffetta 4x50 Stile Libero,118.30,402,no
 2° Trofeo Minitop,Ruscelli Siria,50 Stile Libero,31.53,384,no
 2° Trofeo Minitop,Oliaro Giulio,50 Stile Libero lanciato,26.41,444,no
 2° Trofeo Minitop,Midulla Arianna,50 Stile Libero lanciato,30.91,408,no
 2° Trofeo Minitop,Perosino Edoardo,50 Stile Libero lanciato,25.42,498,no
+2° Trofeo Minitop,Savant Ros Sveva,Mistaffetta 4x50 Stile Libero,118.30,402,no
+2° Trofeo Minitop,Belmare Diego,Mistaffetta 4x50 Stile Libero,118.30,402,no
+2° Trofeo Minitop,Ingrosso Emma,Mistaffetta 4x50 Stile Libero,118.30,402,no
+2° Trofeo Minitop,De Giorgi Alessandro,Mistaffetta 4x50 Stile Libero,118.30,402,no
 2° Trofeo Minitop,Savant Ros Sveva,50 Stile Libero,31.39,389,no
 2° Trofeo Minitop,Belmare Diego,50 Stile Libero lanciato,28.54,352,no
 2° Trofeo Minitop,Ingrosso Emma,50 Stile Libero lanciato,31.87,372,no
@@ -1326,14 +1491,14 @@ Trofeo Regionale Distanze Speciali,Ruscelli Siria,50 Rana,37.28,478,oro
 46° Trofeo Della Resistenza,De Giorgi Alessandro,Staffetta 4x50 Stile Libero Maschi,108.20,461,no
 46° Trofeo Della Resistenza,Oliaro Giulio,Staffetta 4x50 Stile Libero Maschi,108.20,461,no
 46° Trofeo Della Resistenza,Perosino Edoardo,Staffetta 4x50 Stile Libero Maschi,108.20,461,no
-46° Trofeo Della Resistenza,Savant Ros Sveva,Staffetta 4x50 Stile Libero Femmine,126.42,416,no
-46° Trofeo Della Resistenza,Midulla Arianna,Staffetta 4x50 Stile Libero Femmine,126.42,416,no
-46° Trofeo Della Resistenza,Ingrosso Emma,Staffetta 4x50 Stile Libero Femmine,126.42,416,no
-46° Trofeo Della Resistenza,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,126.42,416,no
 46° Trofeo Della Resistenza,Belmare Diego,50 Stile Libero,28.90,378,no
 46° Trofeo Della Resistenza,De Giorgi Alessandro,50 Stile Libero lanciato,27.21,453,no
 46° Trofeo Della Resistenza,Oliaro Giulio,50 Stile Libero lanciato,26.88,470,no
 46° Trofeo Della Resistenza,Perosino Edoardo,50 Stile Libero lanciato,25.55,548,no
+46° Trofeo Della Resistenza,Savant Ros Sveva,Staffetta 4x50 Stile Libero Femmine,126.42,416,no
+46° Trofeo Della Resistenza,Midulla Arianna,Staffetta 4x50 Stile Libero Femmine,126.42,416,no
+46° Trofeo Della Resistenza,Ingrosso Emma,Staffetta 4x50 Stile Libero Femmine,126.42,416,no
+46° Trofeo Della Resistenza,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,126.42,416,no
 46° Trofeo Della Resistenza,Savant Ros Sveva,50 Stile Libero,32.01,401,no
 46° Trofeo Della Resistenza,Midulla Arianna,50 Stile Libero lanciato,31.67,414,no
 46° Trofeo Della Resistenza,Ingrosso Emma,50 Stile Libero lanciato,32.53,382,no
@@ -1342,14 +1507,14 @@ Trofeo Regionale Distanze Speciali,Ruscelli Siria,50 Rana,37.28,478,oro
 46° Trofeo Della Resistenza,De Giorgi Alessandro,Mistaffetta 4x50 Misti,132.35,431,no
 46° Trofeo Della Resistenza,Perosino Edoardo,Mistaffetta 4x50 Misti,132.35,431,no
 46° Trofeo Della Resistenza,Ruscelli Siria,Mistaffetta 4x50 Misti,132.35,431,no
-46° Trofeo Della Resistenza,Lucchese Camilla,Mistaffetta 4x50 Misti,140.30,370,no
-46° Trofeo Della Resistenza,Belmare Diego,Mistaffetta 4x50 Misti,140.30,370,no
-46° Trofeo Della Resistenza,Oliaro Giulio,Mistaffetta 4x50 Misti,140.30,370,no
-46° Trofeo Della Resistenza,Midulla Arianna,Mistaffetta 4x50 Misti,140.30,370,no
 46° Trofeo Della Resistenza,Savant Ros Sveva,50 Dorso,40.06,301,no
 46° Trofeo Della Resistenza,De Giorgi Alessandro,50 Rana lanciato,33.50,464,no
 46° Trofeo Della Resistenza,Perosino Edoardo,50 Farfalla lanciato,28.33,485,no
 46° Trofeo Della Resistenza,Ruscelli Siria,50 Stile Libero lanciato,30.30,473,no
+46° Trofeo Della Resistenza,Lucchese Camilla,Mistaffetta 4x50 Misti,140.30,370,no
+46° Trofeo Della Resistenza,Belmare Diego,Mistaffetta 4x50 Misti,140.30,370,no
+46° Trofeo Della Resistenza,Oliaro Giulio,Mistaffetta 4x50 Misti,140.30,370,no
+46° Trofeo Della Resistenza,Midulla Arianna,Mistaffetta 4x50 Misti,140.30,370,no
 46° Trofeo Della Resistenza,Lucchese Camilla,50 Dorso,38.13,349,no
 46° Trofeo Della Resistenza,Belmare Diego,50 Rana lanciato,41.02,253,no
 46° Trofeo Della Resistenza,Oliaro Giulio,50 Farfalla lanciato,28.68,468,no
@@ -1398,18 +1563,18 @@ Campionati Regionali Open 2025,Lucchese Camilla,Staffetta 4x50 Misti Femmine,143
 Campionati Regionali Open 2025,Ruscelli Siria,Staffetta 4x50 Misti Femmine,143.92,384,no
 Campionati Regionali Open 2025,Ingrosso Emma,Staffetta 4x50 Misti Femmine,143.92,384,no
 Campionati Regionali Open 2025,Midulla Arianna,Staffetta 4x50 Misti Femmine,143.92,384,no
-Campionati Regionali Open 2025,Belmare Diego,Staffetta 4x50 Misti Maschi,126.56,416,bronzo
-Campionati Regionali Open 2025,De Giorgi Alessandro,Staffetta 4x50 Misti Maschi,126.56,416,bronzo
-Campionati Regionali Open 2025,Oliaro Giulio,Staffetta 4x50 Misti Maschi,126.56,416,bronzo
-Campionati Regionali Open 2025,Perosino Edoardo,Staffetta 4x50 Misti Maschi,126.56,416,bronzo
 Campionati Regionali Open 2025,Lucchese Camilla,50 Dorso,37.73,360,no
 Campionati Regionali Open 2025,Ruscelli Siria,50 Rana lanciato,37.65,464,no
 Campionati Regionali Open 2025,Ingrosso Emma,50 Farfalla lanciato,36.88,290,no
 Campionati Regionali Open 2025,Midulla Arianna,50 Stile Libero lanciato,31.52,420,no
+Campionati Regionali Open 2025,Belmare Diego,Staffetta 4x50 Misti Maschi,126.56,416,bronzo
+Campionati Regionali Open 2025,De Giorgi Alessandro,Staffetta 4x50 Misti Maschi,126.56,416,bronzo
+Campionati Regionali Open 2025,Perosino Edoardo,Staffetta 4x50 Misti Maschi,126.56,416,bronzo
+Campionati Regionali Open 2025,Oliaro Giulio,Staffetta 4x50 Misti Maschi,126.56,416,bronzo
 Campionati Regionali Open 2025,Belmare Diego,50 Dorso,37.57,246,no
 Campionati Regionali Open 2025,De Giorgi Alessandro,50 Rana lanciato,33.47,466,no
-Campionati Regionali Open 2025,Oliaro Giulio,50 Stile Libero lanciato,26.31,501,no
 Campionati Regionali Open 2025,Perosino Edoardo,50 Farfalla lanciato,29.05,450,no
+Campionati Regionali Open 2025,Oliaro Giulio,50 Stile Libero lanciato,26.31,501,no
 Manifestazione Estiva Master Giorno 1,De Giorgi Alessandro,100 Rana,78.74,376,no
 Manifestazione Estiva Master Giorno 2,De Giorgi Alessandro,50 Rana,34.96,408,no
 Manifestazione Estiva Master Giorno 2,Perosino Edoardo,50 Stile Libero,26.68,481,no
@@ -1660,22 +1825,22 @@ Apertura Stagione 2025/2026,Oliaro Giulio,50 Stile Libero lanciato,25.37,482,no
 1ª Giornata Interregionale 2025/2026,Lambertoni Giulia,Staffetta 4x50 Stile Libero Femmine,131.23,350,no
 1ª Giornata Interregionale 2025/2026,Vignola Elena,Staffetta 4x50 Stile Libero Femmine,131.23,350,no
 1ª Giornata Interregionale 2025/2026,Savant Ros Sveva,Staffetta 4x50 Stile Libero Femmine,131.23,350,no
-1ª Giornata Interregionale 2025/2026,Scattaglia Stella,Staffetta 4x50 Stile Libero Femmine,123.33,421,argento
-1ª Giornata Interregionale 2025/2026,Midulla Arianna,Staffetta 4x50 Stile Libero Femmine,123.33,421,argento
-1ª Giornata Interregionale 2025/2026,Ingrosso Emma,Staffetta 4x50 Stile Libero Femmine,123.33,421,argento
-1ª Giornata Interregionale 2025/2026,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,123.33,421,argento
-1ª Giornata Interregionale 2025/2026,Bolognesi Lorenzo,Staffetta 4x50 Stile Libero Maschi,112.67,382,oro
-1ª Giornata Interregionale 2025/2026,Belmare Diego,Staffetta 4x50 Stile Libero Maschi,112.67,382,oro
-1ª Giornata Interregionale 2025/2026,De Giorgi Alessandro,Staffetta 4x50 Stile Libero Maschi,112.67,382,oro
-1ª Giornata Interregionale 2025/2026,Oliaro Giulio,Staffetta 4x50 Stile Libero Maschi,112.67,382,oro
 1ª Giornata Interregionale 2025/2026,Lucchese Camilla,50 Stile Libero,32.09,360,no
 1ª Giornata Interregionale 2025/2026,Lambertoni Giulia,50 Stile Libero lanciato,35.24,271,no
 1ª Giornata Interregionale 2025/2026,Vignola Elena,50 Stile Libero lanciato,31.55,379,no
 1ª Giornata Interregionale 2025/2026,Savant Ros Sveva,50 Stile Libero lanciato,32.35,351,no
+1ª Giornata Interregionale 2025/2026,Scattaglia Stella,Staffetta 4x50 Stile Libero Femmine,123.33,421,argento
+1ª Giornata Interregionale 2025/2026,Midulla Arianna,Staffetta 4x50 Stile Libero Femmine,123.33,421,argento
+1ª Giornata Interregionale 2025/2026,Ingrosso Emma,Staffetta 4x50 Stile Libero Femmine,123.33,421,argento
+1ª Giornata Interregionale 2025/2026,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,123.33,421,argento
 1ª Giornata Interregionale 2025/2026,Scattaglia Stella,50 Stile Libero,31.00,399,no
 1ª Giornata Interregionale 2025/2026,Midulla Arianna,50 Stile Libero lanciato,31.36,385,no
 1ª Giornata Interregionale 2025/2026,Ingrosso Emma,50 Stile Libero lanciato,30.86,404,no
 1ª Giornata Interregionale 2025/2026,Ruscelli Siria,50 Stile Libero lanciato,30.11,435,no
+1ª Giornata Interregionale 2025/2026,Bolognesi Lorenzo,Staffetta 4x50 Stile Libero Maschi,112.67,382,oro
+1ª Giornata Interregionale 2025/2026,Belmare Diego,Staffetta 4x50 Stile Libero Maschi,112.67,382,oro
+1ª Giornata Interregionale 2025/2026,De Giorgi Alessandro,Staffetta 4x50 Stile Libero Maschi,112.67,382,oro
+1ª Giornata Interregionale 2025/2026,Oliaro Giulio,Staffetta 4x50 Stile Libero Maschi,112.67,382,oro
 1ª Giornata Interregionale 2025/2026,Bolognesi Lorenzo,50 Stile Libero,34.10,198,no
 1ª Giornata Interregionale 2025/2026,Belmare Diego,50 Stile Libero lanciato,26.97,401,no
 1ª Giornata Interregionale 2025/2026,De Giorgi Alessandro,50 Stile Libero lanciato,25.95,450,no
@@ -1699,14 +1864,14 @@ Campionati Nazionali Invernali 2026 Giorno 1,Scattaglia Stella,Mistaffetta 4x50 
 Campionati Nazionali Invernali 2026 Giorno 1,Varolo Nicolò,Mistaffetta 4x50 Stile Libero,116.62,419,no
 Campionati Nazionali Invernali 2026 Giorno 1,Lucchese Camilla,Mistaffetta 4x50 Stile Libero,116.62,419,no
 Campionati Nazionali Invernali 2026 Giorno 1,Belmare Diego,Mistaffetta 4x50 Stile Libero,116.62,419,no
-Campionati Nazionali Invernali 2026 Giorno 1,Ruscelli Siria,Mistaffetta 4x50 Stile Libero,111.96,474,no
-Campionati Nazionali Invernali 2026 Giorno 1,De Giorgi Alessandro,Mistaffetta 4x50 Stile Libero,111.96,474,no
-Campionati Nazionali Invernali 2026 Giorno 1,Midulla Arianna,Mistaffetta 4x50 Stile Libero,111.96,474,no
-Campionati Nazionali Invernali 2026 Giorno 1,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,111.96,474,no
 Campionati Nazionali Invernali 2026 Giorno 1,Scattaglia Stella,50 Stile Libero,30.99,399,no
 Campionati Nazionali Invernali 2026 Giorno 1,Varolo Nicolò,50 Stile Libero lanciato,27.73,369,no
 Campionati Nazionali Invernali 2026 Giorno 1,Lucchese Camilla,50 Stile Libero lanciato,31.75,371,no
 Campionati Nazionali Invernali 2026 Giorno 1,Belmare Diego,50 Stile Libero lanciato,26.15,440,no
+Campionati Nazionali Invernali 2026 Giorno 1,Ruscelli Siria,Mistaffetta 4x50 Stile Libero,111.96,474,no
+Campionati Nazionali Invernali 2026 Giorno 1,De Giorgi Alessandro,Mistaffetta 4x50 Stile Libero,111.96,474,no
+Campionati Nazionali Invernali 2026 Giorno 1,Midulla Arianna,Mistaffetta 4x50 Stile Libero,111.96,474,no
+Campionati Nazionali Invernali 2026 Giorno 1,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,111.96,474,no
 Campionati Nazionali Invernali 2026 Giorno 1,Ruscelli Siria,50 Stile Libero,30.62,414,no
 Campionati Nazionali Invernali 2026 Giorno 1,De Giorgi Alessandro,50 Stile Libero lanciato,26.08,444,no
 Campionati Nazionali Invernali 2026 Giorno 1,Midulla Arianna,50 Stile Libero lanciato,30.59,415,no
@@ -1853,14 +2018,14 @@ Campionato Regionale di Categoria 2026 3ª Giornata,Ruscelli Siria,50 Rana,36.34
 4ª Giornata Interregionale 2025/2026,Ingrosso Emma,Staffetta 4x100 Stile Libero Femmine,266.78,453,argento
 4ª Giornata Interregionale 2025/2026,Lucchese Camilla,Staffetta 4x100 Stile Libero Femmine,266.78,453,argento
 4ª Giornata Interregionale 2025/2026,Ruscelli Siria,Staffetta 4x100 Stile Libero Femmine,266.78,453,argento
-4ª Giornata Interregionale 2025/2026,Scattaglia Stella,Mistaffetta 4x100 Stile Libero,251.25,443,oro
-4ª Giornata Interregionale 2025/2026,De Giorgi Alessandro,Mistaffetta 4x100 Stile Libero,251.25,443,oro
-4ª Giornata Interregionale 2025/2026,Tissoni Giulia,Mistaffetta 4x100 Stile Libero,251.25,443,oro
-4ª Giornata Interregionale 2025/2026,Oliaro Giulio,Mistaffetta 4x100 Stile Libero,251.25,443,oro
 4ª Giornata Interregionale 2025/2026,Midulla Arianna,100 Stile Libero,66.99,422,no
 4ª Giornata Interregionale 2025/2026,Ingrosso Emma,100 Stile Libero lanciato,67.78,407,no
 4ª Giornata Interregionale 2025/2026,Lucchese Camilla,100 Stile Libero lanciato,66.82,425,no
 4ª Giornata Interregionale 2025/2026,Ruscelli Siria,100 Stile Libero lanciato,65.19,457,no
+4ª Giornata Interregionale 2025/2026,Scattaglia Stella,Mistaffetta 4x100 Stile Libero,251.25,443,oro
+4ª Giornata Interregionale 2025/2026,De Giorgi Alessandro,Mistaffetta 4x100 Stile Libero,251.25,443,oro
+4ª Giornata Interregionale 2025/2026,Tissoni Giulia,Mistaffetta 4x100 Stile Libero,251.25,443,oro
+4ª Giornata Interregionale 2025/2026,Oliaro Giulio,Mistaffetta 4x100 Stile Libero,251.25,443,oro
 4ª Giornata Interregionale 2025/2026,Scattaglia Stella,100 Stile Libero,68.37,397,no
 4ª Giornata Interregionale 2025/2026,De Giorgi Alessandro,100 Stile Libero lanciato,58.59,448,no
 4ª Giornata Interregionale 2025/2026,Tissoni Giulia,100 Stile Libero lanciato,69.68,375,no
@@ -1895,14 +2060,14 @@ Trofeo Primavera,Midulla Arianna,Staffetta 4x50 Stile Libero Femmine,123.88,416,
 Trofeo Primavera,Tissoni Giulia,Staffetta 4x50 Stile Libero Femmine,123.88,416,no
 Trofeo Primavera,Vignola Elena,Staffetta 4x50 Stile Libero Femmine,123.88,416,no
 Trofeo Primavera,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,123.88,416,no
-Trofeo Primavera,Bolognesi Lorenzo,Staffetta 4x50 Stile Libero Maschi,108.09,433,argento
-Trofeo Primavera,Belmare Diego,Staffetta 4x50 Stile Libero Maschi,108.09,433,argento
-Trofeo Primavera,De Giorgi Alessandro,Staffetta 4x50 Stile Libero Maschi,108.09,433,argento
-Trofeo Primavera,Oliaro Giulio,Staffetta 4x50 Stile Libero Maschi,108.09,433,argento
 Trofeo Primavera,Midulla Arianna,50 Stile Libero,30.43,422,no
 Trofeo Primavera,Tissoni Giulia,50 Stile Libero lanciato,32.38,350,no
 Trofeo Primavera,Vignola Elena,50 Stile Libero lanciato,31.63,376,no
 Trofeo Primavera,Ruscelli Siria,50 Stile Libero lanciato,29.44,466,no
+Trofeo Primavera,Bolognesi Lorenzo,Staffetta 4x50 Stile Libero Maschi,108.09,433,argento
+Trofeo Primavera,Belmare Diego,Staffetta 4x50 Stile Libero Maschi,108.09,433,argento
+Trofeo Primavera,De Giorgi Alessandro,Staffetta 4x50 Stile Libero Maschi,108.09,433,argento
+Trofeo Primavera,Oliaro Giulio,Staffetta 4x50 Stile Libero Maschi,108.09,433,argento
 Trofeo Primavera,Bolognesi Lorenzo,50 Stile Libero,31.04,263,no
 Trofeo Primavera,Belmare Diego,50 Stile Libero lanciato,26.23,436,no
 Trofeo Primavera,De Giorgi Alessandro,50 Stile Libero lanciato,26.27,434,no
@@ -1935,16 +2100,16 @@ Manifestazione Nuoto per Salvamento,Midulla Arianna,Staffetta 4x50 Mista Salvame
 Manifestazione Nuoto per Salvamento,Lucchese Camilla,Staffetta 4x50 Mista Salvamento Femmine,137.03,0,oro
 Manifestazione Nuoto per Salvamento,Ingrosso Emma,Staffetta 4x50 Mista Salvamento Femmine,137.03,0,oro
 Manifestazione Nuoto per Salvamento,Ruscelli Siria,Staffetta 4x50 Mista Salvamento Femmine,137.03,0,oro
+Manifestazione Nuoto per Salvamento,Midulla Arianna,50 Stile Libero,32.16,357,no
 Manifestazione Nuoto per Salvamento,Lambertoni Giulia,Staffetta 4x50 Mista Salvamento Femmine,141.41,0,argento
 Manifestazione Nuoto per Salvamento,Prudenzano Sofia,Staffetta 4x50 Mista Salvamento Femmine,141.41,0,argento
 Manifestazione Nuoto per Salvamento,Vignola Elena,Staffetta 4x50 Mista Salvamento Femmine,141.41,0,argento
 Manifestazione Nuoto per Salvamento,Tissoni Giulia,Staffetta 4x50 Mista Salvamento Femmine,141.41,0,argento
+Manifestazione Nuoto per Salvamento,Lambertoni Giulia,50 Stile Libero,36.08,253,no
 Manifestazione Nuoto per Salvamento,Belmare Diego,Staffetta 4x50 Mista Salvamento Maschi,119.25,0,oro
 Manifestazione Nuoto per Salvamento,Bolognesi Lorenzo,Staffetta 4x50 Mista Salvamento Maschi,119.25,0,oro
 Manifestazione Nuoto per Salvamento,De Giorgi Alessandro,Staffetta 4x50 Mista Salvamento Maschi,119.25,0,oro
 Manifestazione Nuoto per Salvamento,Oliaro Giulio,Staffetta 4x50 Mista Salvamento Maschi,119.25,0,oro
-Manifestazione Nuoto per Salvamento,Midulla Arianna,50 Stile Libero,32.16,357,no
-Manifestazione Nuoto per Salvamento,Lambertoni Giulia,50 Stile Libero,36.08,253,no
 Manifestazione Nuoto per Salvamento,Belmare Diego,50 Stile Libero,27.37,384,no
 47° Trofeo Della Resistenza,Bolognesi Lorenzo,100 Rana,90.34,229,argento
 47° Trofeo Della Resistenza,Bolognesi Lorenzo,50 Stile Libero,32.30,233,no
@@ -2102,14 +2267,14 @@ Campionati Nazionali Estivi 2026 Giorno 1,Lucchese Camilla,Mistaffetta 4x50 Mist
 Campionati Nazionali Estivi 2026 Giorno 1,De Giorgi Alessandro,Mistaffetta 4x50 Misti,125.79,509,no
 Campionati Nazionali Estivi 2026 Giorno 1,Oliaro Giulio,Mistaffetta 4x50 Misti,125.79,509,no
 Campionati Nazionali Estivi 2026 Giorno 1,Ruscelli Siria,Mistaffetta 4x50 Misti,125.79,509,no
-Campionati Nazionali Estivi 2026 Giorno 1,Tissoni Giulia,Mistaffetta 4x50 Misti,134.75,415,no
-Campionati Nazionali Estivi 2026 Giorno 1,Varolo Nicolò,Mistaffetta 4x50 Misti,134.75,415,no
-Campionati Nazionali Estivi 2026 Giorno 1,Belmare Diego,Mistaffetta 4x50 Misti,134.75,415,no
-Campionati Nazionali Estivi 2026 Giorno 1,Midulla Arianna,Mistaffetta 4x50 Misti,134.75,415,no
 Campionati Nazionali Estivi 2026 Giorno 1,Lucchese Camilla,50 Dorso,38.79,332,no
 Campionati Nazionali Estivi 2026 Giorno 1,De Giorgi Alessandro,50 Rana lanciato,31.93,536,no
 Campionati Nazionali Estivi 2026 Giorno 1,Oliaro Giulio,50 Farfalla lanciato,25.75,646,no
 Campionati Nazionali Estivi 2026 Giorno 1,Ruscelli Siria,50 Stile Libero lanciato,29.32,522,no
+Campionati Nazionali Estivi 2026 Giorno 1,Tissoni Giulia,Mistaffetta 4x50 Misti,134.75,415,no
+Campionati Nazionali Estivi 2026 Giorno 1,Varolo Nicolò,Mistaffetta 4x50 Misti,134.75,415,no
+Campionati Nazionali Estivi 2026 Giorno 1,Belmare Diego,Mistaffetta 4x50 Misti,134.75,415,no
+Campionati Nazionali Estivi 2026 Giorno 1,Midulla Arianna,Mistaffetta 4x50 Misti,134.75,415,no
 Campionati Nazionali Estivi 2026 Giorno 1,Tissoni Giulia,50 Dorso,40.28,296,no
 Campionati Nazionali Estivi 2026 Giorno 1,Varolo Nicolò,50 Rana lanciato,36.92,347,no
 Campionati Nazionali Estivi 2026 Giorno 1,Belmare Diego,50 Farfalla lanciato,27.33,541,no
@@ -2118,22 +2283,22 @@ Campionati Nazionali Estivi 2026 Giorno 1,Scattaglia Stella,Staffetta 4x50 Stile
 Campionati Nazionali Estivi 2026 Giorno 1,Lucchese Camilla,Staffetta 4x50 Stile Libero Femmine,128.47,399,no
 Campionati Nazionali Estivi 2026 Giorno 1,Lambertoni Giulia,Staffetta 4x50 Stile Libero Femmine,128.47,399,no
 Campionati Nazionali Estivi 2026 Giorno 1,Tissoni Giulia,Staffetta 4x50 Stile Libero Femmine,128.47,399,no
-Campionati Nazionali Estivi 2026 Giorno 1,Midulla Arianna,Staffetta 4x50 Stile Libero Femmine,119.91,489,no
-Campionati Nazionali Estivi 2026 Giorno 1,Ingrosso Emma,Staffetta 4x50 Stile Libero Femmine,119.91,489,no
-Campionati Nazionali Estivi 2026 Giorno 1,Vignola Elena,Staffetta 4x50 Stile Libero Femmine,119.91,489,no
-Campionati Nazionali Estivi 2026 Giorno 1,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,119.91,489,no
-Campionati Nazionali Estivi 2026 Giorno 1,Belmare Diego,Staffetta 4x50 Stile Libero Maschi,104.40,521,no
-Campionati Nazionali Estivi 2026 Giorno 1,Varolo Nicolò,Staffetta 4x50 Stile Libero Maschi,104.40,521,no
-Campionati Nazionali Estivi 2026 Giorno 1,De Giorgi Alessandro,Staffetta 4x50 Stile Libero Maschi,104.40,521,no
-Campionati Nazionali Estivi 2026 Giorno 1,Oliaro Giulio,Staffetta 4x50 Stile Libero Maschi,104.40,521,no
 Campionati Nazionali Estivi 2026 Giorno 1,Scattaglia Stella,50 Stile Libero,31.82,408,no
 Campionati Nazionali Estivi 2026 Giorno 1,Lucchese Camilla,50 Stile Libero lanciato,31.08,438,no
 Campionati Nazionali Estivi 2026 Giorno 1,Lambertoni Giulia,50 Stile Libero lanciato,33.90,337,no
 Campionati Nazionali Estivi 2026 Giorno 1,Tissoni Giulia,50 Stile Libero lanciato,31.67,414,no
+Campionati Nazionali Estivi 2026 Giorno 1,Midulla Arianna,Staffetta 4x50 Stile Libero Femmine,119.91,489,no
+Campionati Nazionali Estivi 2026 Giorno 1,Ingrosso Emma,Staffetta 4x50 Stile Libero Femmine,119.91,489,no
+Campionati Nazionali Estivi 2026 Giorno 1,Vignola Elena,Staffetta 4x50 Stile Libero Femmine,119.91,489,no
+Campionati Nazionali Estivi 2026 Giorno 1,Ruscelli Siria,Staffetta 4x50 Stile Libero Femmine,119.91,489,no
 Campionati Nazionali Estivi 2026 Giorno 1,Midulla Arianna,50 Stile Libero,30.55,461,no
 Campionati Nazionali Estivi 2026 Giorno 1,Ingrosso Emma,50 Stile Libero lanciato,30.73,453,no
 Campionati Nazionali Estivi 2026 Giorno 1,Vignola Elena,50 Stile Libero lanciato,29.17,530,no
 Campionati Nazionali Estivi 2026 Giorno 1,Ruscelli Siria,50 Stile Libero lanciato,29.46,514,no
+Campionati Nazionali Estivi 2026 Giorno 1,Belmare Diego,Staffetta 4x50 Stile Libero Maschi,104.40,521,no
+Campionati Nazionali Estivi 2026 Giorno 1,Varolo Nicolò,Staffetta 4x50 Stile Libero Maschi,104.40,521,no
+Campionati Nazionali Estivi 2026 Giorno 1,De Giorgi Alessandro,Staffetta 4x50 Stile Libero Maschi,104.40,521,no
+Campionati Nazionali Estivi 2026 Giorno 1,Oliaro Giulio,Staffetta 4x50 Stile Libero Maschi,104.40,521,no
 Campionati Nazionali Estivi 2026 Giorno 1,Belmare Diego,50 Stile Libero,26.75,477,no
 Campionati Nazionali Estivi 2026 Giorno 1,Varolo Nicolò,50 Stile Libero lanciato,27.41,443,no
 Campionati Nazionali Estivi 2026 Giorno 1,De Giorgi Alessandro,50 Stile Libero lanciato,26.07,515,no
@@ -2156,22 +2321,22 @@ Campionati Nazionali Estivi 2026 Giorno 2,Tissoni Giulia,Staffetta 4x50 Misti Fe
 Campionati Nazionali Estivi 2026 Giorno 2,Lambertoni Giulia,Staffetta 4x50 Misti Femmine,148.17,351,no
 Campionati Nazionali Estivi 2026 Giorno 2,Vignola Elena,Staffetta 4x50 Misti Femmine,148.17,351,no
 Campionati Nazionali Estivi 2026 Giorno 2,Prudenzano Sofia,Staffetta 4x50 Misti Femmine,148.17,351,no
-Campionati Nazionali Estivi 2026 Giorno 2,Lucchese Camilla,Staffetta 4x50 Misti Femmine,138.02,434,no
-Campionati Nazionali Estivi 2026 Giorno 2,Ruscelli Siria,Staffetta 4x50 Misti Femmine,138.02,434,no
-Campionati Nazionali Estivi 2026 Giorno 2,Ingrosso Emma,Staffetta 4x50 Misti Femmine,138.02,434,no
-Campionati Nazionali Estivi 2026 Giorno 2,Midulla Arianna,Staffetta 4x50 Misti Femmine,138.02,434,no
-Campionati Nazionali Estivi 2026 Giorno 2,Varolo Nicolò,Staffetta 4x50 Misti Maschi,115.52,526,no
-Campionati Nazionali Estivi 2026 Giorno 2,De Giorgi Alessandro,Staffetta 4x50 Misti Maschi,115.52,526,no
-Campionati Nazionali Estivi 2026 Giorno 2,Belmare Diego,Staffetta 4x50 Misti Maschi,115.52,526,no
-Campionati Nazionali Estivi 2026 Giorno 2,Oliaro Giulio,Staffetta 4x50 Misti Maschi,115.52,526,no
 Campionati Nazionali Estivi 2026 Giorno 2,Tissoni Giulia,50 Dorso,38.18,348,no
 Campionati Nazionali Estivi 2026 Giorno 2,Lambertoni Giulia,50 Rana lanciato,43.03,311,no
 Campionati Nazionali Estivi 2026 Giorno 2,Vignola Elena,50 Farfalla lanciato,32.52,423,no
 Campionati Nazionali Estivi 2026 Giorno 2,Prudenzano Sofia,50 Stile Libero lanciato,34.44,322,no
+Campionati Nazionali Estivi 2026 Giorno 2,Lucchese Camilla,Staffetta 4x50 Misti Femmine,138.02,434,no
+Campionati Nazionali Estivi 2026 Giorno 2,Ruscelli Siria,Staffetta 4x50 Misti Femmine,138.02,434,no
+Campionati Nazionali Estivi 2026 Giorno 2,Ingrosso Emma,Staffetta 4x50 Misti Femmine,138.02,434,no
+Campionati Nazionali Estivi 2026 Giorno 2,Midulla Arianna,Staffetta 4x50 Misti Femmine,138.02,434,no
 Campionati Nazionali Estivi 2026 Giorno 2,Lucchese Camilla,50 Dorso,37.68,362,no
 Campionati Nazionali Estivi 2026 Giorno 2,Ruscelli Siria,50 Rana lanciato,37.05,487,no
 Campionati Nazionali Estivi 2026 Giorno 2,Ingrosso Emma,50 Farfalla lanciato,33.73,379,no
 Campionati Nazionali Estivi 2026 Giorno 2,Midulla Arianna,50 Stile Libero lanciato,29.56,509,no
+Campionati Nazionali Estivi 2026 Giorno 2,Varolo Nicolò,Staffetta 4x50 Misti Maschi,115.52,526,no
+Campionati Nazionali Estivi 2026 Giorno 2,De Giorgi Alessandro,Staffetta 4x50 Misti Maschi,115.52,526,no
+Campionati Nazionali Estivi 2026 Giorno 2,Belmare Diego,Staffetta 4x50 Misti Maschi,115.52,526,no
+Campionati Nazionali Estivi 2026 Giorno 2,Oliaro Giulio,Staffetta 4x50 Misti Maschi,115.52,526,no
 Campionati Nazionali Estivi 2026 Giorno 2,Varolo Nicolò,50 Dorso,31.57,415,no
 Campionati Nazionali Estivi 2026 Giorno 2,De Giorgi Alessandro,50 Rana lanciato,32.06,530,no
 Campionati Nazionali Estivi 2026 Giorno 2,Belmare Diego,50 Farfalla lanciato,27.41,536,no
@@ -2185,280 +2350,1115 @@ Campionati Nazionali Estivi 2026 Giorno 3,Midulla Arianna,Mistaffetta 4x50 Stile
 Campionati Nazionali Estivi 2026 Giorno 3,De Giorgi Alessandro,Mistaffetta 4x50 Stile Libero,110.02,533,no
 Campionati Nazionali Estivi 2026 Giorno 3,Ruscelli Siria,Mistaffetta 4x50 Stile Libero,110.02,533,no
 Campionati Nazionali Estivi 2026 Giorno 3,Oliaro Giulio,Mistaffetta 4x50 Stile Libero,110.02,533,no
-Campionati Nazionali Estivi 2026 Giorno 3,Lucchese Camilla,Mistaffetta 4x50 Stile Libero,116.11,454,no
-Campionati Nazionali Estivi 2026 Giorno 3,Varolo Nicolò,Mistaffetta 4x50 Stile Libero,116.11,454,no
-Campionati Nazionali Estivi 2026 Giorno 3,Ingrosso Emma,Mistaffetta 4x50 Stile Libero,116.11,454,no
-Campionati Nazionali Estivi 2026 Giorno 3,Belmare Diego,Mistaffetta 4x50 Stile Libero,116.11,454,no
 Campionati Nazionali Estivi 2026 Giorno 3,Midulla Arianna,50 Stile Libero,30.35,470,no
 Campionati Nazionali Estivi 2026 Giorno 3,De Giorgi Alessandro,50 Stile Libero lanciato,26.01,519,no
 Campionati Nazionali Estivi 2026 Giorno 3,Ruscelli Siria,50 Stile Libero lanciato,28.74,554,no
 Campionati Nazionali Estivi 2026 Giorno 3,Oliaro Giulio,50 Stile Libero lanciato,24.92,590,no
+Campionati Nazionali Estivi 2026 Giorno 3,Lucchese Camilla,Mistaffetta 4x50 Stile Libero,116.11,454,no
+Campionati Nazionali Estivi 2026 Giorno 3,Varolo Nicolò,Mistaffetta 4x50 Stile Libero,116.11,454,no
+Campionati Nazionali Estivi 2026 Giorno 3,Ingrosso Emma,Mistaffetta 4x50 Stile Libero,116.11,454,no
+Campionati Nazionali Estivi 2026 Giorno 3,Belmare Diego,Mistaffetta 4x50 Stile Libero,116.11,454,no
 Campionati Nazionali Estivi 2026 Giorno 3,Lucchese Camilla,50 Stile Libero,32.07,399,no
 Campionati Nazionali Estivi 2026 Giorno 3,Varolo Nicolò,50 Stile Libero lanciato,27.36,446,no
 Campionati Nazionali Estivi 2026 Giorno 3,Ingrosso Emma,50 Stile Libero lanciato,30.61,458,no
 Campionati Nazionali Estivi 2026 Giorno 3,Belmare Diego,50 Stile Libero lanciato,26.07,515,no
 </script>
 
+<!-- INFO GARE -->
+<script id="info_gare" type="application/json">
+{
+  "apertura": {"data": "2022-12-04", "piscina": "Sisport", "vasca": 25},
+  "17° memorial davide cagnotto": {"data": "2023-01-22", "piscina": "Fossano", "vasca": 25},
+  "1ª giornata pentathlon 2023": {"data": "2023-02-12", "piscina": "Fossano", "vasca": 25},
+  "trofeo mimosa": {"data": "2023-03-05", "piscina": "Colletta", "vasca": 25},
+  "2ª giornata pentathlon 2023": {"data": "2023-03-19", "piscina": "Sisport", "vasca": 25},
+  "trofeo raspini": {"data": "2023-04-16", "piscina": "Pinerolo", "vasca": 25},
+  "44° trofeo della resistenza": {"data": "2023-04-25", "piscina": "Sisport", "vasca": 50},
+  "campionati regionali open 2023": {"data": "2023-05-21", "piscina": "Sisport", "vasca": 50},
+  "campionati nazionali estivi 2023 giorno 1": {"data": "2023-06-09", "piscina": "Napoli", "vasca": 50},
+  "campionati nazionali estivi 2023 giorno 2": {"data": "2023-06-10", "piscina": "Napoli", "vasca": 50},
+  "campionati nazionali estivi 2023 giorno 3": {"data": "2023-06-11", "piscina": "Napoli", "vasca": 50},
+  "coppa autunno": {"data": "2023-11-19", "piscina": "Fossano", "vasca": 25},
+  "campionati nazionali invernali master 2023": {"data": "2023-12-09", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "18° memorial davide cagnotto": {"data": "2024-01-14", "piscina": "Fossano", "vasca": 25},
+  "1ª giornata pentathlon 2024": {"data": "2024-01-28", "piscina": "Fossano", "vasca": 25},
+  "2ª giornata pentathlon 2024": {"data": "2024-02-18", "piscina": "Sisport", "vasca": 25},
+  "coppa piemonte": {"data": "2024-03-24", "piscina": "Sisport", "vasca": 25},
+  "45° trofeo della resistenza": {"data": "2024-04-25", "piscina": "Sisport", "vasca": 50},
+  "1° trofeo minitop": {"data": "2024-05-05", "piscina": "Pinerolo", "vasca": 25},
+  "campionati regionali open 2024": {"data": "2024-05-12", "piscina": "Sisport", "vasca": 50},
+  "2° trofeo torino nuoto": {"data": "2024-05-25", "piscina": "Torino Nuoto", "vasca": 25},
+  "campionati nazionali estivi 2024 giorno 1": {"data": "2024-06-14", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi 2024 giorno 2": {"data": "2024-06-15", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi 2024 giorno 3": {"data": "2024-06-16", "piscina": "Riccione", "vasca": 50},
+  "memorial giuseppina ghibaudo": {"data": "2024-10-20", "piscina": "Saint Vincent", "vasca": 25},
+  "15° trofeo master città di saronno": {"data": "2024-11-10", "piscina": "Saronno", "vasca": 25},
+  "19° memorial davide cagnotto": {"data": "2024-11-24", "piscina": "Fossano", "vasca": 25},
+  "campionati nazionali invernali master 2024 giorno 2": {"data": "2024-12-07", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "campionati nazionali invernali master 2024 giorno 3": {"data": "2024-12-08", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "1ª tappa coppa los angeles 2024/2025 giorno 1": {"data": "2024-12-14", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "1ª tappa coppa los angeles 2024/2025 giorno 2": {"data": "2024-12-15", "piscina": "Sisport", "vasca": 25},
+  "1ª giornata pentathlon 2025": {"data": "2025-01-19", "piscina": "Sisport", "vasca": 25},
+  "2ª tappa coppa los angeles 2024/2025 giorno 1": {"data": "2025-01-25", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "2ª tappa coppa los angeles 2024/2025 giorno 2": {"data": "2025-01-26", "piscina": "Sisport", "vasca": 25},
+  "2ª giornata pentathlon 2025": {"data": "2025-02-02", "piscina": "Sisport", "vasca": 25},
+  "campionato regionale master 2025 giorno 1": {"data": "2025-02-08", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "campionato regionale master 2025 giorno 2": {"data": "2025-02-09", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "trofeo riviera delle alpi": {"data": "2025-02-23", "piscina": "Saint Vincent", "vasca": 25},
+  "trofeo regionale distanze speciali": {"data": "2025-03-02", "piscina": "Sisport", "vasca": 50},
+  "11° trofeo nuoto ponente master": {"data": "2025-03-30", "piscina": "Genova Pra", "vasca": 25},
+  "2° trofeo minitop": {"data": "2025-04-13", "piscina": "Pinerolo", "vasca": 25},
+  "46° trofeo della resistenza": {"data": "2025-04-25", "piscina": "Sisport", "vasca": 50},
+  "campionati regionali open 2025": {"data": "2025-05-11", "piscina": "Sisport", "vasca": 50},
+  "manifestazione estiva master giorno 1": {"data": "2025-05-17", "piscina": "Palazzo del Nuoto", "vasca": 50},
+  "manifestazione estiva master giorno 2": {"data": "2025-05-18", "piscina": "Palazzo del Nuoto", "vasca": 50},
+  "3° trofeo torino nuoto": {"data": "2025-05-24", "piscina": "Torino Nuoto", "vasca": 25},
+  "campionati nazionali estivi 2025 giorno 1": {"data": "2025-06-13", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi 2025 giorno 2": {"data": "2025-06-14", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi 2025 giorno 3": {"data": "2025-06-15", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi master 2025 giorno 3": {"data": "2025-06-26", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi master 2025 giorno 4": {"data": "2025-06-27", "piscina": "Riccione interna", "vasca": 50},
+  "campionati nazionali estivi master 2025 giorno 5": {"data": "2025-06-28", "piscina": "Riccione", "vasca": 50},
+  "1ª tappa coppa los angeles 2025/2026 giorno 1": {"data": "2025-11-01", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "1ª tappa coppa los angeles 2025/2026 giorno 2": {"data": "2025-11-02", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "apertura stagione 2025/2026": {"data": "2025-12-06", "piscina": "Sisport", "vasca": 25},
+  "2ª tappa coppa los angeles 2025/2026 giorno 1": { "data": "2025-11-22", "piscina": "Palazzo del Nuoto", "vasca": 25 },
+  "2ª tappa coppa los angeles 2025/2026 giorno 2": { "data": "2025-11-23", "piscina": "Sisport", "vasca": 25 },
+  "1ª giornata interregionale 2025/2026": { "data": "2025-12-14", "piscina": "Tortona", "vasca": 25 },
+  "campionati nazionali invernali 2026 giorno 1": { "data": "2026-01-10", "piscina": "Palazzo del Nuoto", "vasca": 25 },
+  "campionati nazionali invernali 2026 giorno 2": { "data": "2026-01-11", "piscina": "Palazzo del Nuoto", "vasca": 25 },
+  "giocati il 5 2025/2026 1ª giornata": { "data": "2026-01-18", "piscina": "Pinerolo", "vasca": 25 },
+  "3ª tappa coppa los angeles 2025/2026 giorno 1": { "data": "2026-01-24", "piscina": "Palazzo del Nuoto", "vasca": 25 },
+  "3ª tappa coppa los angeles 2025/2026 giorno 2": { "data": "2026-01-25", "piscina": "Palazzo del Nuoto", "vasca": 25 },
+  "3ª tappa coppa los angeles 2025/2026 giorno 2 conc. b": { "data": "2026-01-25", "piscina": "Sisport", "vasca": 25 },
+  "giocati il 5 2025/2026 2ª giornata": { "data": "2026-02-01", "piscina": "Pinerolo", "vasca": 25 },
+  "campionato regionale di categoria 2026 3ª giornata": {"data": "2026-03-14", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "4ª giornata interregionale 2025/2026": {"data": "2026-03-15", "piscina": "Tortona", "vasca": 25},
+  "trofeo primavera": {"data": "2026-03-22", "piscina": "Pinerolo", "vasca": 25},
+  "manifestazione nuoto per salvamento": {"data": "2026-04-12", "piscina": "Torrazza", "vasca": 25},
+  "47° trofeo della resistenza": { "data": "2026-04-25", "piscina": "Sisport", "vasca": 25 },
+  "campionati regionali open 2026": { "data": "2026-05-10", "piscina": "Sisport", "vasca": 50 },
+  "2ª tappa coppa los angeles summer edition 2025/2026 giorno 1": { "data": "2026-05-30", "piscina": "Palazzo del Nuoto", "vasca": 50 },
+  "2ª tappa coppa los angeles summer edition 2025/2026 giorno 2": { "data": "2026-05-31", "piscina": "Sisport", "vasca": 50 },
+  "campionati nazionali estivi 2026 giorno 1": { "data": "2026-06-12", "piscina": "Riccione", "vasca": 50 },
+  "campionati nazionali estivi 2026 giorno 2": { "data": "2026-06-13", "piscina": "Riccione", "vasca": 50 },
+  "campionati nazionali estivi 2026 giorno 3": { "data": "2026-06-14", "piscina": "Riccione", "vasca": 50 }
+}
+</script>
+
+<script id="master_raw" type="text/plain">
+Staffetta 4x50 Stile Libero Maschi,25,105.19,101.19,103.95
+Staffetta 4x50 Stile Libero Femmine,25,129.03,125.32
+Mistaffetta 4x50 Stile Libero,25,111.84,110.32,115.27,113.95
+Mistaffetta 4x50 Misti,25,119.66,127.51,121.75,127.56
+Staffetta 4x50 Misti Maschi,25,112.07,115.69,117.33,118.22,121.02,121.66
+Staffetta 4x50 Misti Femmine,25,143.33,144.20,142.43
+Staffetta 4x50 Stile Libero Maschi,50,107.63
+Staffetta 4x50 Stile Libero Femmine,50
+Mistaffetta 4x50 Stile Libero,50,116.43,115.00
+Mistaffetta 4x50 Misti,50,125.78,131.91,130.83,133.34,133.44
+Staffetta 4x50 Misti Maschi,50,118.73,120.97,120.38
+Staffetta 4x50 Misti Femmine,50,144.35,141.71
+</script>
+
+<script id="podi_nazionali_raw" type="text/plain">
+Podio nazionali estivi UISP 2025,Mistaffetta 4x50 Misti,116.74
+Podio nazionali estivi UISP 2025,Staffetta 4x50 Stile Libero Femmine,115.47
+Podio nazionali estivi UISP 2025,Staffetta 4x50 Stile Libero Maschi,98.85
+Podio nazionali estivi UISP 2025,Staffetta 4x50 Misti Femmine,125.34
+Podio nazionali estivi UISP 2025,Staffetta 4x50 Misti Maschi,107.54
+Podio nazionali estivi UISP 2025,Mistaffetta 4x50 Stile Libero,105.38
+Podio nazionali estivi UISP 2026,Mistaffetta 4x50 Misti,120.07
+Podio nazionali estivi UISP 2026,Staffetta 4x50 Stile Libero Femmine,119.78
+Podio nazionali estivi UISP 2026,Staffetta 4x50 Stile Libero Maschi,98.50
+Podio nazionali estivi UISP 2026,Staffetta 4x50 Misti Femmine,129.72
+Podio nazionali estivi UISP 2026,Staffetta 4x50 Misti Maschi,108.09
+Podio nazionali estivi UISP 2026,Mistaffetta 4x50 Stile Libero,106.56
+Podio nazionali estivi UISP 2024,Mistaffetta 4x50 Misti,118.93
+Podio nazionali estivi UISP 2024,Staffetta 4x50 Stile Libero Femmine,116.08
+Podio nazionali estivi UISP 2024,Staffetta 4x50 Stile Libero Maschi,100.47
+Podio nazionali estivi UISP 2024,Staffetta 4x50 Misti Femmine,129.50
+Podio nazionali estivi UISP 2024,Staffetta 4x50 Misti Maschi,109.98
+Podio nazionali estivi UISP 2024,Mistaffetta 4x50 Stile Libero,107.80
+Podio nazionali invernali UISP 2026,Mistaffetta 4x50 Stile Libero,108.39
+Campionati nazionali invernali UISP 2025,Staffetta 4x50 Stile Libero Maschi,102.42
+Campionati nazionali invernali UISP 2025,Staffetta 4x50 Stile Libero Femmine,119.06
+Campionati nazionali invernali UISP 2024,Staffetta 4x50 Stile Libero Maschi,110.47
+Campionati nazionali invernali UISP 2024,Staffetta 4x50 Stile Libero Femmine,122.97
+Podio nazionali invernali master 2023,Mistaffetta 4x50 Stile Libero,111.41
+Podio nazionali invernali master 2024,Mistaffetta 4x50 Stile Libero,105.12
+Podio nazionali invernali master 2025,Mistaffetta 4x50 Stile Libero,105.96
+Podio nazionali estivi master 2024,Mistaffetta 4x50 Misti,125.06
+Podio nazionali estivi master 2024,Staffetta 4x50 Misti Femmine,130.64
+Podio nazionali estivi master 2024,Staffetta 4x50 Misti Maschi,117.14
+Podio nazionali estivi master 2024,Mistaffetta 4x50 Stile Libero,110.61
+Podio nazionali estivi master 2024,Staffetta 4x50 Stile Libero Femmine,119.46
+Podio nazionali estivi master 2024,Staffetta 4x50 Stile Libero Maschi,103.69
+Podio nazionali estivi master 2025,Mistaffetta 4x50 Misti,117.45
+Podio nazionali estivi master 2025,Staffetta 4x50 Misti Femmine,130.56
+Podio nazionali estivi master 2025,Staffetta 4x50 Misti Maschi,113.22
+Podio nazionali estivi master 2025,Mistaffetta 4x50 Stile Libero,106.03
+Podio nazionali estivi master 2025,Staffetta 4x50 Stile Libero Femmine,116.86
+Podio nazionali estivi master 2025,Staffetta 4x50 Stile Libero Maschi,100.73
+Podio nazionali estivi master 2026,Mistaffetta 4x50 Misti,117.63
+Podio nazionali estivi master 2026,Staffetta 4x50 Misti Femmine,127.86
+Podio nazionali estivi master 2026,Staffetta 4x50 Misti Maschi,110.28
+Podio nazionali estivi master 2026,Mistaffetta 4x50 Stile Libero,106.45
+Podio nazionali estivi master 2026,Staffetta 4x50 Stile Libero Femmine,114.45
+Podio nazionali estivi master 2026,Staffetta 4x50 Stile Libero Maschi,98.83
+</script>
+
+<!-- INFO GARE -->
+<script id="info_gare" type="application/json">
+{
+  "apertura": {"data": "2022-12-04", "piscina": "Sisport", "vasca": 25},
+  "17° memorial davide cagnotto": {"data": "2023-01-22", "piscina": "Fossano", "vasca": 25},
+  "1ª giornata pentathlon 2023": {"data": "2023-02-12", "piscina": "Fossano", "vasca": 25},
+  "trofeo mimosa": {"data": "2023-03-05", "piscina": "Colletta", "vasca": 25},
+  "2ª giornata pentathlon 2023": {"data": "2023-03-19", "piscina": "Sisport", "vasca": 25},
+  "trofeo raspini": {"data": "2023-04-16", "piscina": "Pinerolo", "vasca": 25},
+  "44° trofeo della resistenza": {"data": "2023-04-25", "piscina": "Sisport", "vasca": 50},
+  "campionati regionali open 2023": {"data": "2023-05-21", "piscina": "Sisport", "vasca": 50},
+  "campionati nazionali estivi 2023 giorno 1": {"data": "2023-06-09", "piscina": "Napoli", "vasca": 50},
+  "campionati nazionali estivi 2023 giorno 2": {"data": "2023-06-10", "piscina": "Napoli", "vasca": 50},
+  "campionati nazionali estivi 2023 giorno 3": {"data": "2023-06-11", "piscina": "Napoli", "vasca": 50},
+  "coppa autunno": {"data": "2023-11-19", "piscina": "Fossano", "vasca": 25},
+  "campionati nazionali invernali master 2023": {"data": "2023-12-09", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "18° memorial davide cagnotto": {"data": "2024-01-14", "piscina": "Fossano", "vasca": 25},
+  "1ª giornata pentathlon 2024": {"data": "2024-01-28", "piscina": "Fossano", "vasca": 25},
+  "2ª giornata pentathlon 2024": {"data": "2024-02-18", "piscina": "Sisport", "vasca": 25},
+  "coppa piemonte": {"data": "2024-03-24", "piscina": "Sisport", "vasca": 25},
+  "45° trofeo della resistenza": {"data": "2024-04-25", "piscina": "Sisport", "vasca": 50},
+  "1° trofeo minitop": {"data": "2024-05-05", "piscina": "Pinerolo", "vasca": 25},
+  "campionati regionali open 2024": {"data": "2024-05-12", "piscina": "Sisport", "vasca": 50},
+  "2° trofeo torino nuoto": {"data": "2024-05-25", "piscina": "Torino Nuoto", "vasca": 25},
+  "campionati nazionali estivi 2024 giorno 1": {"data": "2024-06-14", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi 2024 giorno 2": {"data": "2024-06-15", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi 2024 giorno 3": {"data": "2024-06-16", "piscina": "Riccione", "vasca": 50},
+  "memorial giuseppina ghibaudo": {"data": "2024-10-20", "piscina": "Saint Vincent", "vasca": 25},
+  "15° trofeo master città di saronno": {"data": "2024-11-10", "piscina": "Saronno", "vasca": 25},
+  "19° memorial davide cagnotto": {"data": "2024-11-24", "piscina": "Fossano", "vasca": 25},
+  "campionati nazionali invernali master 2024 giorno 2": {"data": "2024-12-07", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "campionati nazionali invernali master 2024 giorno 3": {"data": "2024-12-08", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "1ª tappa coppa los angeles 2024/2025 giorno 1": {"data": "2024-12-14", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "1ª tappa coppa los angeles 2024/2025 giorno 2": {"data": "2024-12-15", "piscina": "Sisport", "vasca": 25},
+  "1ª giornata pentathlon 2025": {"data": "2025-01-19", "piscina": "Sisport", "vasca": 25},
+  "2ª tappa coppa los angeles 2024/2025 giorno 1": {"data": "2025-01-25", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "2ª tappa coppa los angeles 2024/2025 giorno 2": {"data": "2025-01-26", "piscina": "Sisport", "vasca": 25},
+  "2ª giornata pentathlon 2025": {"data": "2025-02-02", "piscina": "Sisport", "vasca": 25},
+  "campionato regionale master 2025 giorno 1": {"data": "2025-02-08", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "campionato regionale master 2025 giorno 2": {"data": "2025-02-09", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "trofeo riviera delle alpi": {"data": "2025-02-23", "piscina": "Saint Vincent", "vasca": 25},
+  "trofeo regionale distanze speciali": {"data": "2025-03-02", "piscina": "Sisport", "vasca": 50},
+  "11° trofeo nuoto ponente master": {"data": "2025-03-30", "piscina": "Genova Pra", "vasca": 25},
+  "2° trofeo minitop": {"data": "2025-04-13", "piscina": "Pinerolo", "vasca": 25},
+  "46° trofeo della resistenza": {"data": "2025-04-25", "piscina": "Sisport", "vasca": 50},
+  "campionati regionali open 2025": {"data": "2025-05-11", "piscina": "Sisport", "vasca": 50},
+  "manifestazione estiva master giorno 1": {"data": "2025-05-17", "piscina": "Palazzo del Nuoto", "vasca": 50},
+  "manifestazione estiva master giorno 2": {"data": "2025-05-18", "piscina": "Palazzo del Nuoto", "vasca": 50},
+  "3° trofeo torino nuoto": {"data": "2025-05-24", "piscina": "Torino Nuoto", "vasca": 25},
+  "campionati nazionali estivi 2025 giorno 1": {"data": "2025-06-13", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi 2025 giorno 2": {"data": "2025-06-14", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi 2025 giorno 3": {"data": "2025-06-15", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi master 2025 giorno 3": {"data": "2025-06-26", "piscina": "Riccione", "vasca": 50},
+  "campionati nazionali estivi master 2025 giorno 4": {"data": "2025-06-27", "piscina": "Riccione interna", "vasca": 50},
+  "campionati nazionali estivi master 2025 giorno 5": {"data": "2025-06-28", "piscina": "Riccione", "vasca": 50},
+  "1ª tappa coppa los angeles 2025/2026 giorno 1": {"data": "2025-11-01", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "1ª tappa coppa los angeles 2025/2026 giorno 2": {"data": "2025-11-02", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "apertura stagione 2025/2026": {"data": "2025-12-06", "piscina": "Sisport", "vasca": 25},
+  "2ª tappa coppa los angeles 2025/2026 giorno 1": { "data": "2025-11-22", "piscina": "Palazzo del Nuoto", "vasca": 25 },
+  "2ª tappa coppa los angeles 2025/2026 giorno 2": { "data": "2025-11-23", "piscina": "Sisport", "vasca": 25 },
+  "1ª giornata interregionale 2025/2026": { "data": "2025-12-14", "piscina": "Tortona", "vasca": 25 },
+  "campionati nazionali invernali 2026 giorno 1": { "data": "2026-01-10", "piscina": "Palazzo del Nuoto", "vasca": 25 },
+  "campionati nazionali invernali 2026 giorno 2": { "data": "2026-01-11", "piscina": "Palazzo del Nuoto", "vasca": 25 },
+  "giocati il 5 2025/2026 1ª giornata": { "data": "2026-01-18", "piscina": "Pinerolo", "vasca": 25 },
+  "3ª tappa coppa los angeles 2025/2026 giorno 1": { "data": "2026-01-24", "piscina": "Palazzo del Nuoto", "vasca": 25 },
+  "3ª tappa coppa los angeles 2025/2026 giorno 2": { "data": "2026-01-25", "piscina": "Palazzo del Nuoto", "vasca": 25 },
+  "3ª tappa coppa los angeles 2025/2026 giorno 2 conc. b": { "data": "2026-01-25", "piscina": "Sisport", "vasca": 25 },
+  "giocati il 5 2025/2026 2ª giornata": { "data": "2026-02-01", "piscina": "Pinerolo", "vasca": 25 },
+  "campionato regionale di categoria 2026 3ª giornata": {"data": "2026-03-14", "piscina": "Palazzo del Nuoto", "vasca": 25},
+  "4ª giornata interregionale 2025/2026": {"data": "2026-03-15", "piscina": "Tortona", "vasca": 25},
+  "trofeo primavera": {"data": "2026-03-22", "piscina": "Pinerolo", "vasca": 25},
+  "manifestazione nuoto per salvamento": {"data": "2026-04-12", "piscina": "Torrazza", "vasca": 25},
+  "47° trofeo della resistenza": { "data": "2026-04-25", "piscina": "Sisport", "vasca": 25 },
+  "campionati regionali open 2026": { "data": "2026-05-10", "piscina": "Sisport", "vasca": 50 },
+  "2ª tappa coppa los angeles summer edition 2025/2026 giorno 1": { "data": "2026-05-30", "piscina": "Palazzo del Nuoto", "vasca": 50 },
+  "2ª tappa coppa los angeles summer edition 2025/2026 giorno 2": { "data": "2026-05-31", "piscina": "Sisport", "vasca": 50 },
+  "campionati nazionali estivi 2026 giorno 1": { "data": "2026-06-12", "piscina": "Riccione", "vasca": 50 },
+  "campionati nazionali estivi 2026 giorno 2": { "data": "2026-06-13", "piscina": "Riccione", "vasca": 50 },
+  "campionati nazionali estivi 2026 giorno 3": { "data": "2026-06-14", "piscina": "Riccione", "vasca": 50 }
+}
+</script>
+
 <script>
-function normalizzaStringa(s) {
-  s = s.trim().toLowerCase();
-  s = s.replace(/ª/g,"a").replace(/°/g,"");
-  s = s.normalize("NFKD").replace(/[\u0300-\u036f]/g,"");
-  s = s.replace(/\s+/g," ");
-  return s;
+// BOLLINO RECORD SOCIETARIO IMPOSTATO A 100PX DE DEFAULT
+function getSvgBollinoRecord(dim = 100) {
+    return `<svg class="badge-svg" viewBox="0 0 500 500" width="${dim}" height="${dim}">
+  <defs>
+    <filter id="auraGlowSvg_${dim}" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur1" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="20" result="blur2" />
+      <feMerge><feMergeNode in="blur2" /><feMergeNode in="blur1" /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
+    <linearGradient id="goldGradientSvg_${dim}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF8D6" /><stop offset="20%" stop-color="#FFD700" /><stop offset="50%" stop-color="#DAA520" /><stop offset="80%" stop-color="#FFD700" /><stop offset="100%" stop-color="#8B6508" />
+    </linearGradient>
+    <radialGradient id="auraBgSvg_${dim}" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD700" stop-opacity="0.9" /><stop offset="60%" stop-color="#FF8C00" stop-opacity="0.4" /><stop offset="100%" stop-color="#070674" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="innerBgSvg_${dim}" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0E1A48" /><stop offset="100%" stop-color="#04033B" />
+    </radialGradient>
+    <path id="txtArcTopSvg_${dim}" d="M 95,250 A 155,155 0 0,1 405,250" fill="none" />
+    <path id="txtArcBottomSvg_${dim}" d="M 405,250 A 155,155 0 0,1 95,250" fill="none" />
+  </defs>
+  <circle cx="250" cy="250" r="225" fill="url(#auraBgSvg_${dim})" filter="url(#auraGlowSvg_${dim})" />
+  <circle cx="250" cy="250" r="210" fill="none" stroke="url(#goldGradientSvg_${dim})" stroke-width="8" filter="url(#auraGlowSvg_${dim})" />
+  <circle cx="250" cy="250" r="200" fill="url(#innerBgSvg_${dim})" stroke="#FFFFFF" stroke-width="3" />
+  <circle cx="250" cy="250" r="165" fill="none" stroke="url(#goldGradientSvg_${dim})" stroke-width="4" stroke-dasharray="8,6" />
+  <circle cx="250" cy="250" r="125" fill="url(#goldGradientSvg_${dim})" stroke="#FFFFFF" stroke-width="3" filter="url(#auraGlowSvg_${dim})" />
+  <path fill="#070674" d="M 215,225 L 230,205 L 250,220 L 270,205 L 285,225 L 280,235 L 220,235 Z" />
+  <circle cx="230" cy="202" r="3" fill="#070674" /><circle cx="250" cy="216" r="3.5" fill="#070674" /><circle cx="270" cy="202" r="3" fill="#070674" />
+  <text fill="url(#goldGradientSvg_${dim})" font-family="'Arial Black', sans-serif" font-weight="900" font-size="42" letter-spacing="5" filter="url(#auraGlowSvg_${dim})"><textPath href="#txtArcTopSvg_${dim}" startOffset="50%" text-anchor="middle">RECORD</textPath></text>
+  <text fill="#FFFFFF" font-family="'Arial Black', sans-serif" font-weight="900" font-size="42" letter-spacing="5"><textPath href="#txtArcTopSvg_${dim}" startOffset="50%" text-anchor="middle">RECORD</textPath></text>
+  <text fill="url(#goldGradientSvg_${dim})" font-family="'Arial Black', sans-serif" font-weight="900" font-size="36" letter-spacing="4" filter="url(#auraGlowSvg_${dim})"><textPath href="#txtArcBottomSvg_${dim}" startOffset="50%" text-anchor="middle">SOCIETARIO</textPath></text>
+  <text fill="#FFFFFF" font-family="'Arial Black', sans-serif" font-weight="900" font-size="36" letter-spacing="4"><textPath href="#txtArcBottomSvg_${dim}" startOffset="50%" text-anchor="middle">SOCIETARIO</textPath></text>
+</svg>`;
 }
 
-// --- Mappa gare (semplificata per esempio) ---
-// --- Mappa gare completa ---
-const mappaGare = {
-  [normalizzaStringa("Apertura")]: {data: "2022-12-04", piscina: "Sisport", vasca: 25},
-  [normalizzaStringa("17° Memorial Davide Cagnotto")]: {data: "2023-01-22", piscina: "Fossano", vasca: 25},
-  [normalizzaStringa("1ª Giornata Pentathlon 2023")]: {data: "2023-02-12", piscina: "Fossano", vasca: 25},
-  [normalizzaStringa("Trofeo Mimosa")]: {data: "2023-03-05", piscina: "Colletta", vasca: 25},
-  [normalizzaStringa("2ª Giornata Pentathlon 2023")]: {data: "2023-03-19", piscina: "Sisport", vasca: 25},
-  [normalizzaStringa("Trofeo Raspini")]: {data: "2023-04-16", piscina: "Pinerolo", vasca: 25},
-  [normalizzaStringa("44° Trofeo Della Resistenza")]: {data: "2023-04-25", piscina: "Sisport", vasca: 50},
-  [normalizzaStringa("Campionati Regionali Open 2023")]: {data: "2023-05-21", piscina: "Sisport", vasca: 50},
-  [normalizzaStringa("Campionati Nazionali Estivi 2023 giorno 1")]: {data: "2023-06-09", piscina: "Napoli", vasca: 50},
-  [normalizzaStringa("Campionati Nazionali Estivi 2023 giorno 2")]: {data: "2023-06-10", piscina: "Napoli", vasca: 50},
-  [normalizzaStringa("Campionati Nazionali Estivi 2023 giorno 3")]: {data: "2023-06-11", piscina: "Napoli", vasca: 50},
-  [normalizzaStringa("Coppa Autunno")]: {data: "2023-11-19", piscina: "Fossano", vasca: 25},
-  [normalizzaStringa("Campionati Nazionali Invernali Master 2023")]: {data: "2023-12-09", piscina: "Palazzo del Nuoto", vasca: 25},
-  [normalizzaStringa("18° Memorial Davide Cagnotto")]: {data: "2024-01-14", piscina: "Fossano", vasca: 25},
-  [normalizzaStringa("1ª Giornata Pentathlon 2024")]: {data: "2024-01-28", piscina: "Fossano", vasca: 25},
-  [normalizzaStringa("2ª Giornata Pentathlon 2024")]: {data: "2024-02-18", piscina: "Sisport", vasca: 25},
-  [normalizzaStringa("Coppa Piemonte")]: {data: "2024-03-24", piscina: "Sisport", vasca: 25},
-  [normalizzaStringa("45° Trofeo Della Resistenza")]: {data: "2024-04-25", piscina: "Sisport", vasca: 50},
-  [normalizzaStringa("1° Trofeo Minitop")]: {data: "2024-05-05", piscina: "Pinerolo", vasca: 25},
-  [normalizzaStringa("Campionati Regionali Open 2024")]: {data: "2024-05-12", piscina: "Sisport", vasca: 50},
-  [normalizzaStringa("2° Trofeo Torino Nuoto")]: {data: "2024-05-25", piscina: "Torino Nuoto", vasca: 25},
-  [normalizzaStringa("Campionati Nazionali Estivi 2024 giorno 1")]: {data: "2024-06-14", piscina: "Riccione", vasca: 50},
-  [normalizzaStringa("Campionati Nazionali Estivi 2024 giorno 2")]: {data: "2024-06-15", piscina: "Riccione", vasca: 50},
-  [normalizzaStringa("Campionati Nazionali Estivi 2024 giorno 3")]: {data: "2024-06-16", piscina: "Riccione", vasca: 50},
-  [normalizzaStringa("Memorial Giuseppina Ghibaudo")]: {data: "2024-10-20", piscina: "Saint Vincent", vasca: 25},
-  [normalizzaStringa("15° Trofeo Master Citta di Saronno")]: {data: "2024-11-10", piscina: "Saronno", vasca: 25},
-  [normalizzaStringa("19° Memorial Davide Cagnotto")]: {data: "2024-11-24", piscina: "Fossano", vasca: 25},
-  [normalizzaStringa("Campionati Nazionali Invernali Master 2024 Giorno 2")]: {data: "2024-12-07", piscina: "Palazzo del Nuoto", vasca: 25},
-  [normalizzaStringa("Campionati Nazionali Invernali Master 2024 Giorno 3")]: {data: "2024-12-08", piscina: "Palazzo del Nuoto", vasca: 25},
-  [normalizzaStringa("1ª Tappa Coppa Los Angeles 2024/2025 Giorno 1")]: {data: "2024-12-14", piscina: "Palazzo del Nuoto", vasca: 25},
-  [normalizzaStringa("1ª Tappa Coppa Los Angeles 2024/2025 Giorno 2")]: {data: "2024-12-15", piscina: "Sisport", vasca: 25},
-  [normalizzaStringa("1ª Giornata Pentathlon 2025")]: {data: "2025-01-19", piscina: "Sisport", vasca: 25},
-  [normalizzaStringa("2ª Tappa Coppa Los Angeles 2024/2025 Giorno 1")]: {data: "2025-01-25", piscina: "Palazzo del Nuoto", vasca: 25},
-  [normalizzaStringa("2ª Tappa Coppa Los Angeles 2024/2025 Giorno 2")]: {data: "2025-01-26", piscina: "Sisport", vasca: 25},
-  [normalizzaStringa("2ª Giornata Pentathlon 2025")]: {data: "2025-02-02", piscina: "Sisport", vasca: 25},
-  [normalizzaStringa("Campionato Regionale Master 2025 Giorno 1")]: {data: "2025-02-08", piscina: "Palazzo del Nuoto", vasca: 25},
-  [normalizzaStringa("Campionato Regionale Master 2025 Giorno 2")]: {data: "2025-02-09", piscina: "Palazzo del Nuoto", vasca: 25},
-  [normalizzaStringa("Trofeo Riviera Delle Alpi")]: {data: "2025-02-23", piscina: "Saint Vincent", vasca: 25},
-  [normalizzaStringa("Trofeo Regionale Distanze Speciali")]: {data: "2025-03-02", piscina: "Sisport", vasca: 50},
-  [normalizzaStringa("11° Trofeo Nuoto Ponente Master")]: {data: "2025-03-30", piscina: "Genova Pra", vasca: 25},
-  [normalizzaStringa("2° Trofeo Minitop")]: {data: "2025-04-13", piscina: "Pinerolo", vasca: 25},
-  [normalizzaStringa("46° Trofeo Della Resistenza")]: {data: "2025-04-25", piscina: "Sisport", vasca: 50},
-  [normalizzaStringa("Campionati Regionali Open 2025")]: {data: "2025-05-11", piscina: "Sisport", vasca: 50},
-  [normalizzaStringa("Manifestazione Estiva Master Giorno 1")]: {data: "2025-05-17", piscina: "Palazzo del Nuoto", vasca: 50},
-  [normalizzaStringa("Manifestazione Estiva Master Giorno 2")]: {data: "2025-05-18", piscina: "Palazzo del Nuoto", vasca: 50},
-  [normalizzaStringa("3° Trofeo Torino Nuoto")]: {data: "2025-05-24", piscina: "Torino Nuoto", vasca: 25},
-  [normalizzaStringa("Campionati Nazionali Estivi 2025 giorno 1")]: {data: "2025-06-13", piscina: "Riccione", vasca: 50},
-  [normalizzaStringa("Campionati Nazionali Estivi 2025 giorno 2")]: {data: "2025-06-14", piscina: "Riccione", vasca: 50},
-  [normalizzaStringa("Campionati Nazionali Estivi 2025 giorno 3")]: {data: "2025-06-15", piscina: "Riccione", vasca: 50},
-  [normalizzaStringa("Campionati Nazionali Estivi Master 2025 Giorno 3")]: {data: "2025-06-26", piscina: "Riccione", vasca: 50},
-  [normalizzaStringa("Campionati Nazionali Estivi Master 2025 Giorno 4")]: {data: "2025-06-27", piscina: "Riccione interna", vasca: 50},
-  [normalizzaStringa("Campionati Nazionali Estivi Master 2025 Giorno 5")]: {data: "2025-06-28", piscina: "Riccione", vasca: 50},
-  [normalizzaStringa("1ª Tappa Coppa Los Angeles 2025/2026 Giorno 1")]: {data: "2025-11-01", piscina: "Palazzo del Nuoto", vasca: 25},
-  [normalizzaStringa("1ª Tappa Coppa Los Angeles 2025/2026 Giorno 2")]: {data: "2025-11-02", piscina: "Palazzo del Nuoto", vasca: 25},
-  [normalizzaStringa("Apertura Stagione 2025/2026")]: {data: "2025-11-16", piscina: "Pinerolo", vasca: 25},
-  [normalizzaStringa("2ª Tappa Coppa Los Angeles 2025/2026 Giorno 1")]: {data: "2025-11-22", piscina: "Palazzo del Nuoto", vasca: 25},
-  [normalizzaStringa("2ª Tappa Coppa Los Angeles 2025/2026 Giorno 2")]: {data: "2025-11-23", piscina: "Sisport", vasca: 25},
-  [normalizzaStringa("1ª Giornata Interregionale 2025/2026")]: {data: "2025-12-14", piscina: "Tortona", vasca: 25},
-  [normalizzaStringa("Campionati Nazionali Invernali 2026 Giorno 1")]: {data: "2026-01-10", piscina: "Palazzo del Nuoto", vasca: 25},
-  [normalizzaStringa("Campionati Nazionali Invernali 2026 Giorno 2")]: {data: "2026-01-11", piscina: "Palazzo del Nuoto", vasca: 25},
-  [normalizzaStringa("Giocati il 5 2025/2026 1ª giornata")]: {data: "2026-01-18", piscina: "Pinerolo", vasca: 25},
-  [normalizzaStringa("3ª Tappa Coppa Los Angeles 2025/2026 Giorno 1")]: {data: "2026-02-07", piscina: "Palazzo del Nuoto", vasca: 25},
-  [normalizzaStringa("3ª Tappa Coppa Los Angeles 2025/2026 Giorno 2")]: {data: "2026-02-08", piscina: "Palazzo del Nuoto", vasca: 25},
-  [normalizzaStringa("3ª Tappa Coppa Los Angeles 2025/2026 Giorno 2 conc. b")]: {data: "2026-02-08", piscina: "Sisport", vasca: 25},
-  [normalizzaStringa("Giocati il 5 2025/2026 2ª giornata")]: {data: "2026-02-01", piscina: "Pinerolo", vasca: 25},
-  [normalizzaStringa("Campionato Regionale di Categoria 2026 3ª Giornata")]: {data: "2026-03-14", piscina: "Palazzo del Nuoto", vasca: 25},  
-  [normalizzaStringa("4ª Giornata Interregionale 2025/2026")]: {data: "2026-03-15", piscina: "Tortona", vasca: 25},
-  [normalizzaStringa("Trofeo Primavera")]: {data: "2026-03-22", piscina: "Pinerolo", vasca: 25},
-  [normalizzaStringa("Manifestazione Nuoto per Salvamento")]: {data: "2026-04-05", piscina: "Torrazza", vasca: 25},
-  [normalizzaStringa("47° Trofeo Della Resistenza")]: {data: "2026-04-25", piscina: "Sisport", vasca: 25},
-  [normalizzaStringa("Campionati Regionali Open 2026")]: {data: "2026-05-10", piscina: "Sisport", vasca: 50}, 
-  [normalizzaStringa("2ª Tappa Coppa Los Angeles Summer Edition 2025/2026 giorno 1")]: {data: "2026-05-30", piscina: "Palazzo del Nuoto", vasca: 50},
-  [normalizzaStringa("2ª Tappa Coppa Los Angeles Summer Edition 2025/2026 giorno 2")]: {data: "2026-05-31", piscina: "Sisport", vasca: 50},
-  [normalizzaStringa("Campionati Nazionali Estivi 2026 giorno 1")]: {data: "2026-06-12", piscina: "Riccione", vasca: 50},
-  [normalizzaStringa("Campionati Nazionali Estivi 2026 giorno 2")]: {data: "2026-06-13", piscina: "Riccione", vasca: 50},
-  [normalizzaStringa("Campionati Nazionali Estivi 2026 giorno 3")]: {data: "2026-06-14", piscina: "Riccione", vasca: 50},
-};
+// MEDAGLIE SVG REALISTICHE
+const svgMedagliaArgento = `<svg width="55" height="55" viewBox="0 0 100 100" class="badge-svg">
+  <path d="M30 10 L50 40 L40 40 L20 10 Z" fill="#D50000"/>
+  <path d="M70 10 L50 40 L60 40 L80 10 Z" fill="#0D47A1"/>
+  <path d="M40 10 L50 40 L60 10 Z" fill="#FFFFFF"/>
+  <circle cx="50" cy="65" r="28" fill="url(#gradSilver)"/>
+  <circle cx="50" cy="65" r="24" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="50" y="73" font-family="Arial Black" font-weight="900" font-size="22" fill="#37474F" text-anchor="middle">2</text>
+  <defs>
+    <linearGradient id="gradSilver" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="50%" stop-color="#B0BEC5"/>
+      <stop offset="100%" stop-color="#546E7A"/>
+    </linearGradient>
+  </defs>
+</svg>`;
 
+const svgMedagliaBronzo = `<svg width="55" height="55" viewBox="0 0 100 100" class="badge-svg">
+  <path d="M30 10 L50 40 L40 40 L20 10 Z" fill="#D50000"/>
+  <path d="M70 10 L50 40 L60 40 L80 10 Z" fill="#0D47A1"/>
+  <path d="M40 10 L50 40 L60 10 Z" fill="#FFFFFF"/>
+  <circle cx="50" cy="65" r="28" fill="url(#gradBronze)"/>
+  <circle cx="50" cy="65" r="24" fill="none" stroke="#FFE0B2" stroke-width="2"/>
+  <text x="50" y="73" font-family="Arial Black" font-weight="900" font-size="22" fill="#3E2723" text-anchor="middle">3</text>
+  <defs>
+    <linearGradient id="gradBronze" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE0B2"/>
+      <stop offset="50%" stop-color="#CD7F32"/>
+      <stop offset="100%" stop-color="#4E2A0C"/>
+    </linearGradient>
+  </defs>
+</svg>`;
 
-// --- Leggi CSV ---
-const raw = document.getElementById("dati").textContent.trim();
-const righe = raw.split("\n");
-const dati = righe.map(riga=>{
-  const [gara, nome, tipo, tempo, punti] = riga.split(",").map(s=>s.trim());
-  return {gara, nome, tipoOriginale: tipo, tempo: parseFloat(tempo), punti: parseFloat(punti)};
+const rawLines = document.getElementById("gare_raw").textContent.trim().split("\n");
+const masterRawLines = document.getElementById("master_raw").textContent.trim().split("\n");
+const infoGareRaw = JSON.parse(document.getElementById("info_gare").textContent);
+const podiRaw = document.getElementById("podi_nazionali_raw").textContent.trim().split("\n");
+
+function normalizeKey(str) {
+    return str ? str.toLowerCase().replace(/[^a-z0-9]/g, "").replace(/×/g, "x") : "";
+}
+
+const infoGare = {};
+Object.keys(infoGareRaw).forEach(k => {
+    infoGare[normalizeKey(k)] = infoGareRaw[k];
 });
 
-function normalizzaTipo(tipo){
-  return tipo.replace(/\s*lanciato/i,"").replace(/\s*da fermo/i,"").trim().toLowerCase();
-}
-function normalizzaDistanza(tipo){
-  const t = normalizzaTipo(tipo);
-  if(t.startsWith("50")) return "50";
-  if(t.startsWith("100")) return "100";
-  if(t.startsWith("200")) return "200";
-  if(t.startsWith("400")) return "400";
-  if(t.startsWith("800")) return "800";
-  if(t.startsWith("1500")) return "1500";
-  return null;
+const gareStagionePassata = [
+    "podio nazionali estivi uisp 2026",
+    "podio nazionali estivi master 2026",
+    "podio nazionali invernali uisp 2026",
+    "podio nazionali invernali master 2025"
+];
+
+const podiDatabase = podiRaw.map(riga => {
+    if (!riga.trim()) return null;
+    const parts = riga.split(",");
+    if (parts.length < 3) return null;
+
+    const compClean = parts[0].trim();
+    const garaClean = parts[1].trim().replace(/4×50/g, "Staffetta 4x50");
+    const tempoClean = parseFloat(parts[2].trim().replace(",", "."));
+
+    const vasca = compClean.toLowerCase().includes("invernal") ? "25" : "50";
+    const compNorm = normalizeKey(compClean);
+    const tipoStagione = gareStagionePassata.some(g => compNorm.includes(normalizeKey(g))) 
+        ? "stagione_passata" 
+        : "vecchia";
+
+    return {
+        competizione: compClean,
+        gara: garaClean,
+        tempo: tempoClean,
+        vasca: vasca,
+        tipoStagione: tipoStagione
+    };
+}).filter(p => p !== null && !isNaN(p.tempo));
+
+function formattaTempo(t) {
+    const val = parseFloat(t);
+    if (isNaN(val)) return "--";
+    if (val < 60) return val.toFixed(2);
+    const minuti = Math.floor(val / 60);
+    const secondi = (val % 60).toFixed(2).padStart(5,'0');
+    return `${minuti}:${secondi}`;
 }
 
-function ottieniGaraBase(nomeGara) {
-  return nomeGara.replace(/\s+giorno\s+\d+/i, "")
-                 .replace(/\s+\d+ª\s+giornata/i, "")
-                 .replace(/\s+conc\.\s+[a-z0-9]+/i, "")
-                 .trim();
+function getNumeroFrazionistiAttesi(nomeStaffetta) {
+    const match = nomeStaffetta.match(/(\d+)\s*x\s*(\d+)/i);
+    return match ? parseInt(match[1], 10) : 4;
 }
 
-function ottieniDataGara(nomeGara) {
-  const info = mappaGare[normalizzaStringa(nomeGara)];
-  return info ? info.data : "";
+function getDistanzaFrazione(nomeStaffetta) {
+    const match = nomeStaffetta.match(/(\d+)\s*x\s*(\d+)/i);
+    return match ? parseInt(match[2], 10) : null;
 }
 
-function filtroDatiFinoAGara(datiSubset, garaLimite) {
-  const dataLimite = ottieniDataGara(garaLimite);
-  const garaBaseLimite = ottieniGaraBase(garaLimite);
+function isStileCoerente(nomeStaffetta, indivParziale, ordineFrazione) {
+    const stLower = nomeStaffetta.toLowerCase();
+    const indLower = indivParziale.toLowerCase();
 
-  return datiSubset.filter(d => {
-    const dataGara = ottieniDataGara(d.gara);
-    if (!dataGara) return true;
-    if (dataGara < dataLimite) return true;
-    if (dataGara === dataLimite) {
-      const garaBaseCurrent = ottieniGaraBase(d.gara);
-      return garaBaseCurrent === garaBaseLimite;
+    if (stLower.includes("stile") || stLower.includes("sl")) {
+        return indLower.includes("stile");
+    } else if (stLower.includes("misti")) {
+        if (ordineFrazione === 0) return indLower.includes("dorso");
+        if (ordineFrazione === 1) return indLower.includes("rana");
+        if (ordineFrazione === 2) return indLower.includes("farfalla") || indLower.includes("delfino");
+        if (ordineFrazione === 3) return indLower.includes("stile");
     }
-    return false;
-  });
+    return true;
 }
 
-function costruisciClassificaSuSubset(datiSubset, stile, distanza, vasca){
-  const migliori = {};
-  datiSubset.forEach(d=>{
-    if(d.tipoOriginale.toLowerCase().includes("staffetta")) return;
-    if(!normalizzaTipo(d.tipoOriginale).includes(stile)) return;
-    if(distanza && normalizzaDistanza(d.tipoOriginale)!=distanza) return;
+// PARSING STAFFETTE NOSTRE
+const parsedRows = rawLines.map((riga, index) => {
+    if (!riga.trim()) return null;
+    const parts = riga.split(",");
+    if (parts.length < 4) return null;
+    const indiv = parts[2].trim();
+    return {
+        lineIndex: index,
+        gara: parts[0].trim(),
+        atleta: parts[1].trim(),
+        individuale: indiv,
+        tempo: parts[3].trim(),
+        isStaffetta: indiv.toLowerCase().includes("staffetta") || indiv.toLowerCase().includes("4x") || indiv.toLowerCase().includes("8x")
+    };
+}).filter(r => r !== null);
+
+const staffetteList = [];
+const tipiStaffette = new Set();
+let currentStaffetta = null;
+
+parsedRows.forEach((row) => {
+    if (row.isStaffetta) {
+        tipiStaffette.add(row.individuale);
+        const maxAtleti = getNumeroFrazionistiAttesi(row.individuale);
+
+        if (!currentStaffetta || 
+            currentStaffetta.competizione !== row.gara || 
+            currentStaffetta.gara !== row.individuale || 
+            currentStaffetta.frazionisti.length >= maxAtleti) {
+            
+            const infoKey = normalizeKey(row.gara);
+            const info = infoGare[infoKey] || {};
+            
+            currentStaffetta = {
+                gara: row.individuale,
+                tempo: row.tempo,
+                competizione: row.gara,
+                data: info.data || "ND",
+                piscina: info.piscina || "ND",
+                vasca: info.vasca ? String(info.vasca) : "ND",
+                frazionisti: [],
+                lastStaffettaLine: row.lineIndex,
+                isMaster: false
+            };
+
+            staffetteList.push(currentStaffetta);
+        }
+
+        if (currentStaffetta.frazionisti.length < maxAtleti) {
+            currentStaffetta.frazionisti.push({
+                nome: row.atleta,
+                passaggio: null,
+                ordine: currentStaffetta.frazionisti.length
+            });
+            currentStaffetta.lastStaffettaLine = row.lineIndex;
+        }
+    }
+});
+
+staffetteList.forEach((st) => {
+    const distAttesa = getDistanzaFrazione(st.gara);
+    const startSearchLine = st.lastStaffettaLine + 1;
+
+    st.frazionisti.forEach(f => {
+        for (let j = startSearchLine; j < parsedRows.length; j++) {
+            const nextRow = parsedRows[j];
+
+            if (nextRow.gara !== st.competizione || nextRow.isStaffetta) {
+                break;
+            }
+
+            if (nextRow.atleta === f.nome) {
+                const matchDist = nextRow.individuale.match(/^(\d+)/);
+                const distGara = matchDist ? parseInt(matchDist[1], 10) : null;
+
+                const distOk = !distAttesa || !distGara || (distGara === distAttesa);
+                const stileOk = isStileCoerente(st.gara, nextRow.individuale, f.ordine);
+
+                if (distOk && stileOk) {
+                    f.passaggio = {
+                        disciplina: nextRow.individuale,
+                        tempo: nextRow.tempo
+                    };
+                    break;
+                }
+            }
+        }
+    });
+});
+
+// PARSING STAFFETTE MASTER
+const masterStaffetteList = [];
+masterRawLines.forEach(riga => {
+    if (!riga.trim()) return;
+    const parts = riga.split(",");
+    if (parts.length < 3) return;
+
+    const nomeGara = parts[0].trim();
+    const vasca = parts[1].trim();
+
+    tipiStaffette.add(nomeGara);
+
+    for (let i = 2; i < parts.length; i++) {
+        const valTempo = parseFloat(parts[i].trim().replace(",", "."));
+        if (!isNaN(valTempo)) {
+            masterStaffetteList.push({
+                gara: nomeGara,
+                tempo: valTempo,
+                competizione: "Master",
+                data: "-",
+                piscina: "ND",
+                vasca: vasca,
+                frazionisti: [],
+                isMaster: true
+            });
+        }
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    const selectEl = document.getElementById("selectStaffetta");
+    const selectVasca = document.getElementById("selectVasca");
+
+    if (selectEl) {
+        Array.from(tipiStaffette).sort().forEach(tipo => {
+            const opt = document.createElement("option");
+            opt.value = tipo;
+            opt.textContent = tipo;
+            selectEl.appendChild(opt);
+        });
+
+        selectEl.addEventListener("change", aggiornaTabella);
+    }
+
+    if (selectVasca) {
+        selectVasca.addEventListener("change", aggiornaTabella);
+    }
+});
+
+function analizzaPodiSuperati(staffetta) {
+    const tStaffetta = parseFloat(staffetta.tempo);
+    if (isNaN(tStaffetta)) return { icona: "❌", podiBattuti: [], colore: "#e63946" };
+
+    const podiCompatibili = podiDatabase.filter(p => 
+        normalizeKey(p.gara) === normalizeKey(staffetta.gara) &&
+        String(p.vasca) === String(staffetta.vasca)
+    );
+
+    const podiBattuti = podiCompatibili.filter(p => tStaffetta <= p.tempo);
+
+    if (podiBattuti.length === 0) {
+        return { icona: "❌", podiBattuti: [], colore: "#e63946" };
+    }
+
+    const haStagionePassata = podiBattuti.some(p => p.tipoStagione === "stagione_passata");
+    const icona = haStagionePassata ? "🟢" : "🟡";
+    const colore = haStagionePassata ? "#2a9d8f" : "#e9c46a";
+
+    return { icona: icona, podiBattuti: podiBattuti, colore: colore };
+}
+
+function getTempoRecordSocietario(tipoGara, vasca) {
+    const tutte = [
+        ...staffetteList.filter(s => normalizeKey(s.gara) === normalizeKey(tipoGara) && String(s.vasca) === String(vasca)),
+        ...masterStaffetteList.filter(s => normalizeKey(s.gara) === normalizeKey(tipoGara) && String(s.vasca) === String(vasca))
+    ];
+    if (tutte.length === 0) return null;
+    return Math.min(...tutte.map(s => parseFloat(s.tempo)));
+}
+
+function aggiornaTabella() {
+    const selectEl = document.getElementById("selectStaffetta");
+    const selectVasca = document.getElementById("selectVasca");
+    const divRisultati = document.getElementById("risultati");
+    const chartSection = document.getElementById("chartSection");
+    const chartMessage = document.getElementById("chartMessage");
+
+    if (!selectEl || !selectVasca || !divRisultati) return;
+
+    const tipoScelto = selectEl.value;
+    const vascaScelta = selectVasca.value;
     
-    const infoGara = mappaGare[normalizzaStringa(d.gara)] || {};
-    if(vasca && infoGara.vasca != vasca) return;
-
-    if(!migliori[d.nome] || d.punti>migliori[d.nome].punti || (d.punti===migliori[d.nome].punti && d.tempo<migliori[d.nome].tempo)){
-      migliori[d.nome] = {...d, ...infoGara};
+    if (!tipoScelto) {
+        divRisultati.innerHTML = "";
+        if (chartSection) chartSection.style.display = "none";
+        if (chartMessage) chartMessage.style.display = "none";
+        return;
     }
-  });
-  return Object.values(migliori).sort((a,b)=>b.punti - a.punti || a.tempo - b.tempo);
-}
 
-function costruisciClassifica(stile, distanza, vasca){
-  return costruisciClassificaSuSubset(dati, stile, distanza, vasca);
-}
+    const risultati = staffetteList.filter(s => {
+        const matchTipo = (s.gara === tipoScelto);
+        const matchVasca = (vascaScelta === "tutte") || (s.vasca === vascaScelta);
+        return matchTipo && matchVasca;
+    });
 
-function calcolaPosizioniPrecedenti(stile, distanza, vasca) {
-  const gareUnicheMap = {};
-  dati.forEach(d => {
-    const data = ottieniDataGara(d.gara);
-    if (data) {
-      if (!gareUnicheMap[d.gara]) {
-        gareUnicheMap[d.gara] = data;
-      }
+    if (risultati.length === 0) {
+        divRisultati.innerHTML = "<p style='text-align:center; font-size: 1.2rem; margin-top:20px;'>Nessuna staffetta trovata per i filtri selezionati.</p>";
+        if (chartSection) chartSection.style.display = "none";
+        if (chartMessage) chartMessage.style.display = "none";
+        return;
     }
-  });
 
-  const gareOrdinate = Object.keys(gareUnicheMap).sort((a, b) => {
-    if (gareUnicheMap[a] !== gareUnicheMap[b]) {
-      return gareUnicheMap[a].localeCompare(gareUnicheMap[b]);
-    }
-    return a.localeCompare(b);
-  });
+    let html = `<table>
+        <thead>
+            <tr>
+                <th style="width: 28%;">Gara</th>
+                <th style="width: 12%;">Tempo</th>
+                <th style="width: 28%;">Atleti (in ordine)</th>
+                <th style="width: 12%;">Competizione</th>
+                <th style="width: 8%;">Data</th>
+                <th style="width: 4%;">Piscina</th>
+                <th style="width: 4%;">Vasca</th>
+                <th style="width: 4%;">Podio</th>
+            </tr>
+        </thead>
+        <tbody>`;
 
-  if (gareOrdinate.length === 0) return {};
+    risultati.forEach((st, idx) => {
+        st.frazionisti.sort((a,b) => a.ordine - b.ordine);
+        const nomiAtleti = st.frazionisti.map(f => f.nome).join(", ");
+        const podiInfo = analizzaPodiSuperati(st);
+        
+        const tempoRecordAssoluto = getTempoRecordSocietario(st.gara, st.vasca);
+        const isRecordSocietario = (tempoRecordAssoluto !== null && Math.abs(parseFloat(st.tempo) - tempoRecordAssoluto) < 0.001);
 
-  const ultimaGara = gareOrdinate[gareOrdinate.length - 1];
-  const garaBaseUltima = ottieniGaraBase(ultimaGara);
+        const cellaPodioHtml = (podiInfo.icona !== "❌") 
+            ? `<span class="clickable-podio" onclick="togglePodio(${idx})">${podiInfo.icona} ▾</span>`
+            : "❌";
 
-  let idxPrecedente = -1;
-  for (let i = gareOrdinate.length - 1; i >= 0; i--) {
-    if (ottieniGaraBase(gareOrdinate[i]) !== garaBaseUltima) {
-      idxPrecedente = i;
-      break;
-    }
-  }
+        // BOLLINO IMPOSTATO A 100PX NELLA TABELLA
+        const badgeHtml = isRecordSocietario ? `<span style="margin-left:-25px; margin-right:2px;">${getSvgBollinoRecord(100)}</span>` : "";
 
-  if (idxPrecedente === -1) return {};
+        html += `
+            <tr>
+                <td>
+                    <div class="record-cell-container">
+                        <strong>${st.gara}</strong>
+                        ${badgeHtml}
+                    </div>
+                </td>
+                <td><span class="clickable-time" onclick="toggleDettagli(${idx})">${formattaTempo(st.tempo)} ▾</span></td>
+                <td class="atleti-cell">${nomiAtleti}</td>
+                <td>${st.competizione}</td>
+                <td>${st.data}</td>
+                <td>${st.piscina}</td>
+                <td>${st.vasca !== "ND" ? st.vasca + "m" : "ND"}</td>
+                <td style="text-align:center;">${cellaPodioHtml}</td>
+            </tr>
+            <tr id="details-${idx}" class="details-row" style="display:none;">
+                <td colspan="8">
+                    <div class="details-container">
+                        <strong>Passaggi Frazionisti (${st.frazionisti.length} atleti):</strong><br><br>`;
+        
+        st.frazionisti.forEach((f, i) => {
+            const tStr = f.passaggio ? formattaTempo(f.passaggio.tempo) : "--";
+            const descStr = f.passaggio ? ` (${f.passaggio.disciplina})` : "";
+            html += `<div class="frazione-item">${i + 1}° Frazione: <strong>${f.nome}</strong>${descStr} — <strong>${tStr}</strong></div>`;
+        });
 
-  const garaPrecedente = gareOrdinate[idxPrecedente];
-  const datiPrecedenti = filtroDatiFinoAGara(dati, garaPrecedente);
-  const classificaPrecedente = costruisciClassificaSuSubset(datiPrecedenti, stile, distanza, vasca);
+        html += `    </div>
+                </td>
+            </tr>`;
 
-  const posizioniPrev = {};
-  classificaPrecedente.forEach((d, i) => {
-    posizioniPrev[d.nome] = i + 1;
-  });
+        if (podiInfo.podiBattuti.length > 0) {
+            html += `
+            <tr id="podio-${idx}" class="details-row" style="display:none;">
+                <td colspan="8">
+                    <div class="details-container" style="background-color: #f0fdf4; border-color: #bbf7d0;">
+                        <strong>Podi Nazionali Superati:</strong><br><br>`;
+            
+            podiInfo.podiBattuti.forEach(p => {
+                const etichetta = p.tipoStagione === "stagione_passata" ? "🟢 [Scorsa Stagione]" : "🟡 [Precedente]";
+                html += `<div class="podio-item">${etichetta} <strong>${p.competizione}</strong> (${p.vasca}m) — Tempo Podio: <strong>${formattaTempo(p.tempo)}</strong></div>`;
+            });
 
-  return posizioniPrev;
-}
+            html += `    </div>
+                </td>
+            </tr>`;
+        }
+    });
 
-function formatTempo(sec){ 
-  return sec<60 ? sec.toFixed(2) : `${Math.floor(sec/60)}:${(sec%60).toFixed(2).padStart(5,"0")}`;
-}
+    html += `</tbody></table>`;
+    divRisultati.innerHTML = html;
 
-function mostraClassifica(){
-  const stile = document.getElementById("stile").value.toLowerCase();
-  const distanza = document.getElementById("distanza").value;
-  const vasca = document.getElementById("vasca").value;
-  const classifica = costruisciClassifica(stile,distanza,vasca);
-  const posizioniPrev = calcolaPosizioniPrecedenti(stile, distanza, vasca);
-
-  let html = `<table><thead><tr>
-  <th>Pos</th><th>Atleta</th><th>Punti</th><th>Gara</th><th>Tempo</th><th>Competizione</th><th>Data</th><th>Piscina</th><th>Vasca</th>
-  </tr></thead><tbody>`;
-
-  classifica.forEach((d,i)=>{
-    const posAttuale = i + 1;
-    const posPrecedente = posizioniPrev[d.nome];
-    let varStr = "";
-
-    if (posPrecedente === undefined) {
-      varStr = ' <span style="color: green;">▲ (nuovo)</span>';
+    if (vascaScelta === "tutte") {
+        if (chartSection) chartSection.style.display = "none";
+        if (chartMessage) chartMessage.style.display = "block";
     } else {
-      const diff = posPrecedente - posAttuale;
-      if (diff > 0) {
-        varStr = ` <span style="color: green;">▲ +${diff}</span>`;
-      } else if (diff < 0) {
-        varStr = ` <span style="color: red;">▼ ${diff}</span>`;
-      } else {
-        varStr = ' <span style="color: black;">=</span>';
-      }
+        if (chartMessage) chartMessage.style.display = "none";
+        disegnaGrafico(risultati, tipoScelto, vascaScelta);
+        generaClassificaTop5(tipoScelto, vascaScelta);
     }
-
-    const nomeGara = d.gara || "";
-    const evidenzia = nomeGara.toLowerCase().includes("campionati nazionali estivi 2026");
-    const style = evidenzia ? 'style="background-color: yellow;"' : "";
-    html+=`<tr ${style}>
-      <td>${posAttuale}${varStr}</td>
-      <td>${d.nome}</td>
-      <td>${d.punti}</td>
-      <td>${d.tipoOriginale}</td>
-      <td>${formatTempo(d.tempo)}</td>
-      <td>${d.gara}</td>
-      <td>${d.data || "-"}</td>
-      <td>${d.piscina || "-"}</td>
-      <td>${d.vasca || "-"}</td>
-    </tr>`;
-  });
-  html+="</tbody></table>";
-  document.getElementById("contenuto").innerHTML = html;
 }
 
-document.getElementById("mostra").addEventListener("click", mostraClassifica);
+function toggleDettagli(idx) {
+    const row = document.getElementById(`details-${idx}`);
+    if (row) {
+        row.style.display = row.style.display === "none" ? "table-row" : "none";
+    }
+}
+
+function togglePodio(idx) {
+    const row = document.getElementById(`podio-${idx}`);
+    if (row) {
+        row.style.display = row.style.display === "none" ? "table-row" : "none";
+    }
+}
+
+// LOGICA GRAFICO INTERATTIVO CANVAS CON ETICHETTE ASSE X SOTTO L'ASSE
+let allChartPoints = [];
+let lineSogliePodi = [];
+
+function disegnaGrafico(risultati, tipoStaffetta, vascaScelta) {
+    const chartSection = document.getElementById("chartSection");
+    const canvas = document.getElementById("chartCanvas");
+    const tooltip = document.getElementById("chartTooltip");
+    const titleEl = document.getElementById("chartTitle");
+
+    if (!chartSection || !canvas) return;
+
+    chartSection.style.display = "block";
+    titleEl.textContent = `Andamento Tempi - ${tipoStaffetta} (Vasca ${vascaScelta}m)`;
+
+    const datiValidi = [...risultati].filter(r => !isNaN(parseFloat(r.tempo))).sort((a,b) => {
+        if (a.data === "ND") return 1;
+        if (b.data === "ND") return -1;
+        return a.data.localeCompare(b.data);
+    });
+
+    if (datiValidi.length === 0) {
+        chartSection.style.display = "none";
+        return;
+    }
+
+    const tempoRecordSocietario = getTempoRecordSocietario(tipoStaffetta, vascaScelta);
+
+    const gruppiPerData = [];
+    const mapDate = new Map();
+
+    datiValidi.forEach(item => {
+        const key = `${item.data}_${item.competizione}`;
+        if (!mapDate.has(key)) {
+            mapDate.set(key, []);
+            gruppiPerData.push({ key: key, gare: mapDate.get(key) });
+        }
+        mapDate.get(key).push(item);
+    });
+
+    gruppiPerData.forEach(g => {
+        g.gare.sort((a,b) => parseFloat(a.tempo) - parseFloat(b.tempo));
+    });
+
+    const podiRilevanti = podiDatabase.filter(p => 
+        normalizeKey(p.gara) === normalizeKey(tipoStaffetta) &&
+        String(p.vasca) === String(vascaScelta)
+    );
+
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    const ctx = canvas.getContext("2d");
+    ctx.scale(dpr, dpr);
+
+    const W = rect.width;
+    const H = rect.height;
+
+    const padLeft = 85;
+    const padRight = 65;
+    const padTop = 60;
+    
+    // MARGINE IN BASSO DEDICATO ALL'ASSE X E LE SUE ETICHETTE
+    const padBottom = 220; 
+
+    const tempiGare = datiValidi.map(d => parseFloat(d.tempo));
+    const minGara = Math.min(...tempiGare);
+    const maxGara = Math.max(...tempiGare);
+    
+    const podiVicini = podiRilevanti.map(p => p.tempo).filter(t => t >= minGara - 12 && t <= maxGara + 12);
+    const tuttiTempi = [...tempiGare, ...(podiVicini.length > 0 ? podiVicini : tempiGare)];
+
+    let minTempoVal = Math.min(...tuttiTempi);
+    let maxTempoVal = Math.max(...tuttiTempi);
+    let delta = maxTempoVal - minTempoVal;
+
+    if (delta < 2.5) {
+        const centro = (maxTempoVal + minTempoVal) / 2;
+        minTempoVal = centro - 1.25;
+        maxTempoVal = centro + 1.25;
+        delta = 2.5;
+    }
+
+    const minT = minTempoVal - (delta * 0.02); 
+    const maxT = maxTempoVal + (delta * 0.02);
+
+    const getX = (i) => {
+        if (gruppiPerData.length === 1) {
+            return padLeft + (W - padLeft - padRight) / 2;
+        }
+        return padLeft + (i * (W - padLeft - padRight) / (gruppiPerData.length - 1));
+    };
+
+    const getY = (val) => padTop + ((maxT - val) / (maxT - minT)) * (H - padTop - padBottom);
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Griglia orizzontale asse Y
+    ctx.strokeStyle = "#e2e8f0";
+    ctx.lineWidth = 1;
+    const numStepY = 16;
+    ctx.fillStyle = "#070674";
+    ctx.font = "bold 12px sans-serif";
+    ctx.textAlign = "right";
+
+    for (let i = 0; i <= numStepY; i++) {
+        const val = minT + (i * (maxT - minT) / numStepY);
+        const y = getY(val);
+        ctx.beginPath();
+        ctx.moveTo(padLeft, y);
+        ctx.lineTo(W - padRight, y);
+        ctx.stroke();
+        ctx.fillText(formattaTempo(val), padLeft - 10, y + 4);
+    }
+
+    // LINEA CONTINUA DELL'ASSE X (SEPARATORE CONTINUO COLORE #070674)
+    const yAsseX = H - padBottom;
+    ctx.save();
+    ctx.strokeStyle = "#070674";
+    ctx.lineWidth = 3.5;
+    ctx.beginPath();
+    ctx.moveTo(padLeft, yAsseX);
+    ctx.lineTo(W - padRight, yAsseX);
+    ctx.stroke();
+    ctx.restore();
+
+    // Linee Soglia Podi Nazionali
+    lineSogliePodi = [];
+
+    podiRilevanti.forEach(p => {
+        const yPodio = getY(p.tempo);
+        
+        lineSogliePodi.push({
+            y: yPodio,
+            podioData: p
+        });
+
+        ctx.save();
+        ctx.setLineDash([6, 4]);
+        ctx.strokeStyle = p.tipoStagione === "stagione_passata" ? "#2a9d8f" : "#e9c46a";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(padLeft, yPodio);
+        ctx.lineTo(W - padRight, yPodio);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.fillStyle = p.tipoStagione === "stagione_passata" ? "#1b7065" : "#b58404";
+        ctx.font = "bold 11px sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText(`${p.competizione} (${formattaTempo(p.tempo)})`, padLeft + 6, yPodio - 5);
+    });
+
+    allChartPoints = [];
+    const mainPathPoints = [];
+
+    gruppiPerData.forEach((g, i) => {
+        const x = getX(i);
+        
+        g.gare.forEach((garaItem, orderInGroup) => {
+            const y = getY(parseFloat(garaItem.tempo));
+            const infoPodio = analizzaPodiSuperati(garaItem);
+            const isRecord = (tempoRecordSocietario !== null && Math.abs(parseFloat(garaItem.tempo) - tempoRecordSocietario) < 0.001);
+
+            const pObj = {
+                x: x,
+                y: y,
+                data: garaItem,
+                colore: infoPodio.colore,
+                infoPodio: infoPodio,
+                isBest: (orderInGroup === 0),
+                groupIndex: i,
+                isRecord: isRecord
+            };
+
+            allChartPoints.push(pObj);
+            if (orderInGroup === 0) {
+                mainPathPoints.push(pObj);
+            }
+        });
+    });
+
+    // Tratti verticali tratteggiati
+    gruppiPerData.forEach((g, i) => {
+        if (g.gare.length > 1) {
+            const puntiGruppo = allChartPoints.filter(p => p.groupIndex === i);
+            puntiGruppo.sort((a,b) => b.y - a.y);
+
+            for (let k = 0; k < puntiGruppo.length - 1; k++) {
+                ctx.save();
+                ctx.setLineDash([4, 4]);
+                ctx.beginPath();
+                ctx.moveTo(puntiGruppo[k].x, puntiGruppo[k].y);
+                ctx.lineTo(puntiGruppo[k + 1].x, puntiGruppo[k + 1].y);
+                ctx.strokeStyle = puntiGruppo[k + 1].colore;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+    });
+
+    // Segmenti principali
+    if (mainPathPoints.length > 1) {
+        for (let i = 0; i < mainPathPoints.length - 1; i++) {
+            const p1 = mainPathPoints[i];
+            const p2 = mainPathPoints[i + 1];
+
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = p2.colore;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+    }
+
+    // BOLLINO IMPOSTATO A 100PX PER IL GRAFICO CANVAS
+    const imgBadge = new Image();
+    imgBadge.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(getSvgBollinoRecord(100));
+
+    allChartPoints.forEach((p) => {
+        // Pallino
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.isBest ? 7 : 5, 0, 2 * Math.PI);
+        ctx.fillStyle = p.colore;
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "#ffffff";
+        ctx.stroke();
+
+        // Testo Tempo
+        ctx.save();
+        ctx.fillStyle = "#070674";
+        ctx.textAlign = "center";
+        ctx.font = "bold 12px sans-serif";
+        ctx.fillText(formattaTempo(p.data.tempo), p.x, p.y - 14);
+
+        // Disegno del bollino da 100px sul Canvas
+        if (p.isRecord) {
+            ctx.drawImage(imgBadge, p.x + 18, p.y - 50, 100, 100);
+        }
+        ctx.restore();
+    });
+
+    // ETICHETTE ASSE X SPOSTATE TOTALMENTE SOTTO LA LINEA DELL'ASSE X
+    mainPathPoints.forEach((p) => {
+        ctx.save();
+        ctx.translate(p.x, yAsseX + 15); // Punto di origine 15px sotto l'asse X
+        ctx.rotate(-Math.PI / 3);       // Inclinazione di 60 gradi verso il basso
+        ctx.fillStyle = "#070674";
+        ctx.font = "bold 12px sans-serif";
+        ctx.textAlign = "right";        // Il testo si sviluppa all'indietro a partire dall'asse X verso il basso
+        const labelStr = `${p.data.data} (${p.data.piscina})`;
+        ctx.fillText(labelStr, 0, 0);
+        ctx.restore();
+    });
+
+    // Hover / Tooltip
+    canvas.onmousemove = function(e) {
+        const r = canvas.getBoundingClientRect();
+        const mx = e.clientX - r.left;
+        const my = e.clientY - r.top;
+
+        let foundPoint = null;
+        allChartPoints.forEach(p => {
+            const dist = Math.hypot(p.x - mx, p.y - my);
+            if (dist <= 14) foundPoint = p;
+        });
+
+        if (foundPoint) {
+            tooltip.style.display = "block";
+
+            foundPoint.data.frazionisti.sort((a,b) => a.ordine - b.ordine);
+            const strPartecipanti = foundPoint.data.frazionisti.map(f => {
+                const tStr = f.passaggio ? formattaTempo(f.passaggio.tempo) : "--";
+                return `${f.nome} (${tStr})`;
+            }).join(" - ");
+
+            let podiTxt = "";
+            if (foundPoint.infoPodio.podiBattuti.length > 0) {
+                podiTxt = "<br><b>Podi superati:</b><br>" + foundPoint.infoPodio.podiBattuti.map(pb => 
+                    `• ${pb.competizione}: ${formattaTempo(pb.tempo)}`
+                ).join("<br>");
+            } else {
+                podiTxt = "<br><i>Nessun podio nazionale battuto</i>";
+            }
+
+            tooltip.innerHTML = `
+                <strong style="font-size:1.05rem; color:#ffd166;">Gara: ${foundPoint.data.competizione}</strong><br>
+                <div style="font-size:0.88rem; color:#e2e8f0; margin: 4px 0 6px 0; border-bottom: 1px dashed rgba(255,255,255,0.3); padding-bottom: 4px;">
+                    ${strPartecipanti}
+                </div>
+                <b>Data:</b> ${foundPoint.data.data}<br>
+                <b>Piscina:</b> ${foundPoint.data.piscina} (${foundPoint.data.vasca}m)<br>
+                <b>Tempo:</b> ${formattaTempo(foundPoint.data.tempo)}
+                ${podiTxt}
+            `;
+
+            posizionaTooltipDinamico(tooltip, foundPoint.x, foundPoint.y, r.width, r.height);
+            return;
+        }
+
+        if (mx >= padLeft && mx <= W - padRight) {
+            let foundSoglia = null;
+            lineSogliePodi.forEach(s => {
+                if (Math.abs(s.y - my) <= 6) {
+                    foundSoglia = s;
+                }
+            });
+
+            if (foundSoglia) {
+                tooltip.style.display = "block";
+                const p = foundSoglia.podioData;
+
+                tooltip.innerHTML = `
+                    <strong style="font-size:1.05rem; color:#ffd166;">Soglia Podio Nazionale</strong><br>
+                    <b>Gara Podio:</b> ${p.competizione}<br>
+                    <b>Tempo Podio:</b> ${formattaTempo(p.tempo)} (${p.vasca}m)
+                `;
+
+                posizionaTooltipDinamico(tooltip, mx, foundSoglia.y, r.width, r.height);
+                return;
+            }
+        }
+
+        tooltip.style.display = "none";
+    };
+
+    canvas.onmouseleave = function() {
+        tooltip.style.display = "none";
+    };
+}
+
+function posizionaTooltipDinamico(tooltip, targetX, targetY, canvasWidth, canvasHeight) {
+    const tooltipWidth = tooltip.offsetWidth || 300;
+    const tooltipHeight = tooltip.offsetHeight || 120;
+
+    let posX = targetX + 15;
+    let posY = targetY - 20;
+
+    if (posX + tooltipWidth > canvasWidth - 15) {
+        posX = targetX - tooltipWidth - 15;
+    }
+    if (posY + tooltipHeight > canvasHeight - 15) {
+        posY = targetY - tooltipHeight - 10;
+    }
+    if (posY < 10) {
+        posY = 10;
+    }
+
+    tooltip.style.left = `${Math.max(10, posX)}px`;
+    tooltip.style.top = `${posY}px`;
+}
+
+// GENERAZIONE CLASSIFICA TOP 5 CON EVIDENZIAZIONE VERDE PER LA NOSTRA SQUADRA
+function generaClassificaTop5(tipoStaffetta, vasca) {
+    const container = document.getElementById("top5Content");
+    if (!container) return;
+
+    const nostreCoerenti = staffetteList.filter(s => normalizeKey(s.gara) === normalizeKey(tipoStaffetta) && String(s.vasca) === String(vasca));
+    const masterCoerenti = masterStaffetteList.filter(s => normalizeKey(s.gara) === normalizeKey(tipoStaffetta) && String(s.vasca) === String(vasca));
+
+    const tutte = [...nostreCoerenti, ...masterCoerenti];
+
+    if (tutte.length === 0) {
+        container.innerHTML = "<p style='text-align:center;'>Nessun dato disponibile per la classifica di questa staffetta.</p>";
+        return;
+    }
+
+    tutte.sort((a, b) => parseFloat(a.tempo) - parseFloat(b.tempo));
+    const top5 = tutte.slice(0, 5);
+
+    let html = `<table>
+        <thead>
+            <tr>
+                <th style="width: 16%; text-align:center;">Posizione</th>
+                <th style="width: 44%;">Gara</th>
+                <th style="width: 20%;">Tempo</th>
+                <th style="width: 20%;">Data</th>
+            </tr>
+        </thead>
+        <tbody>`;
+
+    top5.forEach((st, idx) => {
+        let posStr = "";
+        if (idx === 0) {
+            posStr = getSvgBollinoRecord(100); 
+        } else if (idx === 1) {
+            posStr = svgMedagliaArgento; 
+        } else if (idx === 2) {
+            posStr = svgMedagliaBronzo; 
+        } else {
+            posStr = `<strong style="font-size:1.3rem;">${idx + 1}°</strong>`;
+        }
+
+        // Se è una staffetta della nostra squadra applica la classe 'row-nostra-squadra' (sfondo verde)
+        // Se è dei Master applica 'row-master' (sfondo bianco)
+        const rowClass = (!st.isMaster) ? "row-nostra-squadra" : "row-master";
+
+        html += `
+            <tr class="${rowClass}">
+                <td style="text-align:center; vertical-align:middle;">${posStr}</td>
+                <td><strong>${st.competizione}</strong></td>
+                <td><strong>${formattaTempo(st.tempo)}</strong></td>
+                <td>${st.data}</td>
+            </tr>`;
+    });
+
+    html += `</tbody></table>`;
+    container.innerHTML = html;
+}
 </script>
 </body>
 </html>
