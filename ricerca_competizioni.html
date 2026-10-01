@@ -2,7 +2,6 @@
 <html lang="it">
 <head>
   <meta charset="utf-8" />
-  <!-- RIGA DA AGGIUNGERE: Forza il caricamento di tutte le immagini e link in HTTPS -->
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   <title>Ricerca per Manifestazione</title>
   <style>
@@ -2332,13 +2331,25 @@ const mappa_gare = {
   "campionati nazionali estivi 2026 giorno 3": {data: "2026-06-14", piscina: "Riccione", vasca: 50},
 };
 
-function normalizzaManifestazione(nome) {
+const sessoAtleti = {
+      "bartalesi beatrice": "F", "bibbona lucia": "F", "damasio gaia ada": "F",
+      "farruggia vittoria": "F", "ferrero miriam": "F", "fiora virginia": "F",
+      "ichim alexandra": "F", "lambertoni giulia": "F", "manfrino elisa": "F",
+      "ruscelli siria": "F", "speranza lucrezia": "F", "toniazzo francesca": "F",
+      "lucchese camilla": "F", "ingrosso emma": "F", "midulla arianna": "F",
+      "prudenzano sofia": "F", "scattaglia stella": "F", "tissoni giulia": "F", "vignola elena": "F",
+      "catalano giovanni": "M", "de giorgi alessandro": "M", "oliaro giulio": "M",
+      "oliaro pietro": "M", "pedi mattia": "M", "perosino edoardo": "M",
+      "tessitore andrea": "M", "belmare diego": "M", "bolognesi lorenzo": "M"
+    };
+
+    function normalizzaManifestazione(nome) {
       if (!nome) return "";
       return nome.replace(/\s+giorno\s+\d+/i, "").trim();
     }
 
     function formattaTempo(t) {
-      if (isNaN(t)) return t;
+      if (isNaN(t) || t === null || t === undefined) return "-";
       return t < 60 
         ? t.toFixed(2) 
         : `${Math.floor(t/60)}:${(t % 60).toFixed(2).padStart(5, '0')}`;
@@ -2356,6 +2367,10 @@ function normalizzaManifestazione(nome) {
       return strData;
     }
 
+    function normalizzaGaraBase(gara) {
+      return gara.toLowerCase().replace("lanciato", "").trim();
+    }
+
     const text = document.getElementById("dati").textContent.trim();
     const lines = text.split('\n').slice(1); 
     
@@ -2364,7 +2379,7 @@ function normalizzaManifestazione(nome) {
       let infoGara = mappa_gare[nomeGara.toLowerCase()] || {};
       return { 
         id: idx,
-        nomeGara, 
+        nomeGara: nomeGara.trim(), 
         nomeManifestazioneBase: normalizzaManifestazione(nomeGara),
         nomeAtleta: nomeAtleta.trim(), 
         gara: gara.trim(), 
@@ -2375,6 +2390,28 @@ function normalizzaManifestazione(nome) {
         data: infoGara.data || "9999-12-31"
       };
     });
+
+    let recordSquadraMappa = {};
+    dati.forEach(d => {
+      if (!d.gara.toLowerCase().includes("staffetta") && !isNaN(d.tempo)) {
+        let sesso = sessoAtleti[d.nomeAtleta.toLowerCase()] || "M";
+        let garaBase = normalizzaGaraBase(d.gara);
+        let key = `${d.vasca}_${sesso}_${garaBase}`;
+        
+        if (!recordSquadraMappa[key] || d.tempo < recordSquadraMappa[key]) {
+          recordSquadraMappa[key] = d.tempo;
+        }
+      }
+    });
+
+    function checkRecordSquadra(tempo, vasca, nomeAtleta, gara) {
+      if (isNaN(tempo)) return false;
+      let sesso = sessoAtleti[nomeAtleta.toLowerCase()] || "M";
+      let garaBase = normalizzaGaraBase(gara);
+      let key = `${vasca}_${sesso}_${garaBase}`;
+      let recordAccertato = recordSquadraMappa[key];
+      return recordAccertato && Math.abs(tempo - recordAccertato) < 0.001;
+    }
 
     const selectManifestazione = document.getElementById("manifestazioneSelect");
 
@@ -2437,11 +2474,9 @@ function normalizzaManifestazione(nome) {
       }
 
       let vascaEvento = righeManifestazione[0].vasca;
-      // Trova la data di inizio di questa manifestazione per escludere confronti con la stessa o con giornate successive della stessa competizione
       let dataInizioManifestazione = righeManifestazione.map(d => d.data).sort()[0];
 
       let html = "";
-
       let blocchiStaffette = [];
       let indiciUsatiComePassaggi = new Set();
 
@@ -2453,25 +2488,40 @@ function normalizzaManifestazione(nome) {
           let tipoStaffetta = riga.gara;
           let puntiStaffetta = riga.punti;
 
-          let componenti = [riga];
-          let passaggi = [];
+          let numComponenti = tipoStaffetta.toLowerCase().includes("8x50") ? 8 : 4;
 
+          let componenti = [riga];
           let j = i + 1;
-          while (j < righeManifestazione.length && componenti.length < 4) {
+          while (j < righeManifestazione.length && componenti.length < numComponenti) {
             if (righeManifestazione[j].gara === tipoStaffetta && Math.abs(righeManifestazione[j].tempo - tempoStaffetta) < 0.01) {
               componenti.push(righeManifestazione[j]);
             }
             j++;
           }
 
+          let passaggi = [];
           let posCercaPassaggi = j;
-          while (posCercaPassaggi < righeManifestazione.length && passaggi.length < 4) {
+
+          while (posCercaPassaggi < righeManifestazione.length) {
             let rigaP = righeManifestazione[posCercaPassaggi];
             if (!rigaP.gara.toLowerCase().includes("staffetta")) {
               passaggi.push(rigaP);
               indiciUsatiComePassaggi.add(rigaP.id);
+            } else {
+              break; 
             }
             posCercaPassaggi++;
+          }
+
+          // Se la staffetta è una 4x50 ed è stata calcolata dai frazionisti di una 8x50
+          if (passaggi.length === 0 && numComponenti === 4) {
+            let staffettaMaggiore = blocchiStaffette.find(b => b.componenti.length === 8 && b.passaggi.length > 0);
+            if (staffettaMaggiore) {
+              componenti.forEach(c => {
+                let pTrovato = staffettaMaggiore.passaggi.find(p => p.nomeAtleta.toLowerCase() === c.nomeAtleta.toLowerCase());
+                if (pTrovato) passaggi.push(pTrovato);
+              });
+            }
           }
 
           blocchiStaffette.push({
@@ -2507,7 +2557,6 @@ function normalizzaManifestazione(nome) {
           <tbody>`;
 
         individuali.forEach(r => {
-          // FILTRO PB: solo gare STRICTLY PRECEDENTI alla manifestazione attuale
           let garePrecedentiStessaVasca = dati.filter(d => 
             d.nomeAtleta.toLowerCase() === r.nomeAtleta.toLowerCase() && 
             d.gara.toLowerCase() === r.gara.toLowerCase() && 
@@ -2529,7 +2578,7 @@ function normalizzaManifestazione(nome) {
             }
           }
 
-          let isRecordSocietario = r.tempo < 73.00 && r.gara.toLowerCase().includes("100 rana");
+          let isRecordSocietario = checkRecordSquadra(r.tempo, r.vasca, r.nomeAtleta, r.gara);
           let tagRecord = isRecordSocietario ? `<span class="tag-record-rosso">RECORD DI SQUADRA</span>` : "";
 
           html += `<tr>
@@ -2572,37 +2621,45 @@ function normalizzaManifestazione(nome) {
               <strong>Frazionisti e Passaggi Individuali:</strong><br><br>`;
 
           st.componenti.forEach((comp, idx) => {
-            let pass = st.passaggi[idx];
-
             let nomeFrazionista = comp.nomeAtleta;
-            let nomeGaraPassaggio = pass ? pass.gara : (idx === 0 ? "50 Stile Libero" : "50 Stile Libero lanciato");
-            let tempoPassaggio = pass ? pass.tempo : comp.tempo;
-            let puntiPassaggio = pass ? pass.punti : comp.punti;
+            
+            // Trova il passaggio specifico ABBINATO PER NOME dell'atleta
+            let pass = st.passaggi.find(p => p.nomeAtleta.toLowerCase() === nomeFrazionista.toLowerCase());
 
-            // FILTRO PB PASSAGGI: solo gare STRICTLY PRECEDENTI alla manifestazione attuale
-            let garePrecedentiPassaggio = dati.filter(d => 
-              d.nomeAtleta.toLowerCase() === nomeFrazionista.toLowerCase() && 
-              d.gara.toLowerCase() === nomeGaraPassaggio.toLowerCase() &&
-              d.vasca === vascaEvento &&
-              d.nomeManifestazioneBase !== manifestazioneScelta &&
-              d.data < dataInizioManifestazione
-            );
+            let nomeGaraPassaggio = pass ? pass.gara : (idx === 0 ? "50 Stile Libero" : "50 Stile Libero lanciato");
+            
+            // Valida che il tempo del passaggio non sia uguale o superiore al tempo totale della staffetta
+            let tempoPassaggio = (pass && pass.tempo < comp.tempo) ? pass.tempo : NaN;
+            let puntiPassaggio = (pass && pass.tempo < comp.tempo) ? pass.punti : "-";
 
             let diffPassaggioHtml = "";
-            if (garePrecedentiPassaggio.length > 0) {
-              let pbPrecPassaggio = Math.min(...garePrecedentiPassaggio.map(g => g.tempo));
-              let diff = tempoPassaggio - pbPrecPassaggio;
-              if (diff < -0.001) {
-                diffPassaggioHtml = `<span style="color: green; font-weight: bold;"> (${diff.toFixed(2)}s)</span>`;
-              } else if (diff > 0.001) {
-                diffPassaggioHtml = `<span style="color: red; font-weight: bold;"> (+${diff.toFixed(2)}s)</span>`;
-              } else {
-                diffPassaggioHtml = `<span style="color: gray;"> (=)</span>`;
+            if (!isNaN(tempoPassaggio)) {
+              let garePrecedentiPassaggio = dati.filter(d => 
+                d.nomeAtleta.toLowerCase() === nomeFrazionista.toLowerCase() && 
+                d.gara.toLowerCase() === nomeGaraPassaggio.toLowerCase() &&
+                d.vasca === vascaEvento &&
+                d.nomeManifestazioneBase !== manifestazioneScelta &&
+                d.data < dataInizioManifestazione
+              );
+
+              if (garePrecedentiPassaggio.length > 0) {
+                let pbPrecPassaggio = Math.min(...garePrecedentiPassaggio.map(g => g.tempo));
+                let diff = tempoPassaggio - pbPrecPassaggio;
+                if (diff < -0.001) {
+                  diffPassaggioHtml = `<span style="color: green; font-weight: bold;"> (${diff.toFixed(2)}s)</span>`;
+                } else if (diff > 0.001) {
+                  diffPassaggioHtml = `<span style="color: red; font-weight: bold;"> (+${diff.toFixed(2)}s)</span>`;
+                } else {
+                  diffPassaggioHtml = `<span style="color: gray;"> (=)</span>`;
+                }
               }
             }
 
+            let isRecordPassaggio = !isNaN(tempoPassaggio) && checkRecordSquadra(tempoPassaggio, vascaEvento, nomeFrazionista, nomeGaraPassaggio);
+            let tagRecordPassaggio = isRecordPassaggio ? `<span class="tag-record-rosso">RECORD DI SQUADRA</span>` : "";
+
             html += `<div class="frazionista-riga">
-              <b>${idx + 1}° Frazione (${formattaGaraTitleCase(nomeGaraPassaggio)}):</b> <strong>${nomeFrazionista}</strong> — Passaggio: <strong>${formattaTempo(tempoPassaggio)}</strong>${diffPassaggioHtml} | Punti FINA: <strong>${puntiPassaggio}</strong>
+              <b>${idx + 1}° Frazione (${formattaGaraTitleCase(nomeGaraPassaggio)}):</b> <strong>${nomeFrazionista}</strong> — Passaggio: <strong>${formattaTempo(tempoPassaggio)}</strong>${diffPassaggioHtml} | Punti FINA: <strong>${puntiPassaggio}</strong> ${tagRecordPassaggio}
             </div>`;
           });
 
