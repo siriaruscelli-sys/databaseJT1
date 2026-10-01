@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <!-- RIGA DA AGGIUNGERE: Forza il caricamento di tutte le immagini e link in HTTPS -->
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<meta charset="UTF-8">
 <title>Classifica Nuoto</title>
 <style>
 body {
@@ -24,6 +22,7 @@ table {
     width: 100%; 
     margin-top: 10px;
     background-color: #ffffffb3; 
+    position: relative;
 }
 th, td { 
     border: 1px solid #c4c4c4; 
@@ -32,6 +31,9 @@ th, td {
 }
 th { 
     background-color: #f0f0f0; 
+}
+tr {
+    will-change: transform;
 }
 tr:hover { background-color: #f0f8ff; }
 input, select, button { 
@@ -2293,6 +2295,7 @@ const mappaGare = {
 
 
 // --- Leggi CSV ---
+// --- Leggi CSV ---
 const raw = document.getElementById("dati").textContent.trim();
 const righe = raw.split("\n");
 const dati = righe.map(riga=>{
@@ -2363,7 +2366,7 @@ function costruisciClassifica(stile, distanza, vasca){
   return costruisciClassificaSuSubset(dati, stile, distanza, vasca);
 }
 
-function calcolaPosizioniPrecedenti(stile, distanza, vasca) {
+function calcolaPosizioniEClassificaPrecedente(stile, distanza, vasca) {
   const gareUnicheMap = {};
   dati.forEach(d => {
     const data = ottieniDataGara(d.gara);
@@ -2381,7 +2384,7 @@ function calcolaPosizioniPrecedenti(stile, distanza, vasca) {
     return a.localeCompare(b);
   });
 
-  if (gareOrdinate.length === 0) return {};
+  if (gareOrdinate.length === 0) return { posizioniPrev: {}, classificaPrecedente: [] };
 
   const ultimaGara = gareOrdinate[gareOrdinate.length - 1];
   const garaBaseUltima = ottieniGaraBase(ultimaGara);
@@ -2394,7 +2397,7 @@ function calcolaPosizioniPrecedenti(stile, distanza, vasca) {
     }
   }
 
-  if (idxPrecedente === -1) return {};
+  if (idxPrecedente === -1) return { posizioniPrev: {}, classificaPrecedente: [] };
 
   const garaPrecedente = gareOrdinate[idxPrecedente];
   const datiPrecedenti = filtroDatiFinoAGara(dati, garaPrecedente);
@@ -2405,61 +2408,121 @@ function calcolaPosizioniPrecedenti(stile, distanza, vasca) {
     posizioniPrev[d.nome] = i + 1;
   });
 
-  return posizioniPrev;
+  return { posizioniPrev, classificaPrecedente };
 }
 
 function formatTempo(sec){ 
   return sec<60 ? sec.toFixed(2) : `${Math.floor(sec/60)}:${(sec%60).toFixed(2).padStart(5,"0")}`;
 }
 
+function generaHTMLRiga(d, i, posizioniPrev) {
+  const posAttuale = i + 1;
+  const posPrecedente = posizioniPrev[d.nome];
+  let varStr = "";
+
+  if (posPrecedente === undefined) {
+    varStr = ' <span style="color: green;">▲ (nuovo)</span>';
+  } else {
+    const diff = posPrecedente - posAttuale;
+    if (diff > 0) {
+      varStr = ` <span style="color: green;">▲ +${diff}</span>`;
+    } else if (diff < 0) {
+      varStr = ` <span style="color: red;">▼ ${diff}</span>`;
+    } else {
+      varStr = ' <span style="color: black;">=</span>';
+    }
+  }
+
+  const nomeGara = d.gara || "";
+  const evidenzia = nomeGara.toLowerCase().includes("campionati nazionali estivi 2026");
+  const style = evidenzia ? 'style="background-color: yellow;"' : "";
+
+  return `<tr data-nome="${d.nome}" ${style}>
+    <td>${posAttuale}${varStr}</td>
+    <td>${d.nome}</td>
+    <td>${d.punti}</td>
+    <td>${d.tipoOriginale}</td>
+    <td>${formatTempo(d.tempo)}</td>
+    <td>${d.gara}</td>
+    <td>${d.data || "-"}</td>
+    <td>${d.piscina || "-"}</td>
+    <td>${d.vasca || "-"}</td>
+  </tr>`;
+}
+
 function mostraClassifica(){
   const stile = document.getElementById("stile").value.toLowerCase();
   const distanza = document.getElementById("distanza").value;
   const vasca = document.getElementById("vasca").value;
-  const classifica = costruisciClassifica(stile,distanza,vasca);
-  const posizioniPrev = calcolaPosizioniPrecedenti(stile, distanza, vasca);
+  
+  const classificaNuova = costruisciClassifica(stile,distanza,vasca);
+  const { posizioniPrev, classificaPrecedente } = calcolaPosizioniEClassificaPrecedente(stile, distanza, vasca);
 
-  let html = `<table><thead><tr>
+  const contenitore = document.getElementById("contenuto");
+
+  // 1. Renderizziamo la classifica nella POSIZIONE VECCHIA
+  let htmlIniziale = `<table><thead><tr>
   <th>Pos</th><th>Atleta</th><th>Punti</th><th>Gara</th><th>Tempo</th><th>Competizione</th><th>Data</th><th>Piscina</th><th>Vasca</th>
-  </tr></thead><tbody>`;
+  </tr></thead><tbody id="tbody-classifica">`;
 
-  classifica.forEach((d,i)=>{
-    const posAttuale = i + 1;
-    const posPrecedente = posizioniPrev[d.nome];
-    let varStr = "";
-
-    if (posPrecedente === undefined) {
-      varStr = ' <span style="color: green;">▲ (nuovo)</span>';
-    } else {
-      const diff = posPrecedente - posAttuale;
-      if (diff > 0) {
-        varStr = ` <span style="color: green;">▲ +${diff}</span>`;
-      } else if (diff < 0) {
-        varStr = ` <span style="color: red;">▼ ${diff}</span>`;
-      } else {
-        varStr = ' <span style="color: black;">=</span>';
-      }
-    }
-
-    const nomeGara = d.gara || "";
-    const evidenzia = nomeGara.toLowerCase().includes("campionati nazionali estivi 2026");
-    const style = evidenzia ? 'style="background-color: yellow;"' : "";
-    html+=`<tr ${style}>
-      <td>${posAttuale}${varStr}</td>
-      <td>${d.nome}</td>
-      <td>${d.punti}</td>
-      <td>${d.tipoOriginale}</td>
-      <td>${formatTempo(d.tempo)}</td>
-      <td>${d.gara}</td>
-      <td>${d.data || "-"}</td>
-      <td>${d.piscina || "-"}</td>
-      <td>${d.vasca || "-"}</td>
-    </tr>`;
+  classificaPrecedente.forEach((d, i) => {
+    htmlIniziale += generaHTMLRiga(d, i, posizioniPrev);
   });
-  html+="</tbody></table>";
-  document.getElementById("contenuto").innerHTML = html;
+  htmlIniziale += "</tbody></table>";
+  contenitore.innerHTML = htmlIniziale;
+
+  const tbody = document.getElementById("tbody-classifica");
+
+  // Misuriamo le posizioni INIZIALI
+  const primePosizioni = {};
+  Array.from(tbody.querySelectorAll("tr[data-nome]")).forEach(riga => {
+    const nome = riga.getAttribute("data-nome");
+    primePosizioni[nome] = riga.getBoundingClientRect().top;
+  });
+
+  // 2. Renderizziamo la NUOVA CLASSIFICA nel DOM
+  let htmlNuovoBody = "";
+  classificaNuova.forEach((d, i) => {
+    htmlNuovoBody += generaHTMLRiga(d, i, posizioniPrev);
+  });
+  tbody.innerHTML = htmlNuovoBody;
+
+  // 3. Misuriamo le posizioni FINALI, Invertiamo e Animiamo (RALLENTATO a 3s)
+  const nuoveRighe = Array.from(tbody.querySelectorAll("tr[data-nome]"));
+  
+  nuoveRighe.forEach(riga => {
+    const nome = riga.getAttribute("data-nome");
+    const posFinale = riga.getBoundingClientRect().top;
+    
+    if (primePosizioni[nome] !== undefined) {
+      const deltaY = primePosizioni[nome] - posFinale;
+      if (deltaY !== 0) {
+        riga.style.transform = `translateY(${deltaY}px)`;
+        riga.style.transition = 'transform 0s';
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            // Animazione rallentata a 3 secondi
+            riga.style.transition = 'transform 3s cubic-bezier(0.25, 1, 0.5, 1)';
+            riga.style.transform = 'translateY(0px)';
+          });
+        });
+      }
+    } else {
+      // Per i nuovi atleti dissolvenza rallentata a 2.5 secondi
+      riga.style.opacity = '0';
+      riga.style.transition = 'opacity 2.5s ease-in';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          riga.style.opacity = '1';
+        });
+      });
+    }
+  });
 }
 
+// Eseguiamo la visualizzazione e l'animazione al caricamento della pagina
+window.addEventListener("DOMContentLoaded", mostraClassifica);
 document.getElementById("mostra").addEventListener("click", mostraClassifica);
 </script>
 </body>

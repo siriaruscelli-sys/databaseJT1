@@ -84,6 +84,7 @@
       align-items: center;
       justify-content: center;
       gap: 30px;
+      flex-wrap: wrap;
     }
 
     #blocco-foto { text-align: center; flex-shrink: 0; }
@@ -101,12 +102,48 @@
       line-height: 1.6;
       color: #040b66;
       text-align: left;
+      flex-grow: 1;
     }
     #dettagli-testo-atleta h3 {
       margin: 0 0 8px 0;
       font-size: 1.5rem;
       border-bottom: 2px solid #002f6d;
       padding-bottom: 4px;
+    }
+
+    /* Stile Player Audio Personalizzato */
+    .audio-player-box {
+      margin-top: 12px;
+      padding: 8px 12px;
+      background: #eef7ff;
+      border: 1.5px solid #0e289c;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      max-width: 380px;
+    }
+    .btn-audio-control {
+      background: #002f6d;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .btn-audio-control:hover {
+      background: #0e289c;
+    }
+    .audio-title-text {
+      font-size: 0.9rem;
+      color: #002f6d;
+      font-weight: bold;
     }
 
     .stato-attivo { color: #1e7e34; font-weight: bold; }
@@ -240,6 +277,9 @@
   </style>
 </head>
 <body>
+
+  <!-- ELEMENTO AUDIO GLOBALE -->
+  <audio id="atletaAudioPlayer" preload="none"></audio>
 
   <h1>RICERCA PER ATLETA</h1>
   
@@ -2570,6 +2610,16 @@ Podio nazionali invernali UISP 2024,100 Dorso,70.00,80.52,83.42,75.00
   </script>
 
  <script>
+    // --- MAPPA TRACCE AUDIO ATLETI ---
+    const mappa_audio = {
+      "de giorgi alessandro": "Audio database/de_giorgi.mp3",
+      "lucchese camilla": "Audio database/lucchese.mp3",
+      "oliaro giulio": "Audio database/oliaro.mp3",
+      "ruscelli siria": "Audio database/ruscelli.mp3",
+      "belmare diego": "Audio database/belmare.mp3",
+      // Aggiungi qui gli altri atleti es: "nome cognome": "audio/file.mp3"
+    };
+
     // --- Mappa gare con data, piscina e vasca ---
     const mappa_gare = {
       "apertura": {"data": "2022-12-04", "piscina": "Sisport", "vasca": 25},
@@ -2653,7 +2703,6 @@ Podio nazionali invernali UISP 2024,100 Dorso,70.00,80.52,83.42,75.00
     // --- Funzioni globali di utilità ---
 function chiaveGara(nome) { return (nome || "").trim().toLowerCase(); }
 
-    // TITLE CASE PER I NOMI DELLE GARE
     function formattaNomeGaraTitleCase(str) {
       if (!str) return "";
       return str.toLowerCase().split(' ').map(word => {
@@ -2843,6 +2892,7 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
       const fotoContainer = document.getElementById("foto-atleta-container");
       const imgAtleta = document.getElementById("foto-atleta");
       const dettagliTestoAtleta = document.getElementById("dettagli-testo-atleta");
+      const audioPlayer = document.getElementById("atletaAudioPlayer");
 
       const raw = datiElement.textContent.trim();
       const righe = raw.split("\n").map(r => r.split(","));
@@ -2875,7 +2925,51 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
         selectGare.appendChild(opt);
       });
 
-      // RECORD SOCIETARIO ATTUALE (PRENDE QUALSIASI TIPO DI GARA COMPATIBILE)
+      // FUNZIONE GESTIONE AUDIO AUTOMATICO E ROBUSTO (Con gestione blocco Autoplay)
+      function gestisciAudioAtleta(filtroAtleta) {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+
+        if (!filtroAtleta) return "";
+
+        let fileAudio = mappa_audio[filtroAtleta.toLowerCase()];
+        if (fileAudio) {
+          audioPlayer.src = fileAudio;
+          
+          let playPromise = audioPlayer.play();
+          if (playPromise !== undefined) {
+            playPromise.then(() => {
+              const btn = document.getElementById("btnPlayPauseAudio");
+              if (btn) btn.innerHTML = "⏸️ Pausa";
+            }).catch(error => {
+              const btn = document.getElementById("btnPlayPauseAudio");
+              if (btn) btn.innerHTML = "▶️️ Avvia Song";
+            });
+          }
+
+          return `
+            <div class="audio-player-box">
+              <button type="button" class="btn-audio-control" id="btnPlayPauseAudio" onclick="toggleAudioAtleta()">
+                ⏸️ Pausa
+              </button>
+              <div class="audio-title-text">🎵 Traccia Atleta</div>
+            </div>`;
+        }
+        return "";
+      }
+
+      window.toggleAudioAtleta = function() {
+        const btn = document.getElementById("btnPlayPauseAudio");
+        if (audioPlayer.paused) {
+          audioPlayer.play();
+          if (btn) btn.innerHTML = "⏸️ Pausa";
+        } else {
+          audioPlayer.pause();
+          if (btn) btn.innerHTML = "▶️ Avvia Song";
+        }
+      };
+
+      // RECORD SOCIETARIO ATTUALE
       function getRecordSocietario(garaNome, vascaScelta, sessoAtleta) {
         if (!garaNome || !vascaScelta || !sessoAtleta) return null;
         
@@ -2956,8 +3050,6 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
         }
       }
 
-      // CORREZIONE 1: CRONOLOGIA RECORD DI SQUADRA PER LE GARE LANCIATE
-      // Mantiene la corrispondenza rigorosa: se si seleziona una gara "lanciato", vengono usate SOLO le gare "lanciato".
       function calcolaCronologiaRecordGara(garaNome, vascaScelta, sessoAtleta) {
         const isGaraLanciata = garaNome.toLowerCase().includes("lanciato");
         const garaBaseName = garaNome.toLowerCase().replace("lanciato", "").trim();
@@ -2970,7 +3062,6 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
           let dGaraLower = d["gara"].toLowerCase();
           
-          // RIGOROSO: se la gara selezionata è "lanciato", si filtrano SOLO le gare lanciate
           if (isGaraLanciata) {
             return dGaraLower.includes("lanciato") && dGaraLower.includes(garaBaseName);
           } else {
@@ -3182,7 +3273,6 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
         ctx.clearRect(0, 0, W, H);
 
-        // Griglia orizzontale Y
         ctx.strokeStyle = "#e2e8f0";
         ctx.lineWidth = 1;
         ctx.fillStyle = "#070674";
@@ -3196,7 +3286,6 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
           ctx.fillText(formatTempo(val), padLeft - 10, y + 4);
         }
 
-        // Asse X Continuo
         const yAsseX = H - padBottom;
         ctx.save();
         ctx.strokeStyle = "#070674";
@@ -3204,10 +3293,8 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
         ctx.beginPath(); ctx.moveTo(padLeft, yAsseX); ctx.lineTo(W - padRight, yAsseX); ctx.stroke();
         ctx.restore();
 
-        // SOGLIE INTERATTIVE
         lineSoglieInteractive = [];
 
-        // CORREZIONE 5: TOOLTIP LINEA RECORD SOCIETARIO CON SCRITTE "GARA RECORD" E "TEMPO RECORD"
         if (recordSocietario) {
           const etichettaSesso = recordSocietario.sesso === "F" ? "Femminile" : "Maschile";
           lineSoglieInteractive.push({
@@ -3260,7 +3347,6 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
           ctx.restore();
         });
 
-        // CORREZIONE 2: CALCOLO DIFFERENZA DAL PERSONAL BEST PRECEDENTE DELL'ATLETA
         allChartPoints = [];
         let migliorTempoSempreFinora = Infinity;
 
@@ -3297,7 +3383,6 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
           });
         });
 
-        // CORREZIONE 4: RETTANGOLO VIOLA DEL DOMINIO CON LATO INFERIORE PARALLELO ALL'ASSE X AL LIVELLO DEL RECORD ATTUALE
         let sessoAtleta = infoAtleta ? infoAtleta.sesso : "M";
         let regniAtleta = calcolaRegniDominioAtleta(nomeGara, vascaScelta, sessoAtleta, individuali[0].atleta);
 
@@ -3325,7 +3410,6 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
             let xEnd = allChartPoints[idxEnd].x;
             let yRecordInizio = allChartPoints[idxStart].y;
 
-            // Il bordo inferiore non coincide con l'asse X, ma si ferma al tempo dell'ultimo record attuale
             let yRecordAttuale = (tempoRecordAttuale !== null) ? getY(tempoRecordAttuale) : yAsseX;
 
             ctx.save();
@@ -3335,7 +3419,6 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
           }
         });
 
-        // COLORAZIONE TRATTI TRA PUNTI
         if (allChartPoints.length > 1) {
           for (let i = 0; i < allChartPoints.length - 1; i++) {
             const p1 = allChartPoints[i];
@@ -3356,7 +3439,6 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
           }
         }
 
-        // PALLINI E ETICHETTE
         allChartPoints.forEach(p => {
           ctx.beginPath();
           ctx.arc(p.x, p.y, 6.5, 0, 2 * Math.PI);
@@ -3372,7 +3454,6 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
           ctx.fillText(formatTempo(p.data.tempo_raw), p.x, p.y - 12);
         });
 
-        // ETICHETTE ASSE X
         allChartPoints.forEach(p => {
           ctx.save();
           ctx.translate(p.x, yAsseX + 15);
@@ -3384,7 +3465,6 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
           ctx.restore();
         });
 
-        // HOVER INTERATTIVO SUL GRAFICO
         canvas.onmousemove = function(e) {
           const r = canvas.getBoundingClientRect();
           const mx = e.clientX - r.left;
@@ -3422,7 +3502,6 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
           if (foundLine) {
             tooltip.style.display = "block";
 
-            // CORREZIONE 5: SOSTITUZIONE TESTI "Gara Record:" E "Tempo Record:"
             let etichettaGara = foundLine.isRecord ? "Gara Record:" : "Gara Podio:";
             let etichettaTempo = foundLine.isRecord ? "Tempo Record:" : "Tempo Podio:";
             let detAtleta = foundLine.isRecord ? `<br><b>Detentore:</b> ${foundLine.atleta}` : "";
@@ -3473,6 +3552,9 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
           const nomeVisualizzato = optionSelezionata ? optionSelezionata.textContent : filtroAtleta;
           
           imgAtleta.src = mappa_foto[filtroAtleta] || foto_default;
+
+          let htmlAudio = gestisciAudioAtleta(filtroAtleta);
+
           let htmlDettagli = `<h3>${nomeVisualizzato.toUpperCase()}</h3>`;
 
           if (infoAnagrafica) {
@@ -3486,10 +3568,14 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
               htmlDettagli += `<p><b>Periodo di attività:</b> ${infoAnagrafica.inizio} - ${infoAnagrafica.fine}</p>`;
             }
           }
+          htmlDettagli += htmlAudio;
+
           dettagliTestoAtleta.innerHTML = htmlDettagli;
           fotoContainer.style.display = "flex";
         } else {
           fotoContainer.style.display = "none"; 
+          audioPlayer.pause();
+          audioPlayer.currentTime = 0;
         }
 
         let filtrati = dati.filter(d => {
@@ -3540,7 +3626,6 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
         let cronoRecordTutti = (filtroGara && filtroVasca && sessoAtleta) ? calcolaCronologiaRecordGara(filtroGara, filtroVasca, sessoAtleta) : [];
         let cronoRecordAtleta = cronoRecordTutti.filter(cr => filtroAtleta && cr.atleta.toLowerCase() === filtroAtleta.toLowerCase());
 
-        // CORREZIONE 3: COLLEGAMENTO STAFFETTE A ricerca_staffette.html
         function creaTabella(titolo, lista, isStaffetta = false) {
           if (!lista.length) return "";
           let html = `<h2>${titolo}</h2><table><thead><tr>
@@ -3618,10 +3703,8 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
         risultati.innerHTML = creaTabella("Gare individuali", individuali, false) + creaTabella("Staffette", staffette, true);
 
-        // BOX INFORMATIVI SOTTO IL GRAFICO
         let htmlExtraBoxes = "";
 
-        // BOX 1: SOGLIE PODIO
         if (filtroGara && filtroVasca && infoAnagrafica && infoAnagrafica.stato === "In attività") {
           let podiFiltro = podiDatabase.filter(p => 
             chiaveGara(p.gara) === chiaveGara(filtroGara) && String(p.vasca) === String(filtroVasca)
@@ -3664,7 +3747,6 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
           }
         }
 
-        // CORREZIONE 6: GARA SCRITTA IN MAIUSCOLO NEL BOX CRONOLOGIA RECORD DEGLI ATLETI
         if (cronoRecordAtleta.length > 0) {
           htmlExtraBoxes += `
             <div class="info-box-container" style="border-color: #9333ea;">
@@ -3742,6 +3824,8 @@ const foto_default = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
           chartSection.style.display = "none";
           chartMessage.style.display = "none";
           extraBoxesUnderChart.innerHTML = "";
+          audioPlayer.pause();
+          audioPlayer.currentTime = 0;
         } else {
           mostraTabella(valAtleta, valGara, valStagione, valVasca);
         }
