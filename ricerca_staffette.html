@@ -2929,6 +2929,7 @@ function aggiornaTabella() {
         return;
     }
 
+    // 1. Filtra le staffette in base ai criteri scelti
     const risultati = staffetteList.filter(s => {
         const matchTipo = (s.gara === tipoScelto);
         const matchVasca = (vascaScelta === "tutte") || (s.vasca === vascaScelta);
@@ -2941,6 +2942,15 @@ function aggiornaTabella() {
         if (chartMessage) chartMessage.style.display = "none";
         return;
     }
+
+    // 2. Crea una copia ordinata PER TEMPO CRESCENTE (dal migliore al peggiore) per la tabella
+    const risultatiOrdinatiPerTempo = [...risultati].sort((a, b) => {
+        const tA = parseFloat(a.tempo);
+        const tB = parseFloat(b.tempo);
+        if (isNaN(tA)) return 1;
+        if (isNaN(tB)) return -1;
+        return tA - tB;
+    });
 
     let html = `<table>
         <thead>
@@ -2957,7 +2967,8 @@ function aggiornaTabella() {
         </thead>
         <tbody>`;
 
-    risultati.forEach((st, idx) => {
+    // 3. Genera la tabella usando l'array ordinato PER TEMPO
+    risultatiOrdinatiPerTempo.forEach((st, idx) => {
         st.frazionisti.sort((a,b) => a.ordine - b.ordine);
         const nomiAtleti = st.frazionisti.map(f => f.nome).join(", ");
         const podiInfo = analizzaPodiSuperati(st);
@@ -2969,7 +2980,6 @@ function aggiornaTabella() {
             ? `<span class="clickable-podio" onclick="togglePodio(${idx})">${podiInfo.icona} ▾</span>`
             : "❌";
 
-        // BOLLINO IMPOSTATO A 100PX NELLA TABELLA
         const badgeHtml = isRecordSocietario ? `<span style="margin-left:-25px; margin-right:2px;">${getSvgBollinoRecord(100)}</span>` : "";
 
         html += `
@@ -3029,6 +3039,7 @@ function aggiornaTabella() {
         if (chartMessage) chartMessage.style.display = "block";
     } else {
         if (chartMessage) chartMessage.style.display = "none";
+        // 4. Passa al grafico l'array 'risultati' originale (verrà ordinato cronologicamente dentro disegnaGrafico)
         disegnaGrafico(risultati, tipoScelto, vascaScelta);
         generaClassificaTop5(tipoScelto, vascaScelta);
     }
